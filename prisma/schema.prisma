@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  password     String
+  name         String
+  role         String         @default("nurse")
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  conversations Conversation[]
+}
+
+model Conversation {
+  id            Int            @id @default(autoincrement())
+  user          User           @relation(fields: [userId], references: [id])
+  userId        Int
+  startedAt     DateTime       @default(now())
+  endedAt       DateTime?
+  durationSec   Int?
+  score         Float?
+  overtime      Boolean        @default(false)   // 是否超過10分鐘
+  reflection    String?                          // GPT summary
+  createdAt     DateTime       @default(now())
+
+  messages      Message[]
+  reflections   ReflectionMessage[]
+}
+
+model Message {
+  id              Int           @id @default(autoincrement())
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  conversationId  Int
+  sender          String        // 'user' | 'patient'
+  text            String
+  timestamp       DateTime      @default(now())
+
+  elapsedSeconds  Int           // 對話開始後第幾秒
+  delayFromPrev   Int?          // 與上一句相隔的秒數
+  isDelayed       Boolean?      // 是否超過反應時間門檻
+  isCorrect       Boolean?      // 語意比對正確
+  emotionLabel    String?       // 'neutral' | 'sad' | 'angry'...
+  emotionScore    Float?        // 強度 0–1
+
+  audioUrl        String?       // optional: 錄音檔連結
+}
+
+model ReflectionMessage {
+  id              Int           @id @default(autoincrement())
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  conversationId  Int
+  sender          String        // 'user' | 'assistant'
+  text            String
+  timestamp       DateTime      @default(now())
+
+  sourceNodeId    String?       // RAG 來源節點 ID
+  strategyTag     String?       // 可標記使用的是 Gibbs 第幾步等
+}
