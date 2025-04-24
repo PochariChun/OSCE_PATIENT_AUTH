@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Navbar } from '../components/navbar';
+import { Navbar } from '@/components/navbar';
 import Link from 'next/link';
 
 interface User {
@@ -24,23 +24,59 @@ interface DialogueHistory {
   overtime: boolean;
 }
 
-interface RecommendedScenario {
-  id: number;
-  title: string;
-  description: string;
-  scenarioCode: string;
-}
-
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [dialogueHistory, setDialogueHistory] = useState<DialogueHistory[]>([]);
-  const [recommendedScenarios, setRecommendedScenarios] = useState<RecommendedScenario[]>([]);
   const router = useRouter();
+
+  // 模拟对话历史数据
+  const mockDialogueHistory: DialogueHistory[] = [
+    {
+      id: 1,
+      title: '糖尿病患者衛教',
+      startedAt: '2023-11-15T10:30:00Z',
+      score: 85,
+      durationSec: 480,
+      overtime: false
+    },
+    {
+      id: 2,
+      title: '高血壓患者諮詢',
+      startedAt: '2023-11-10T14:15:00Z',
+      score: 92,
+      durationSec: 520,
+      overtime: false
+    },
+    {
+      id: 3,
+      title: '術後照護說明',
+      startedAt: '2023-11-05T09:45:00Z',
+      score: 78,
+      durationSec: 650,
+      overtime: true
+    },
+    {
+      id: 4,
+      title: '慢性疼痛評估',
+      startedAt: '2023-10-28T16:20:00Z',
+      score: 88,
+      durationSec: 510,
+      overtime: false
+    },
+    {
+      id: 5,
+      title: '藥物副作用諮詢',
+      startedAt: '2023-10-20T11:00:00Z',
+      score: 95,
+      durationSec: 430,
+      overtime: false
+    }
+  ];
 
   useEffect(() => {
     // 从 localStorage 获取用户信息
-    const fetchUser = async () => {
+    const fetchUser = () => {
       try {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
@@ -50,11 +86,8 @@ export default function HomePage() {
         const userData = JSON.parse(userJson);
         setUser(userData);
         
-        // 从 API 获取对话历史和推荐场景
-        await Promise.all([
-          fetchDialogueHistory(userData.id),
-          fetchRecommendedScenarios(userData.id)
-        ]);
+        // 设置模拟对话历史
+        setDialogueHistory(mockDialogueHistory);
       } catch (error) {
         console.error('获取用户信息失败', error);
         router.push('/login');
@@ -65,49 +98,6 @@ export default function HomePage() {
 
     fetchUser();
   }, [router]);
-
-  // 从 API 获取对话历史数据
-  const fetchDialogueHistory = async (userId: number) => {
-    try {
-      const response = await fetch(`/api/conversations/history?userId=${userId}`);
-      
-      if (!response.ok) {
-        console.warn(`获取对话历史失败: ${response.status} ${response.statusText}`);
-        // 如果获取失败，设置为空数组
-        setDialogueHistory([]);
-        return;
-      }
-      
-      const data = await response.json();
-      setDialogueHistory(data);
-    } catch (error) {
-      console.error('获取对话历史失败', error);
-      // 如果获取失败，设置为空数组
-      setDialogueHistory([]);
-    }
-  };
-
-  // 从 API 获取推荐场景数据
-  const fetchRecommendedScenarios = async (userId: number) => {
-    try {
-      // 尝试从 API 获取数据
-      const response = await fetch(`/api/scenarios/recommended?userId=${userId}`);
-      
-      if (!response.ok) {
-        console.warn(`获取推荐场景失败: ${response.status} ${response.statusText}`);
-        // 如果获取失败，设置为空数组，不使用假数据
-        setRecommendedScenarios([]);
-        return;
-      }
-      
-      const data = await response.json();
-      setRecommendedScenarios(data);
-    } catch (error) {
-      console.error('获取推荐场景失败', error);
-      // 如果获取失败，设置为空数组，不使用假数据
-      setRecommendedScenarios([]);
-    }
-  };
 
   const handleStartNewDialogue = () => {
     router.push('/dialogue/new');
@@ -361,26 +351,54 @@ export default function HomePage() {
                 推薦場景
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {recommendedScenarios.length > 0 ? (
-                  recommendedScenarios.map((scenario) => (
-                    <div key={scenario.id} className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{scenario.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
-                        {scenario.description}
-                      </p>
-                      <button 
-                        onClick={() => router.push(`/dialogue/new?scenario=${scenario.scenarioCode}`)}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
-                      >
-                        開始練習 →
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-2 text-center py-4">
-                    <p className="text-gray-500 dark:text-gray-400">暫無推薦場景</p>
-                  </div>
-                )}
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">糖尿病患者衛教</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    練習如何向新診斷的糖尿病患者解釋疾病管理和生活方式調整。
+                  </p>
+                  <button 
+                    onClick={() => router.push('/dialogue/new?scenario=diabetes')}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                  >
+                    開始練習 →
+                  </button>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">術前評估會談</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    練習如何進行術前評估，收集患者病史並解釋手術流程。
+                  </p>
+                  <button 
+                    onClick={() => router.push('/dialogue/new?scenario=preop')}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                  >
+                    開始練習 →
+                  </button>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">精神健康初步評估</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    練習如何進行精神健康初步評估，包括抑鬱和焦慮症狀的篩查。
+                  </p>
+                  <button 
+                    onClick={() => router.push('/dialogue/new?scenario=mental')}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                  >
+                    開始練習 →
+                  </button>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">藥物諮詢</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                    練習如何向患者解釋新藥物的使用方法、效果和可能的副作用。
+                  </p>
+                  <button 
+                    onClick={() => router.push('/dialogue/new?scenario=medication')}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                  >
+                    開始練習 →
+                  </button>
+                </div>
               </div>
             </div>
           </div>
