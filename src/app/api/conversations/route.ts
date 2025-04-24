@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
     const userId = searchParams.get('userId');
     
     if (!userId) {
-      return NextResponse.json({ error: '缺少用户ID' }, { status: 400 });
+      return NextResponse.json({ error: '缺少用戶ID' }, { status: 400 });
     }
     
-    // 查询数据库获取对话历史
+    // 查詢數據庫獲取對話歷史
     const conversations = await prisma.conversation.findMany({
       where: {
         userId: parseInt(userId)
@@ -18,10 +18,22 @@ export async function GET(request: NextRequest) {
       orderBy: {
         startedAt: 'desc'
       },
-      take: 10 // 只获取最近的10条记录
+      take: 10 // 只獲取最近的10條記錄
     });
     
-    // 将数据库记录转换为前端需要的格式
+    // 將數據庫記錄轉換為前端需要的格式
     const history = conversations.map((conv: any) => ({
       id: conv.id,
-      title: `
+      title: `對話 ${new Date(conv.startedAt).toLocaleDateString('zh-TW')}`,
+      startedAt: conv.startedAt.toISOString(),
+      score: conv.score,
+      durationSec: conv.durationSec,
+      overtime: conv.overtime
+    }));
+    
+    return NextResponse.json(history);
+  } catch (error) {
+    console.error('獲取對話歷史失敗', error);
+    return NextResponse.json({ error: '獲取對話歷史失敗' }, { status: 500 });
+  }
+}

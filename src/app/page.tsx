@@ -195,12 +195,6 @@ export default function HomePage() {
                 >
                   編輯個人資料
                 </Link>
-                <Link 
-                  href="/resources"
-                  className="block w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium rounded-md transition-colors text-center"
-                >
-                  學習資源
-                </Link>
               </div>
             </div>
 

@@ -1,26 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 
-// 声明全局变量类型
-declare global {
-  var prisma: PrismaClient | undefined
-}
+// 防止开发环境中创建多个 PrismaClient 实例
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
-// 创建 PrismaClient 实例
-const prismaClientSingleton = () => {
-  return new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
-  })
-}
+export const prisma = globalForPrisma.prisma || new PrismaClient()
 
-// 使用全局变量或创建新实例
-const prisma = globalThis.prisma ?? prismaClientSingleton()
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
-// 在开发环境中将实例保存到全局变量中
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.prisma = prisma
-}
-
-export { prisma }
+export default prisma
 
 // 添加一个简单的测试函数
 export async function testPrismaConnection() {

@@ -57,12 +57,6 @@ export function Navbar({ user }: NavbarProps) {
               >
                 對話歷史
               </Link>
-              <Link 
-                href="/resources"
-                className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                學習資源
-              </Link>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
@@ -209,12 +203,6 @@ export function Navbar({ user }: NavbarProps) {
               className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
             >
               對話歷史
-            </Link>
-            <Link
-              href="/resources"
-              className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            >
-              學習資源
             </Link>
           </div>
           {user ? (
