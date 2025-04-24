@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
 import Link from 'next/link';
+import React from 'react';
 
 interface User {
   id: number;
@@ -33,16 +34,21 @@ interface DialogueDetail {
   feedback: string | null;
 }
 
-export default function DialogueDetailPage() {
+export default function DialogueDetailPage({ params }: { params: { id: string } | Promise<{ id: string }> }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [dialogue, setDialogue] = useState<DialogueDetail | null>(null);
   const router = useRouter();
-  const params = useParams();
-  const dialogueId = params?.id as string;
+  const [mounted, setMounted] = useState(false);
+  
+  // 正确使用 React.use() 解包 params
+  const resolvedParams = params instanceof Promise ? React.use(params) : params;
+  const dialogueId = resolvedParams.id;
 
   useEffect(() => {
-    // 從 localStorage 获取用户信息
+    setMounted(true);
+    
+    // 从 localStorage 获取用户信息
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
@@ -64,7 +70,7 @@ export default function DialogueDetailPage() {
     };
 
     fetchUser();
-  }, [router, dialogueId]);
+  }, [dialogueId, router]);
 
   // 從 API 獲取對話詳情數據
   const fetchDialogueDetail = async (id: string) => {
@@ -90,6 +96,11 @@ export default function DialogueDetailPage() {
       console.error('獲取對話詳情失敗', error);
     }
   };
+
+  // 避免服务器端和客户端渲染不匹配
+  if (!mounted) {
+    return null;
+  }
 
   if (loading) {
     return (

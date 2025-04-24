@@ -25,9 +25,12 @@ export default function DialogueHistoryPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [dialogueHistory, setDialogueHistory] = useState<DialogueHistory[]>([]);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
+    
     // 从 localStorage 获取用户信息
     const fetchUser = async () => {
       try {
@@ -74,6 +77,11 @@ export default function DialogueHistoryPage() {
   const handleViewHistory = (id: number) => {
     router.push(`/dialogue/history/${id}`);
   };
+
+  // 避免服务器端和客户端渲染不匹配
+  if (!mounted) {
+    return null;
+  }
 
   if (loading) {
     return (
