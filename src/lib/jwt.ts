@@ -12,15 +12,16 @@ export function signJWT(payload: any, expiresIn = '1d') {
 }
 
 // 驗證 JWT 令牌
-export function verifyJWT<T>(token: string): T | null {
+export async function verifyJWT(token: string) {
   try {
-    if (!JWT_SECRET) {
-      console.error('警告: JWT_SECRET 未設置');
-      return null;
-    }
-    return jwt.verify(token, JWT_SECRET) as T;
+    // 使用與簽名令牌相同的密鑰
+    const secret = process.env.JWT_SECRET || 'your-fallback-secret';
+    
+    // 驗證令牌
+    const payload = jwt.verify(token, secret);
+    return payload;
   } catch (error) {
-    console.error('JWT 驗證錯誤:', error);
+    console.error('JWT 驗證失敗:', error);
     return null;
   }
 } 

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
+import { signJWT } from '@/lib/jwt';
 
 export async function POST(req: Request) {
   try {
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
     }
 
 
-      // 對於其他用戶，使用 bcrypt 比較
+    // 所有用戶都使用 bcrypt 比較
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
         return NextResponse.json({ error: '密碼錯誤' }, { status: 401 });
@@ -39,10 +40,30 @@ export async function POST(req: Request) {
     console.log('登入成功');
     
     // 簡化版本：不設置 JWT，直接返回用戶信息
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: '登入成功',
       user: userWithoutPassword,
     });
+
+    // 生成 JWT 令牌
+    const token = signJWT({ 
+      id: user.id, 
+      email: user.email,
+      role: user.role 
+    });
+
+    // 設置 cookie
+    response.cookies.set({
+      name: 'auth_token',
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 7 天
+      path: '/',
+    });
+
+    return response;
   } catch (error) {
     console.error('登入處理錯誤:', error);
     return NextResponse.json({ error: '登入處理錯誤' }, { status: 500 });

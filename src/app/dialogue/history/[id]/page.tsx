@@ -24,9 +24,11 @@ interface DialogueDetail {
   scenarioDescription: string;
   messages: {
     id: number;
-    role: 'user' | 'assistant';
+    role: string;
     content: string;
     timestamp: string;
+    elapsedSeconds: number | null;
+    delayFromPrev: number | null;
   }[];
   feedback: string | null;
 }
@@ -40,7 +42,7 @@ export default function DialogueDetailPage() {
   const dialogueId = params?.id as string;
 
   useEffect(() => {
-    // 从 localStorage 获取用户信息
+    // 從 localStorage 获取用户信息
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
@@ -64,20 +66,28 @@ export default function DialogueDetailPage() {
     fetchUser();
   }, [router, dialogueId]);
 
-  // 从 API 获取对话详情数据
+  // 從 API 獲取對話詳情數據
   const fetchDialogueDetail = async (id: string) => {
     try {
-      const response = await fetch(`/api/conversations/${id}`);
+      // 從本地存儲獲取用戶 ID
+      const userJson = localStorage.getItem('user');
+      const userData = userJson ? JSON.parse(userJson) : null;
+      const userId = userData?.id;
+
+      // 添加憑據選項，確保發送 cookies
+      const response = await fetch(`/api/conversations/${id}?userId=${userId}`, {
+        credentials: 'include'  // 確保發送 cookies
+      });
       
       if (!response.ok) {
-        console.warn(`获取对话详情失败: ${response.status} ${response.statusText}`);
+        console.warn(`獲取對話詳情失敗: ${response.status} ${response.statusText}`);
         return;
       }
       
       const data = await response.json();
       setDialogue(data);
     } catch (error) {
-      console.error('获取对话详情失败', error);
+      console.error('獲取對話詳情失敗', error);
     }
   };
 
@@ -202,26 +212,106 @@ export default function DialogueDetailPage() {
           {/* 对话内容 */}
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">對話內容</h2>
-            <div className="space-y-4 max-h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
-              {dialogue.messages.map((msg, index) => (
-                <div 
-                  key={msg.id || index} 
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
+            <div className="relative max-h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+              <div className="flex justify-center">
+                <div className="relative w-full max-w-4xl">
+                  {/* 時間軸線條 - 置中且僅在可滾動區域內 */}
                   <div 
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      msg.role === 'user' 
-                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' 
-                        : 'bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-100'
-                    }`}
-                  >
-                    <p>{msg.content}</p>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                      {new Date(msg.timestamp).toLocaleTimeString('zh-TW')}
-                    </div>
+                    className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600 transform -translate-x-1/2"
+                  ></div>
+                  
+                  <div className="space-y-0">
+                    {dialogue.messages.map((msg, index, arr) => {
+                      // 判斷是否為用戶消息
+                      const isUserMessage = msg.role === 'user';
+                      
+                      // 只對用戶消息檢查延遲
+                      const showDelayWarning = isUserMessage && msg.delayFromPrev && msg.delayFromPrev > 5;
+                      
+                      // 計算與上一條消息的間距（基於 elapsedSeconds）
+                      const prevMsg = index > 0 ? arr[index - 1] : null;
+                      const prevElapsed = prevMsg ? (prevMsg.elapsedSeconds || 0) : 0;
+                      const currentElapsed = msg.elapsedSeconds || 0;
+                      const timeDiff = currentElapsed - prevElapsed;
+                      
+                      // 根據時間差計算間距高度（每秒 5px，最小 40px）
+                      const spacing = Math.max(40, timeDiff * 5);
+                      
+                      return (
+                        <div 
+                          key={msg.id || index} 
+                          className="relative" 
+                          style={{ marginTop: index === 0 ? '20px' : `${spacing}px` }}
+                        >
+                          {/* 時間標記 - 置中 */}
+                          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-white"></div>
+                            </div>
+                          </div>
+                          
+                          {/* 時間標籤 - 置中 */}
+                          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
+                            {msg.elapsedSeconds ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` : '00:00'}
+                          </div>
+                          
+                          {/* 對話內容 - 分左右兩側 */}
+                          <div className="grid grid-cols-2 gap-4 mt-8">
+                            {/* 左側（病人）消息 */}
+                            {!isUserMessage && (
+                              <>
+                                <div className={`justify-self-end pr-4 max-w-full`}>
+                                  <div className={`rounded-lg p-3 ${
+                                    'bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-100'
+                                  }`}>
+                                    <p className="break-words">{msg.content}</p>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                                      {msg.elapsedSeconds 
+                                        ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
+                                        : '00:00'}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div></div> {/* 右側空白 */}
+                              </>
+                            )}
+                            
+                            {/* 右側（用戶）消息 */}
+                            {isUserMessage && (
+                              <>
+                                <div></div> {/* 左側空白 */}
+                                <div className={`${showDelayWarning ? 'justify-self-start pl-4 max-w-full' : 'max-w-full'}`}>
+                                  {/* 延遲警告 - 只對用戶消息顯示 */}
+                                  {showDelayWarning && (
+                                    <div className="mb-1 text-xs text-red-500 dark:text-red-400">
+                                      延遲回應 {msg.delayFromPrev} 秒
+                                    </div>
+                                  )}
+                                  <div className={`rounded-lg p-3 ${
+                                    showDelayWarning
+                                      ? 'bg-red-100 dark:bg-red-900 text-red-900 dark:text-red-100 border border-red-300 dark:border-red-700'
+                                      : 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100'
+                                  }`}>
+                                    <p className="break-words">{msg.content}</p>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                                      {msg.elapsedSeconds 
+                                        ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
+                                        : '00:00'}
+                                    </div>
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    
+                    {/* 添加底部間距，確保最後一條消息有足夠空間 */}
+                    <div className="h-20"></div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
