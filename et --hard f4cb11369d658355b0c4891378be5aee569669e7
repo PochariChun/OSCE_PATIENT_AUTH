@@ -1,0 +1,59 @@
+[33mcommit f4cb11369d658355b0c4891378be5aee569669e7[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Thu Apr 24 21:45:48 2025 +0800
+
+    fix: resolve hydration errors and params handling
+    
+    - Add mounted state to prevent client/server rendering mismatch
+    - Properly handle params as Promise using React.use()
+    - Fix direct access to params.id in useEffect dependencies
+
+[33mcommit 655f55fc4d6a35a95e62a7d5e64af1716e02657c[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Thu Apr 24 21:41:47 2025 +0800
+
+    feat: implement conversation history API and UI
+    
+    - Add history endpoints for fetching conversations
+    - Create history page with conversation listing
+    - Implement single conversation view page
+    - Update schema and database models
+
+[33mcommit 27ecd8f750f16e1702fbbf288541dd6363651adb[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Thu Apr 24 20:53:57 2025 +0800
+
+    feat: remove learning resources link and add dialogue history pages
+    
+    - Remove learning resources links from navbar and homepage
+    - Create dialogue history page and detail page
+    - Implement dialogue history API endpoints
+    - Convert API error messages to Traditional Chinese
+
+[33mcommit a19d84c4fac518a66d48c52f4e1630ee77eba00b[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Thu Apr 24 20:02:45 2025 +0800
+
+    fix: align end dialogue button with send button
+    
+    - Remove responsive width and margin styles from end dialogue button
+    - Add flex-shrink-0 to prevent button from being compressed
+    - Improve button alignment consistency across screen sizes
+
+[33mcommit ba34dca293915b2c953d9cd61c57d868e58543ed[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Mon Apr 21 18:24:57 2025 +0800
+
+    first commit
+
+[33mcommit 25ef2918cf54dfbdeed84d928f155d85fd4c41e6[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Mon Apr 21 18:23:45 2025 +0800
+
+    首次提交
+
+[33mcommit d90188022b9a62040c201bde179f8066ecf63662[m
+Author: Oliver Tang <n96121189@gs.ncku.edu.tw>
+Date:   Mon Apr 21 15:03:10 2025 +0800
+
+    Initial commit from Create Next App

@@ -1,6 +1,5 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,15 +15,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-TW" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var savedMode = localStorage.getItem('darkMode');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var shouldUseDarkMode = savedMode === 'true' || (savedMode === null && prefersDark);
+                
+                if (shouldUseDarkMode) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {
+                console.error('無法設置初始主題', e);
+              }
+            })();
+          `
+        }} />
+      </head>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   )
