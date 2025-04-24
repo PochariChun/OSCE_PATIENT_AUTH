@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '../../../components/navbar';
 import Link from 'next/link';
+import { MicrophoneCheck } from '@/components/MicrophoneCheck';
 
 interface User {
   id: number;
@@ -36,6 +37,7 @@ export default function NewDialoguePage() {
   const [selectedScenario, setSelectedScenario] = useState<ScenarioInfo | null>(null);
   const [conversation, setConversation] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [message, setMessage] = useState('');
+  const [micCheckCompleted, setMicCheckCompleted] = useState(false);
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -156,6 +158,13 @@ export default function NewDialoguePage() {
     router.push('/dialogue/history');
   };
   
+  // 处理麦克风检查完成
+  const handleMicCheckComplete = (success: boolean) => {
+    setMicCheckCompleted(true);
+    // 如果麦克风检查失败，可以在这里添加额外处理逻辑
+    // 例如显示警告信息等
+  };
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -172,134 +181,142 @@ export default function NewDialoguePage() {
       <Navbar user={user} />
       
       <main className="container mx-auto px-4 py-8">
-        {!selectedScenario ? (
-          // 場景選擇頁面
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              選擇對話場景
-            </h1>
-            
-            {scenarios.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {scenarios.map((scenario) => (
-                  <div 
-                    key={scenario.id}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                    onClick={() => handleScenarioSelect(scenario.scenarioCode)}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                        {scenario.title}
-                      </h2>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        scenario.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
-                        scenario.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
-                        'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
-                      }`}>
-                        {scenario.difficulty === 'easy' ? '簡單' : 
-                         scenario.difficulty === 'medium' ? '中等' : '困難'}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      {scenario.description}
-                    </p>
-                    <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
-                        {scenario.patientInfo}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">暫無可用場景</p>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">請聯繫管理員添加場景</p>
-              </div>
-            )}
+        {/* 麦克风检查页面 */}
+        {!micCheckCompleted ? (
+          <div className="flex justify-center items-center py-8">
+            <MicrophoneCheck onComplete={handleMicCheckComplete} />
           </div>
         ) : (
-          // 對話頁面
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {selectedScenario.title}
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    {selectedScenario.description}
+          // 原有的场景选择和对话页面
+          !selectedScenario ? (
+            // 场景选择页面
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                選擇對話場景
+              </h1>
+              
+              {scenarios.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {scenarios.map((scenario) => (
+                    <div 
+                      key={scenario.id}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => handleScenarioSelect(scenario.scenarioCode)}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                          {scenario.title}
+                        </h2>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          scenario.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                          scenario.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
+                          'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                        }`}>
+                          {scenario.difficulty === 'easy' ? '簡單' : 
+                           scenario.difficulty === 'medium' ? '中等' : '困難'}
+                        </span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        {scenario.description}
+                      </p>
+                      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
+                          {scenario.patientInfo}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 dark:text-gray-400">暫無可用場景</p>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">請聯繫管理員添加場景</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            // 对话页面
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {selectedScenario.title}
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      {selectedScenario.description}
+                    </p>
+                  </div>
+                  <button 
+                    onClick={handleEndDialogue}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-shrink-0"
+                  >
+                    結束對話
+                  </button>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
+                    {selectedScenario.patientInfo}
                   </p>
                 </div>
-                <button 
-                  onClick={handleEndDialogue}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-shrink-0"
-                >
-                  結束對話
-                </button>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
-                  {selectedScenario.patientInfo}
-                </p>
-              </div>
-            </div>
-            
-            {/* 對話區域 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-              <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
-                {conversation.map((msg, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        msg.role === 'user' 
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' 
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                      }`}
-                    >
-                      <p>{msg.content}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
               
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="輸入您的回應..."
-                  className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
-                >
-                  發送
-                </button>
+              {/* 对话区域 */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
+                  {conversation.map((msg, index) => (
+                    <div 
+                      key={index} 
+                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div 
+                        className={`max-w-[80%] rounded-lg p-3 ${
+                          msg.role === 'user' 
+                            ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' 
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                        }`}
+                      >
+                        <p>{msg.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="輸入您的回應..."
+                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+                  >
+                    發送
+                  </button>
+                </div>
+              </div>
+              
+              {/* 提示和指导 */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  提示和指导
+                </h2>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                  <li>• 保持专业和同理心，倾听患者的担忧</li>
+                  <li>• 使用患者能理解的语言解释医疗概念</li>
+                  <li>• 确认患者理解您提供的信息</li>
+                  <li>• 给予患者足够的时间表达自己</li>
+                  <li>• 提供明确的后续步骤和建议</li>
+                </ul>
               </div>
             </div>
-            
-            {/* 提示和指導 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                提示和指導
-              </h2>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                <li>• 保持專業和同理心，傾聽患者的擔憂</li>
-                <li>• 使用患者能理解的語言解釋醫療概念</li>
-                <li>• 確認患者理解您提供的信息</li>
-                <li>• 給予患者足夠的時間表達自己</li>
-                <li>• 提供明確的後續步驟和建議</li>
-              </ul>
-            </div>
-          </div>
+          )
         )}
       </main>
       
