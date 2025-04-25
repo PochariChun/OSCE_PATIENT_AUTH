@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '../../../components/navbar';
 import Link from 'next/link';
@@ -39,6 +39,12 @@ export default function NewDialoguePage() {
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
   
+  const [isListening, setIsListening] = useState(false);
+  const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null);
+  const [interimTranscript, setInterimTranscript] = useState('');
+  const [finalTranscript, setFinalTranscript] = useState('');
+  const [lastSentenceEnd, setLastSentenceEnd] = useState(0);
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const scenarioCode = searchParams.get('scenario');
@@ -67,6 +73,105 @@ export default function NewDialoguePage() {
     
     fetchUser();
   }, [router]);
+  
+  useEffect(() => {
+    if (micCheckCompleted && typeof window !== 'undefined') {
+      // 檢查瀏覽器是否支持語音識別
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'zh-TW'; // 設置為繁體中文
+        
+        recognition.onresult = (event) => {
+          let interim = '';
+          let final = '';
+          
+          for (let i = 0; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              final += event.results[i][0].transcript;
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          
+          setInterimTranscript(interim);
+          
+          // 如果有新的最終結果
+          if (final !== finalTranscript && final.trim() !== '') {
+            setFinalTranscript(final);
+            
+            // 檢測句子結束（句號、問號、驚嘆號等）
+            const sentenceEndRegex = /[。！？\.!?]/g;
+            let match;
+            while ((match = sentenceEndRegex.exec(final)) !== null) {
+              if (match.index > lastSentenceEnd) {
+                // 提取完整句子
+                const sentence = final.substring(lastSentenceEnd, match.index + 1).trim();
+                if (sentence) {
+                  // 自動發送句子
+                  handleSendVoiceMessage(sentence);
+                  setLastSentenceEnd(match.index + 1);
+                }
+              }
+            }
+          }
+          
+          // 將最終結果和中間結果組合顯示在輸入框
+          setMessage(final.substring(lastSentenceEnd) + interim);
+        };
+        
+        recognition.onerror = (event) => {
+          console.error('語音識別錯誤:', event.error);
+          setIsListening(false);
+        };
+        
+        recognition.onend = () => {
+          // 如果仍在監聽狀態，則重新開始
+          if (isListening) {
+            recognition.start();
+          }
+        };
+        
+        setSpeechRecognition(recognition);
+      } else {
+        console.warn('您的瀏覽器不支持語音識別');
+      }
+    }
+  }, [micCheckCompleted]);
+  
+  useEffect(() => {
+    if (speechRecognition) {
+      if (isListening) {
+        try {
+          speechRecognition.start();
+        } catch (error) {
+          // 處理可能的錯誤，例如已經在監聽中
+          console.log('語音識別已經在運行中或發生錯誤', error);
+        }
+      } else {
+        try {
+          speechRecognition.stop();
+          // 重置語音識別相關狀態
+          setInterimTranscript('');
+          setFinalTranscript('');
+          setLastSentenceEnd(0);
+          setMessage('');
+        } catch (error) {
+          console.log('停止語音識別時發生錯誤', error);
+        }
+      }
+    }
+    
+    return () => {
+      // 組件卸載時停止語音識別
+      if (speechRecognition && isListening) {
+        speechRecognition.stop();
+      }
+    };
+  }, [isListening, speechRecognition]);
   
   // 从 API 获取场景数据
   const fetchScenarios = async () => {
@@ -130,10 +235,32 @@ export default function NewDialoguePage() {
     }
   };
   
+  const handleSendVoiceMessage = (voiceMessage: string) => {
+    if (!voiceMessage.trim()) return;
+    
+    // 添加用戶消息到對話
+    const updatedConversation = [
+      ...conversation,
+      { role: 'user' as const, content: voiceMessage }
+    ];
+    setConversation(updatedConversation);
+    
+    // 模擬虛擬病人回復
+    setTimeout(() => {
+      setConversation([
+        ...updatedConversation,
+        { 
+          role: 'assistant' as const, 
+          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？' 
+        }
+      ]);
+    }, 1000);
+  };
+  
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
-    // 添加用户消息到对话
+    // 添加用戶消息到對話
     const updatedConversation = [
       ...conversation,
       { role: 'user' as const, content: message }
@@ -141,7 +268,7 @@ export default function NewDialoguePage() {
     setConversation(updatedConversation);
     setMessage('');
     
-    // 模拟虚拟病人回复（在实际应用中，这里会调用 AI API）
+    // 模擬虛擬病人回復
     setTimeout(() => {
       setConversation([
         ...updatedConversation,
@@ -158,11 +285,13 @@ export default function NewDialoguePage() {
     router.push('/dialogue/history');
   };
   
-  // 处理麦克风检查完成
+  const toggleListening = () => {
+    setIsListening(!isListening);
+  };
+  
   const handleMicCheckComplete = (success: boolean) => {
     setMicCheckCompleted(true);
-    // 如果麦克风检查失败，可以在这里添加额外处理逻辑
-    // 例如显示警告信息等
+    // 如果麦克风检查成功，可以在這裡添加額外處理邏輯
   };
   
   if (loading) {
@@ -290,16 +419,45 @@ export default function NewDialoguePage() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="輸入您的回應..."
-                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    placeholder={isListening ? '正在聆聽...' : '輸入您的回應...'}
+                    className={`flex-grow px-4 py-2 border ${
+                      isListening 
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
+                        : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white`}
+                    readOnly={isListening}
                   />
                   <button
+                    onClick={toggleListening}
+                    className={`px-4 py-2 ${
+                      isListening 
+                        ? 'bg-red-600 hover:bg-red-700' 
+                        : 'bg-green-600 hover:bg-green-700'
+                    } text-white font-medium rounded-md transition-colors`}
+                    title={isListening ? '停止語音輸入' : '開始語音輸入'}
+                  >
+                    {isListening ? '🛑 停止' : '🎤 語音'}
+                  </button>
+                  <button
                     onClick={handleSendMessage}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+                    disabled={isListening}
+                    className={`px-4 py-2 ${
+                      isListening 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    } text-white font-medium rounded-md transition-colors`}
                   >
                     發送
                   </button>
                 </div>
+                
+                {/* 語音狀態指示器 */}
+                {isListening && (
+                  <div className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                    正在聆聽...說話時會自動檢測句子並發送
+                  </div>
+                )}
               </div>
               
               {/* 提示和指导 */}
@@ -329,4 +487,11 @@ export default function NewDialoguePage() {
       </footer>
     </div>
   );
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
 }
