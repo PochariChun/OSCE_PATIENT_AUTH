@@ -633,6 +633,10 @@ export default function NewDialoguePage() {
           });
         } else {
           console.log('對話結束時間更新成功');
+          
+          // 導向到反思頁面，而不是歷史頁面
+          router.push(`/dialogue/reflection/${conversationId}`);
+          return; // 提前返回，避免執行後面的歷史頁面導向
         }
       } catch (error) {
         console.error('更新對話結束時間失敗', error);
@@ -641,7 +645,7 @@ export default function NewDialoguePage() {
       console.warn('無法更新對話結束時間：對話ID不存在');
     }
     
-    // 在實際應用中，這裡會儲存對話記錄到資料庫
+    // 如果上面的過程出錯，則回退到歷史頁面
     router.push('/dialogue/history');
   };
   
@@ -758,16 +762,20 @@ export default function NewDialoguePage() {
             // 對話頁面
             <div className="max-w-4xl mx-auto">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {selectedScenario.title}
+                      {selectedScenario?.title || '新對話'}
                     </h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      {selectedScenario?.description || '請選擇一個場景開始對話'}
+                    </p>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  
+                  <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                     {/* 計時器顯示 - 更明顯的樣式 */}
-                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md">
-                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center">
+                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md w-full sm:w-auto">
+                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center justify-center sm:justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -775,9 +783,10 @@ export default function NewDialoguePage() {
                         {(elapsedTime % 60).toString().padStart(2, '0')}
                       </div>
                     </div>
+                    
                     <button 
                       onClick={handleEndDialogue}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-shrink-0"
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors w-full sm:w-auto"
                     >
                       結束對話
                     </button>
