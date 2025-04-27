@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '../../../components/navbar';
 import Link from 'next/link';
 import { MicrophoneCheck } from '@/components/MicrophoneCheck';
+import Image from 'next/image';
 
 interface User {
   id: number;
@@ -378,6 +379,25 @@ export default function NewDialoguePage() {
                   </button>
                 </div>
 
+              </div>
+              
+              {/* 虛擬病人頭像區塊 */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
+                <div className="relative w-full max-w-md">
+                  <Image
+                    src="/image/virtualpatient.png"
+                    alt="虛擬病人"
+                    width={400}
+                    height={400}
+                    className="rounded-lg mx-auto"
+                    priority
+                  />
+                  {isListening && (
+                    <div className="absolute bottom-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm animate-pulse">
+                      正在聆聽...
+                    </div>
+                  )}
+                </div>
               </div>
               
               {/* 对话区域 */}
