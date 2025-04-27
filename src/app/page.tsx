@@ -39,7 +39,7 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // 从 localStorage 获取用户信息
+    // 從 localStorage 獲取用戶資訊
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
@@ -50,13 +50,13 @@ export default function HomePage() {
         const userData = JSON.parse(userJson);
         setUser(userData);
         
-        // 从 API 获取对话历史和推荐场景
+        // 從 API 獲取對話歷史和推薦場景
         await Promise.all([
           fetchDialogueHistory(userData.id),
           fetchRecommendedScenarios(userData.id)
         ]);
       } catch (error) {
-        console.error('获取用户信息失败', error);
+        console.error('獲取用戶資訊失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -66,14 +66,14 @@ export default function HomePage() {
     fetchUser();
   }, [router]);
 
-  // 从 API 获取对话历史数据
+  // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
     try {
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
       
       if (!response.ok) {
-        console.warn(`获取对话历史失败: ${response.status} ${response.statusText}`);
-        // 如果获取失败，设置为空数组
+        console.warn(`獲取對話歷史失敗: ${response.status} ${response.statusText}`);
+        // 如果獲取失敗，設置為空陣列
         setDialogueHistory([]);
         return;
       }
@@ -81,21 +81,21 @@ export default function HomePage() {
       const data = await response.json();
       setDialogueHistory(data);
     } catch (error) {
-      console.error('获取对话历史失败', error);
-      // 如果获取失败，设置为空数组
+      console.error('獲取對話歷史失敗', error);
+      // 如果獲取失敗，設置為空陣列
       setDialogueHistory([]);
     }
   };
 
-  // 从 API 获取推荐场景数据
+  // 從 API 獲取推薦場景資料
   const fetchRecommendedScenarios = async (userId: number) => {
     try {
-      // 尝试从 API 获取数据
+      // 嘗試從 API 獲取資料
       const response = await fetch(`/api/scenarios/recommended?userId=${userId}`);
       
       if (!response.ok) {
-        console.warn(`获取推荐场景失败: ${response.status} ${response.statusText}`);
-        // 如果获取失败，设置为空数组，不使用假数据
+        console.warn(`獲取推薦場景失敗: ${response.status} ${response.statusText}`);
+        // 如果獲取失敗，設置為空陣列，不使用假資料
         setRecommendedScenarios([]);
         return;
       }
@@ -103,8 +103,8 @@ export default function HomePage() {
       const data = await response.json();
       setRecommendedScenarios(data);
     } catch (error) {
-      console.error('获取推荐场景失败', error);
-      // 如果获取失败，设置为空数组，不使用假数据
+      console.error('獲取推薦場景失敗', error);
+      // 如果獲取失敗，設置為空陣列，不使用假資料
       setRecommendedScenarios([]);
     }
   };
@@ -122,7 +122,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">加載中...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">載入中...</p>
         </div>
       </div>
     );
@@ -148,12 +148,12 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 左側：用戶信息和快速操作 */}
+          {/* 左側：用戶資訊和快速操作 */}
           <div className="lg:col-span-1 space-y-6">
-            {/* 用戶信息卡片 */}
+            {/* 用戶資訊卡片 */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                您的帳號信息
+                您的帳號資訊
               </h2>
               <div className="space-y-3">
                 <div>

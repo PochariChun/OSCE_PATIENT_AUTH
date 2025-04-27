@@ -225,33 +225,33 @@ export default function NewDialoguePage() {
       const response = await fetch('/api/scenarios');
       
       if (!response.ok) {
-        console.warn(`获取场景数据失败: ${response.status} ${response.statusText}`);
-        // 如果获取失败，设置为空数组，不使用假数据
+        console.warn(`獲取場景資料失敗: ${response.status} ${response.statusText}`);
+        // 如果獲取失敗，設置為空陣列，不使用假資料
         setScenarios([]);
         return;
       }
       
       const data = await response.json();
       
-      // 转换数据格式
+      // 轉換資料格式
       const formattedScenarios = data.map((scenario: any) => ({
         id: scenario.id,
         title: scenario.title,
         description: scenario.description,
         scenarioCode: scenario.scenarioCode,
-        // 只使用数据库中的患者信息，不使用默认值
+        // 只使用資料庫中的患者資訊，不使用預設值
         patientInfo: `${scenario.patientName}，${scenario.patientAge}歲，${scenario.diagnosis}。${scenario.accompaniedBy ? `陪同者：${scenario.accompaniedBy}。` : ''}`,
         difficulty: difficultyMap[scenario.difficulty] || 'medium'
       }));
       
       setScenarios(formattedScenarios);
       
-      // 如果 URL 中有场景代码，自动选择该场景
+      // 如果 URL 中有場景代碼，自動選擇該場景
       if (scenarioCode) {
         const scenario = formattedScenarios.find((s: any) => s.scenarioCode === scenarioCode);
         if (scenario) {
           setSelectedScenario(scenario);
-          // 初始化对话，使用系统提示而非虚拟病人的问候语
+          // 初始化對話，使用系統提示而非虛擬病人的問候語
           setConversation([
             { 
               role: 'system' as const, 
@@ -261,7 +261,7 @@ export default function NewDialoguePage() {
             }
           ]);
           
-          // 启动计时器
+          // 啟動計時器
           const now = new Date();
           setStartTime(now);
           const interval = setInterval(() => {
@@ -271,8 +271,8 @@ export default function NewDialoguePage() {
         }
       }
     } catch (error) {
-      console.error('获取场景数据失败', error);
-      // 如果获取失败，设置为空数组，不使用假数据
+      console.error('獲取場景資料失敗', error);
+      // 如果獲取失敗，設置為空陣列，不使用假資料
       setScenarios([]);
     }
   };
@@ -281,7 +281,7 @@ export default function NewDialoguePage() {
     const scenario = scenarios.find(s => s.scenarioCode === scenarioCode);
     if (scenario) {
       setSelectedScenario(scenario);
-      // 初始化对话，使用系统提示而非虚拟病人的问候语
+      // 初始化對話，使用系統提示而非虛擬病人的問候語
       setConversation([
         { 
           role: 'system' as const, 
@@ -291,7 +291,7 @@ export default function NewDialoguePage() {
         }
       ]);
       
-      // 启动计时器
+      // 啟動計時器
       const now = new Date();
       setStartTime(now);
       const interval = setInterval(() => {
@@ -307,7 +307,7 @@ export default function NewDialoguePage() {
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
-    // 添加用戶消息到對話
+    // 添加用戶訊息到對話
     const updatedConversation = [
       ...conversation,
       { 
@@ -319,7 +319,7 @@ export default function NewDialoguePage() {
     ];
     setConversation(updatedConversation);
     
-    // 模擬虛擬病人回復
+    // 模擬虛擬病人回覆
     setTimeout(() => {
       const replyTime = new Date();
       const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
@@ -328,7 +328,7 @@ export default function NewDialoguePage() {
         ...updatedConversation,
         { 
           role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？',
+          content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
           timestamp: replyTime,
           elapsedSeconds: replySeconds
         }
@@ -342,7 +342,7 @@ export default function NewDialoguePage() {
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
-    // 添加用戶消息到對話
+    // 添加用戶訊息到對話
     const updatedConversation = [
       ...conversation,
       { 
@@ -355,7 +355,7 @@ export default function NewDialoguePage() {
     setConversation(updatedConversation);
     setMessage('');
     
-    // 模擬虛擬病人回復
+    // 模擬虛擬病人回覆
     setTimeout(() => {
       const replyTime = new Date();
       const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
@@ -364,7 +364,7 @@ export default function NewDialoguePage() {
         ...updatedConversation,
         { 
           role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？',
+          content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
           timestamp: replyTime,
           elapsedSeconds: replySeconds
         }
@@ -373,13 +373,13 @@ export default function NewDialoguePage() {
   };
   
   const handleEndDialogue = () => {
-    // 清除计时器
+    // 清除計時器
     if (timerInterval) {
       clearInterval(timerInterval);
       setTimerInterval(null);
     }
     
-    // 在实际应用中，这里会保存对话记录到数据库
+    // 在實際應用中，這裡會儲存對話記錄到資料庫
     router.push('/dialogue/history');
   };
   
@@ -406,7 +406,7 @@ export default function NewDialoguePage() {
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">加載中...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">載入中...</p>
         </div>
       </div>
     );
@@ -417,15 +417,15 @@ export default function NewDialoguePage() {
       <Navbar user={user} />
       
       <main className="container mx-auto px-4 py-8">
-        {/* 麦克风检查页面 */}
+        {/* 麥克風檢查頁面 */}
         {!micCheckCompleted ? (
           <div className="flex justify-center items-center py-8">
             <MicrophoneCheck onComplete={handleMicCheckComplete} />
           </div>
         ) : (
-          // 原有的场景选择和对话页面
+          // 原有的場景選擇和對話頁面
           !selectedScenario ? (
-            // 场景选择页面
+            // 場景選擇頁面
             <div className="max-w-4xl mx-auto">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 選擇對話場景
@@ -463,12 +463,12 @@ export default function NewDialoguePage() {
               ) : (
                 <div className="text-center py-8">
                   <p className="text-gray-500 dark:text-gray-400">暫無可用場景</p>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">請聯繫管理員添加場景</p>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">請聯絡管理員添加場景</p>
                 </div>
               )}
             </div>
           ) : (
-            // 对话页面
+            // 對話頁面
             <div className="max-w-4xl mx-auto">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
                 <div className="flex justify-between items-start mb-4">
@@ -478,7 +478,7 @@ export default function NewDialoguePage() {
                     </h1>
                   </div>
                   <div className="flex items-center space-x-4">
-                    {/* 计时器显示 - 更明显的样式 */}
+                    {/* 計時器顯示 - 更明顯的樣式 */}
                     <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md">
                       <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -517,7 +517,7 @@ export default function NewDialoguePage() {
                 </div>
               </div>
               
-              {/* 对话区域 - 确保显示时间 */}
+              {/* 對話區域 - 確保顯示時間 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
                 <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
                   {conversation.map((msg, index) => (

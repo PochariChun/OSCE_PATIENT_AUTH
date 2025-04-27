@@ -31,7 +31,7 @@ export default function DialogueHistoryPage() {
   useEffect(() => {
     setMounted(true);
     
-    // 从 localStorage 获取用户信息
+    // 從 localStorage 獲取用戶資訊
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
@@ -42,10 +42,10 @@ export default function DialogueHistoryPage() {
         const userData = JSON.parse(userJson);
         setUser(userData);
         
-        // 获取对话历史
+        // 獲取對話歷史
         await fetchDialogueHistory(userData.id);
       } catch (error) {
-        console.error('获取用户信息失败', error);
+        console.error('獲取用戶資訊失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -55,13 +55,13 @@ export default function DialogueHistoryPage() {
     fetchUser();
   }, [router]);
 
-  // 从 API 获取对话历史数据
+  // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
     try {
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
       
       if (!response.ok) {
-        console.warn(`获取对话历史失败: ${response.status} ${response.statusText}`);
+        console.warn(`獲取對話歷史失敗: ${response.status} ${response.statusText}`);
         setDialogueHistory([]);
         return;
       }
@@ -69,7 +69,7 @@ export default function DialogueHistoryPage() {
       const data = await response.json();
       setDialogueHistory(data);
     } catch (error) {
-      console.error('获取对话历史失败', error);
+      console.error('獲取對話歷史失敗', error);
       setDialogueHistory([]);
     }
   };
@@ -88,7 +88,7 @@ export default function DialogueHistoryPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">加載中...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">載入中...</p>
         </div>
       </div>
     );
