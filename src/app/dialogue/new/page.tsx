@@ -31,12 +31,54 @@ const difficultyMap: Record<number, 'easy' | 'medium' | 'hard'> = {
   4: 'hard'
 };
 
+// 添加 SpeechRecognition 接口定义
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+  error?: any;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+}
+
 export default function NewDialoguePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
   const [selectedScenario, setSelectedScenario] = useState<ScenarioInfo | null>(null);
-  const [conversation, setConversation] = useState<{ role: 'user' | 'assistant' | 'system'; content: string }[]>([]);
+  const [conversation, setConversation] = useState<{ 
+    role: 'user' | 'assistant' | 'system'; 
+    content: string;
+    elapsedSeconds?: number;
+    timestamp?: Date;
+  }[]>([]);
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
   
@@ -45,6 +87,9 @@ export default function NewDialoguePage() {
   const [interimTranscript, setInterimTranscript] = useState('');
   const [finalTranscript, setFinalTranscript] = useState('');
   const [lastSentenceEnd, setLastSentenceEnd] = useState(0);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -86,7 +131,7 @@ export default function NewDialoguePage() {
         recognition.interimResults = true;
         recognition.lang = 'zh-TW'; // 設置為繁體中文
         
-        recognition.onresult = (event) => {
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
           let interim = '';
           let final = '';
           
@@ -124,7 +169,7 @@ export default function NewDialoguePage() {
           setMessage(final.substring(lastSentenceEnd) + interim);
         };
         
-        recognition.onerror = (event) => {
+        recognition.onerror = (event: SpeechRecognitionEvent) => {
           console.error('語音識別錯誤:', event.error);
           setIsListening(false);
         };
@@ -210,9 +255,19 @@ export default function NewDialoguePage() {
           setConversation([
             { 
               role: 'system' as const, 
-              content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。` 
+              content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。`,
+              timestamp: new Date(),
+              elapsedSeconds: 0
             }
           ]);
+          
+          // 启动计时器
+          const now = new Date();
+          setStartTime(now);
+          const interval = setInterval(() => {
+            setElapsedTime(prev => prev + 1);
+          }, 1000);
+          setTimerInterval(interval);
         }
       }
     } catch (error) {
@@ -230,29 +285,52 @@ export default function NewDialoguePage() {
       setConversation([
         { 
           role: 'system' as const, 
-          content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。` 
+          content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。`,
+          timestamp: new Date(),
+          elapsedSeconds: 0
         }
       ]);
+      
+      // 启动计时器
+      const now = new Date();
+      setStartTime(now);
+      const interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+      setTimerInterval(interval);
     }
   };
   
   const handleSendVoiceMessage = (voiceMessage: string) => {
     if (!voiceMessage.trim()) return;
     
+    const now = new Date();
+    const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
+    
     // 添加用戶消息到對話
     const updatedConversation = [
       ...conversation,
-      { role: 'user' as const, content: voiceMessage }
+      { 
+        role: 'user' as const, 
+        content: voiceMessage,
+        timestamp: now,
+        elapsedSeconds: seconds
+      }
     ];
     setConversation(updatedConversation);
     
     // 模擬虛擬病人回復
     setTimeout(() => {
+      const replyTime = new Date();
+      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+      
       setConversation([
         ...updatedConversation,
         { 
           role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？' 
+          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？',
+          timestamp: replyTime,
+          elapsedSeconds: replySeconds
         }
       ]);
     }, 1000);
@@ -261,27 +339,46 @@ export default function NewDialoguePage() {
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
+    const now = new Date();
+    const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
+    
     // 添加用戶消息到對話
     const updatedConversation = [
       ...conversation,
-      { role: 'user' as const, content: message }
+      { 
+        role: 'user' as const, 
+        content: message,
+        timestamp: now,
+        elapsedSeconds: seconds
+      }
     ];
     setConversation(updatedConversation);
     setMessage('');
     
     // 模擬虛擬病人回復
     setTimeout(() => {
+      const replyTime = new Date();
+      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+      
       setConversation([
         ...updatedConversation,
         { 
           role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？' 
+          content: '我明白您的意思了。您能告訴我更多關於這個問題的信息嗎？',
+          timestamp: replyTime,
+          elapsedSeconds: replySeconds
         }
       ]);
     }, 1000);
   };
   
   const handleEndDialogue = () => {
+    // 清除计时器
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      setTimerInterval(null);
+    }
+    
     // 在实际应用中，这里会保存对话记录到数据库
     router.push('/dialogue/history');
   };
@@ -294,6 +391,15 @@ export default function NewDialoguePage() {
     setMicCheckCompleted(true);
     // 如果麦克风检查成功，可以在這裡添加額外處理邏輯
   };
+  
+  // 组件卸载时清除计时器
+  useEffect(() => {
+    return () => {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+    };
+  }, [timerInterval]);
   
   if (loading) {
     return (
@@ -371,14 +477,25 @@ export default function NewDialoguePage() {
                       {selectedScenario.title}
                     </h1>
                   </div>
-                  <button 
-                    onClick={handleEndDialogue}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-shrink-0"
-                  >
-                    結束對話
-                  </button>
+                  <div className="flex items-center space-x-4">
+                    {/* 计时器显示 - 更明显的样式 */}
+                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md">
+                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:
+                        {(elapsedTime % 60).toString().padStart(2, '0')}
+                      </div>
+                    </div>
+                    <button 
+                      onClick={handleEndDialogue}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-shrink-0"
+                    >
+                      結束對話
+                    </button>
+                  </div>
                 </div>
-
               </div>
               
               {/* 虛擬病人頭像區塊 */}
@@ -400,7 +517,7 @@ export default function NewDialoguePage() {
                 </div>
               </div>
               
-              {/* 对话区域 */}
+              {/* 对话区域 - 确保显示时间 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
                 <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
                   {conversation.map((msg, index) => (
@@ -416,6 +533,15 @@ export default function NewDialoguePage() {
                         }`}
                       >
                         <p>{msg.content}</p>
+                        {msg.elapsedSeconds !== undefined && msg.role !== 'system' && (
+                          <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300 text-right">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:
+                            {(msg.elapsedSeconds % 60).toString().padStart(2, '0')}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -483,9 +609,10 @@ export default function NewDialoguePage() {
   );
 }
 
+// 修复全局声明
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
   }
 }
