@@ -97,6 +97,10 @@ export default function NewDialoguePage() {
   const searchParams = useSearchParams();
   const scenarioCode = searchParams.get('scenario');
   
+  const [isRecordButtonPressed, setIsRecordButtonPressed] = useState(false);
+  
+  const [isInitializingSpeech, setIsInitializingSpeech] = useState(false);
+  
   useEffect(() => {
     // 从 localStorage 获取用户信息
     const fetchUser = async () => {
@@ -477,8 +481,8 @@ export default function NewDialoguePage() {
     }, 1000);
   };
   
-  const handleSendMessage = async () => {
-    if (!message.trim() || !conversationId) return;
+  const sendMessageToServer = async (messageText: string) => {
+    if (!messageText.trim() || !conversationId) return;
     
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
@@ -494,16 +498,15 @@ export default function NewDialoguePage() {
     }
     
     // 添加用戶訊息到對話
-    const userMessage = { 
-      role: 'user' as const, 
-      content: message,
+    const userMessage = {
+      role: 'user' as const,
+      content: messageText,
       timestamp: now,
       elapsedSeconds: seconds
     };
     
     const updatedConversation = [...conversation, userMessage];
     setConversation(updatedConversation);
-    setMessage('');
     
     // 保存用户消息到数据库
     try {
@@ -517,7 +520,7 @@ export default function NewDialoguePage() {
           messages: [
             {
               sender: 'user',
-              text: message,
+              text: messageText,
               timestamp: now.toISOString(),
               elapsedSeconds: seconds,
               delayFromPrev,
@@ -597,6 +600,17 @@ export default function NewDialoguePage() {
         console.error('保存虛擬病人訊息時發生錯誤', error);
       }
     }, 1000);
+  };
+  
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    
+    // 发送消息到服务器
+    sendMessageToServer(message.trim());
+    
+    // 清空输入框
+    setMessage('');
+    setInterimTranscript('');
   };
   
   const handleEndDialogue = async () => {
@@ -692,6 +706,205 @@ export default function NewDialoguePage() {
     }
   }, []);
   
+  const startRecording = () => {
+    console.log('开始录音...');
+    
+    // 如果已经在录音，不做任何事
+    if (isListening || isInitializingSpeech) {
+      console.log('已经在录音中或正在初始化，忽略此次请求');
+      return;
+    }
+    
+    // 清空临时文本
+    setInterimTranscript('');
+    setFinalTranscript('');
+    
+    // 检查浏览器支持
+    if (typeof window === 'undefined') return;
+    
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      console.error('您的浏览器不支持语音识别');
+      alert('您的浏览器不支持语音识别功能，请使用 Chrome、Edge 或 Safari 浏览器。');
+      setIsRecordButtonPressed(false);
+      return;
+    }
+    
+    try {
+      // 如果已经有一个语音识别实例在运行，先停止它
+      if (speechRecognition) {
+        try {
+          speechRecognition.stop();
+          console.log('停止现有语音识别实例');
+        } catch (e) {
+          console.error('停止现有语音识别实例失败:', e);
+        }
+        // 确保设置为 null，避免引用旧实例
+        setSpeechRecognition(null);
+      }
+      
+      // 创建新的识别实例
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'zh-TW'; // 设置为繁体中文
+      recognition.interimResults = true; // 获取临时结果
+      recognition.continuous = false; // 不连续识别
+      
+      // 处理结果
+      recognition.onresult = (event) => {
+        let interimText = '';
+        let finalText = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += transcript;
+          } else {
+            interimText += transcript;
+          }
+        }
+        
+        if (interimText) {
+          console.log('识别到临时文本:', interimText);
+          setInterimTranscript(interimText);
+        }
+        
+        if (finalText) {
+          console.log('识别到最终文本:', finalText);
+          setInterimTranscript('');
+          setFinalTranscript(prev => prev + finalText);
+        }
+      };
+      
+      // 处理错误
+      recognition.onerror = (event) => {
+        console.log(`语音识别错误: ${event.error || '未知错误'}`);
+        setIsListening(false);
+        setIsRecordButtonPressed(false);
+      };
+      
+      // 处理结束
+      recognition.onend = () => {
+        console.log('语音识别会话结束');
+        setIsListening(false);
+      };
+      
+      // 启动识别
+      recognition.start();
+      setSpeechRecognition(recognition);
+      setIsListening(true);
+      console.log('语音识别已启动');
+    } catch (error) {
+      console.error('启动语音识别失败:', error);
+      setIsListening(false);
+      setIsRecordButtonPressed(false);
+      alert('启动语音识别失败，请刷新页面重试。');
+    }
+  };
+
+  const stopRecording = () => {
+    console.log('停止录音...');
+    
+    // 如果没有在录音，不做任何事
+    if (!isListening && !speechRecognition) {
+      console.log('没有正在进行的录音，忽略此次请求');
+      setIsRecordButtonPressed(false);
+      return;
+    }
+    
+    // 停止语音识别
+    if (speechRecognition) {
+      try {
+        speechRecognition.stop();
+        console.log('语音识别已停止');
+      } catch (e) {
+        console.error('停止语音识别失败:', e);
+      }
+      // 清除语音识别实例
+      setSpeechRecognition(null);
+    }
+    
+    setIsListening(false);
+    
+    // 延迟一下再发送消息，确保最终文本已更新
+    setTimeout(() => {
+      // 首先检查是否有最终识别文本
+      if (finalTranscript) {
+        console.log('发送最终识别文本:', finalTranscript);
+        sendMessageToServer(finalTranscript);
+        setFinalTranscript(''); // 清空最终文本
+        return;
+      }
+      
+      // 如果没有最终文本，但有临时文本，也发送它
+      if (interimTranscript) {
+        console.log('发送临时识别文本:', interimTranscript);
+        sendMessageToServer(interimTranscript);
+        setInterimTranscript(''); // 清空临时文本
+        return;
+      }
+      
+      console.log('没有识别到文本，不发送消息');
+    }, 100);
+  };
+
+  // 3. 添加按钮事件处理函数
+  const handleRecordButtonMouseDown = (e) => {
+    e.preventDefault();
+    if (isInitializingSpeech || isListening) return; // 防止重复启动
+    
+    setIsRecordButtonPressed(true);
+    setIsInitializingSpeech(true); // 设置初始化标志
+    
+    // 延迟启动录音，确保状态已更新
+    setTimeout(() => {
+      startRecording();
+      setIsInitializingSpeech(false); // 清除初始化标志
+    }, 100);
+  };
+
+  const handleRecordButtonTouchStart = (e) => {
+    e.preventDefault(); // 防止触摸事件触发鼠标事件
+    if (isInitializingSpeech || isListening) return; // 防止重复启动
+    
+    setIsRecordButtonPressed(true);
+    setIsInitializingSpeech(true); // 设置初始化标志
+    
+    // 延迟启动录音，确保状态已更新
+    setTimeout(() => {
+      startRecording();
+      setIsInitializingSpeech(false); // 清除初始化标志
+    }, 100);
+  };
+
+  const handleRecordButtonTouchEnd = (e) => {
+    e.preventDefault();
+    setIsRecordButtonPressed(false);
+    stopRecording();
+  };
+  
+  // 确保组件卸载时清理语音识别实例
+  useEffect(() => {
+    return () => {
+      if (speechRecognition) {
+        try {
+          speechRecognition.stop();
+          console.log('组件卸载，停止语音识别');
+        } catch (e) {
+          // 忽略错误
+        }
+        setSpeechRecognition(null);
+      }
+    };
+  }, []);
+  
+  // 只添加缺失的 handleRecordButtonMouseUp 函数
+  const handleRecordButtonMouseUp = (e) => {
+    e.preventDefault();
+    setIsRecordButtonPressed(false);
+    stopRecording();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -843,49 +1056,65 @@ export default function NewDialoguePage() {
                   ))}
                 </div>
                 
-                <div className="flex space-x-2">
+                <div className="flex items-center space-x-2">
                   <input
                     type="text"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder={isListening ? '正在聆聽...' : '輸入您的回應...'}
-                    className={`flex-grow px-4 py-2 border ${
-                      isListening 
-                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
-                        : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'
-                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white`}
-                    readOnly={isListening}
+                    placeholder="輸入訊息或按住麥克風說話..."
+                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                   />
+                  
+                  {/* 现代化录音按钮 - 使用更流行的麦克风图标 */}
                   <button
-                    onClick={toggleListening}
-                    className={`px-4 py-2 ${
-                      isListening 
-                        ? 'bg-red-600 hover:bg-red-700' 
-                        : 'bg-green-600 hover:bg-green-700'
-                    } text-white font-medium rounded-md transition-colors`}
-                    title={isListening ? '停止語音輸入' : '開始語音輸入'}
+                    onMouseDown={handleRecordButtonMouseDown}
+                    onMouseUp={handleRecordButtonMouseUp}
+                    onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
+                    onTouchStart={handleRecordButtonTouchStart}
+                    onTouchEnd={handleRecordButtonTouchEnd}
+                    className={`p-3 rounded-full transition-all duration-200 ${
+                      isRecordButtonPressed 
+                        ? 'bg-red-600 scale-110' 
+                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
+                    aria-label="按住說話"
                   >
-                    {isListening ? '🛑 停止' : '🎤 語音'}
-                  </button>
-                  <button
-                    onClick={handleSendMessage}
-                    disabled={isListening}
-                    className={`px-4 py-2 ${
-                      isListening 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    } text-white font-medium rounded-md transition-colors`}
-                  >
-                    發送
+                    <div className="relative">
+                      {/* 更现代的麦克风图标 */}
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className={`w-6 h-6 ${isRecordButtonPressed ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}
+                      >
+                        <path d="M12 16c2.206 0 4-1.794 4-4V6c0-2.217-1.785-4.021-3.979-4.021a.933.933 0 0 0-.209.025A4.006 4.006 0 0 0 8 6v6c0 2.206 1.794 4 4 4z" />
+                        <path d="M11 19.931V22h2v-2.069c3.939-.495 7-3.858 7-7.931h-2c0 3.309-2.691 6-6 6s-6-2.691-6-6H4c0 4.072 3.061 7.436 7 7.931z" />
+                      </svg>
+                      
+                      {/* 录音中的动画效果 - 使用红点脉动 */}
+                      {isRecordButtonPressed && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                      )}
+                    </div>
                   </button>
                 </div>
                 
-                {/* 語音狀態指示器 */}
+                {/* 显示语音识别状态 */}
                 {isListening && (
-                  <div className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                    正在聆聽...說話時會自動檢測句子並發送
+                  <div className="mt-2 text-center">
+                    <span className="inline-flex items-center text-sm text-red-500">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                      正在錄音...
+                    </span>
+                    {interimTranscript && (
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
+                        {interimTranscript}...
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
