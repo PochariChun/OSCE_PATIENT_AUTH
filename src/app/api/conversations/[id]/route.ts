@@ -64,14 +64,14 @@ export async function GET(
     // 格式化返回數據
     return NextResponse.json({
       id: conversation.id,
-      title: conversation.title,
-      startedAt: conversation.createdAt,
+      title: conversation.scenario?.title || `對話 #${conversation.id}`,
+      startedAt: conversation.startedAt,
       endedAt: conversation.endedAt,
       score: conversation.score,
       durationSec: conversation.durationSec,
       overtime: conversation.overtime,
-      scenarioTitle: conversation.scenario.title,
-      scenarioDescription: conversation.scenario.description,
+      scenarioTitle: conversation.scenario?.title || '未知場景',
+      scenarioDescription: conversation.scenario?.description || '',
       messages: conversation.messages.map(msg => ({
         id: msg.id,
         role: msg.sender,
@@ -80,7 +80,7 @@ export async function GET(
         elapsedSeconds: msg.elapsedSeconds,
         delayFromPrev: msg.delayFromPrev,
       })),
-      feedback: conversation.feedback,
+      feedback: conversation.reflection || null,
     });
   } catch (error) {
     console.error('獲取對話詳情失敗:', error);

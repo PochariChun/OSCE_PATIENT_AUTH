@@ -31,6 +31,15 @@ interface DialogueDetail {
     elapsedSeconds: number | null;
     delayFromPrev: number | null;
   }[];
+  reflection: string | null;
+  reflections: {
+    id: number;
+    sender: string;
+    text: string;
+    timestamp: string;
+    sourceNodeId: string | null;
+    strategyTag: string | null;
+  }[];
   feedback: string | null;
 }
 
@@ -62,7 +71,7 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
         // 获取对话详情
         await fetchDialogueDetail(dialogueId);
       } catch (error) {
-        console.error('获取用户信息失败', error);
+        console.error('獲取對話詳情失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -165,57 +174,58 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
           </div>
           
           {/* 对话信息 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">對話信息</h2>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">場景：</span>
-                  <span className="text-gray-900 dark:text-white">{dialogue.scenarioTitle}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">開始時間：</span>
-                  <span className="text-gray-900 dark:text-white">{new Date(dialogue.startedAt).toLocaleString('zh-TW')}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">結束時間：</span>
-                  <span className="text-gray-900 dark:text-white">
-                    {dialogue.endedAt ? new Date(dialogue.endedAt).toLocaleString('zh-TW') : '未完成'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">持續時間：</span>
-                  <span className="text-gray-900 dark:text-white">
-                    {dialogue.durationSec ? `${Math.floor(dialogue.durationSec / 60)}分${dialogue.durationSec % 60}秒` : '未完成'}
-                    {dialogue.overtime && <span className="ml-1 text-red-500">⚠️ 超時</span>}
-                  </span>
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">對話信息</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">場景：</span>
+                    <span className="text-gray-900 dark:text-white">{dialogue.scenarioTitle}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">開始時間：</span>
+                    <span className="text-gray-900 dark:text-white">{new Date(dialogue.startedAt).toLocaleString('zh-TW')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">結束時間：</span>
+                    <span className="text-gray-900 dark:text-white">
+                      {dialogue.endedAt ? new Date(dialogue.endedAt).toLocaleString('zh-TW') : '未完成'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">持續時間：</span>
+                    <span className="text-gray-900 dark:text-white">
+                      {dialogue.durationSec ? `${Math.floor(dialogue.durationSec / 60)}分${dialogue.durationSec % 60}秒` : '未完成'}
+                      {dialogue.overtime && <span className="ml-1 text-red-500">⚠️ 超時</span>}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">評分信息</h2>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">總分：</span>
-                  <span className={`font-semibold ${
-                    dialogue.score && dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
-                    dialogue.score && dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
-                    dialogue.score && dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
-                    dialogue.score ? 'text-red-600 dark:text-red-400' :
-                    'text-gray-600 dark:text-gray-400'
-                  }`}>
-                    {dialogue.score !== null ? `${dialogue.score}/100` : '未評分'}
-                  </span>
-                </div>
-                {dialogue.feedback && (
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400 block mb-1">評語：</span>
-                    <p className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-2 rounded-md">
-                      {dialogue.feedback}
-                    </p>
+              
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">總分：</span>
+                    <span className={`font-semibold ${
+                      dialogue.score && dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
+                      dialogue.score && dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
+                      dialogue.score && dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
+                      dialogue.score ? 'text-red-600 dark:text-red-400' :
+                      'text-gray-600 dark:text-gray-400'
+                    }`}>
+                      {dialogue.score !== null ? `${dialogue.score}/100` : '未評分'}
+                    </span>
                   </div>
-                )}
+                  {dialogue.feedback && (
+                    <div>
+                      <span className="text-gray-600 dark:text-gray-400 block mb-1">評語：</span>
+                      <p className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-2 rounded-md">
+                        {dialogue.feedback}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -325,6 +335,59 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
               </div>
             </div>
           </div>
+          
+          {/* 添加反思内容部分 */}
+          {(dialogue.reflection || (dialogue.reflections && dialogue.reflections.length > 0)) && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">反思內容</h2>
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                {dialogue.reflection && (
+                  <div className="mb-4">
+                    <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">總結反思</h3>
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.reflection}</p>
+                  </div>
+                )}
+                
+                {dialogue.reflections && dialogue.reflections.length > 0 && (
+                  <div>
+                    <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">反思對話</h3>
+                    <div className="space-y-3 max-h-60 overflow-y-auto p-2">
+                      {dialogue.reflections.map((item, index) => (
+                        <div 
+                          key={item.id || index} 
+                          className={`p-3 rounded-lg ${
+                            item.sender === 'user' 
+                              ? 'bg-blue-100 dark:bg-blue-900 ml-8' 
+                              : 'bg-gray-100 dark:bg-gray-600 mr-8'
+                          }`}
+                        >
+                          <p className="text-sm">{item.text}</p>
+                          {item.strategyTag && (
+                            <span className="inline-block mt-1 text-xs px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200">
+                              {item.strategyTag}
+                            </span>
+                          )}
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                            {new Date(item.timestamp).toLocaleTimeString('zh-TW')}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* 保留原有的feedback显示，以防有些对话使用旧格式 */}
+          {dialogue.feedback && !dialogue.reflection && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">反思內容</h2>
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.feedback}</p>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
