@@ -35,7 +35,7 @@ export default function NewDialoguePage() {
   const [loading, setLoading] = useState(true);
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
   const [selectedScenario, setSelectedScenario] = useState<ScenarioInfo | null>(null);
-  const [conversation, setConversation] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [conversation, setConversation] = useState<{ role: 'user' | 'assistant' | 'system'; content: string }[]>([]);
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
   
@@ -205,11 +205,11 @@ export default function NewDialoguePage() {
         const scenario = formattedScenarios.find((s: any) => s.scenarioCode === scenarioCode);
         if (scenario) {
           setSelectedScenario(scenario);
-          // 初始化对话
+          // 初始化对话，使用系统提示而非虚拟病人的问候语
           setConversation([
             { 
-              role: 'assistant' as const, 
-              content: `您好，我是${scenario.title}的虛擬患者。${scenario.patientInfo}` 
+              role: 'system' as const, 
+              content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。` 
             }
           ]);
         }
@@ -225,11 +225,11 @@ export default function NewDialoguePage() {
     const scenario = scenarios.find(s => s.scenarioCode === scenarioCode);
     if (scenario) {
       setSelectedScenario(scenario);
-      // 初始化对话
+      // 初始化对话，使用系统提示而非虚拟病人的问候语
       setConversation([
         { 
-          role: 'assistant' as const, 
-          content: `您好，我是${scenario.title}的虛擬患者。${scenario.patientInfo}` 
+          role: 'system' as const, 
+          content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。` 
         }
       ]);
     }
@@ -349,10 +349,6 @@ export default function NewDialoguePage() {
                         {scenario.description}
                       </p>
                       <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
-                          {scenario.patientInfo}
-                        </p>
                       </div>
                     </div>
                   ))}
@@ -373,9 +369,6 @@ export default function NewDialoguePage() {
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                       {selectedScenario.title}
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                      {selectedScenario.description}
-                    </p>
                   </div>
                   <button 
                     onClick={handleEndDialogue}
@@ -384,12 +377,7 @@ export default function NewDialoguePage() {
                     結束對話
                   </button>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium text-gray-700 dark:text-gray-300">患者資訊：</span> 
-                    {selectedScenario.patientInfo}
-                  </p>
-                </div>
+
               </div>
               
               {/* 对话区域 */}
@@ -458,20 +446,6 @@ export default function NewDialoguePage() {
                     正在聆聽...說話時會自動檢測句子並發送
                   </div>
                 )}
-              </div>
-              
-              {/* 提示和指导 */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  提示和指导
-                </h2>
-                <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                  <li>• 保持专业和同理心，倾听患者的担忧</li>
-                  <li>• 使用患者能理解的语言解释医疗概念</li>
-                  <li>• 确认患者理解您提供的信息</li>
-                  <li>• 给予患者足够的时间表达自己</li>
-                  <li>• 提供明确的后续步骤和建议</li>
-                </ul>
               </div>
             </div>
           )

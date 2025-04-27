@@ -217,14 +217,45 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                       {dialogue.score !== null ? `${dialogue.score}/100` : '未評分'}
                     </span>
                   </div>
-                  {dialogue.feedback && (
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400 block mb-1">評語：</span>
-                      <p className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-2 rounded-md">
-                        {dialogue.feedback}
-                      </p>
+                  
+                  {/* 添加評分等級 */}
+                  {dialogue.score && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">等級：</span>
+                      <span className={`font-semibold ${
+                        dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
+                        dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
+                        dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
+                        'text-red-600 dark:text-red-400'
+                      }`}>
+                        {dialogue.score >= 90 ? 'A (優秀)' :
+                         dialogue.score >= 80 ? 'B (良好)' :
+                         dialogue.score >= 70 ? 'C (及格)' :
+                         'D (需加強)'}
+                      </span>
                     </div>
                   )}
+                  
+                  {/* 添加評分時間 */}
+                  {dialogue.endedAt && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">評分時間：</span>
+                      <span className="text-gray-900 dark:text-white">
+                        {new Date(dialogue.endedAt).toLocaleString('zh-TW')}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* 添加評分說明 */}
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {dialogue.score === null 
+                        ? '此對話尚未評分，完成對話後系統將自動評分。' 
+                        : dialogue.score >= 80 
+                          ? '恭喜！您在此次對話中表現優異。' 
+                          : '繼續練習可以提高您的對話技巧。'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -339,7 +370,7 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
           {/* 添加反思内容部分 */}
           {(dialogue.reflection || (dialogue.reflections && dialogue.reflections.length > 0)) && (
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">反思內容</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評語</h2>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
                 {dialogue.reflection && (
                   <div className="mb-4">
@@ -382,7 +413,7 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
           {/* 保留原有的feedback显示，以防有些对话使用旧格式 */}
           {dialogue.feedback && !dialogue.reflection && (
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">反思內容</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評語</h2>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
                 <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.feedback}</p>
               </div>
