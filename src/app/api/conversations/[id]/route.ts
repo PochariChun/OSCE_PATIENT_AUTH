@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyJWT } from '@/lib/jwt';
 
+// 使用 dynamic 配置来解决参数问题
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: NextRequest,
   context: { params: { id: string } }
 ) {
   try {
-    // 临时禁用身份验证，仅用于测试
+    // 臨時禁用身份驗證，僅用於測試
     // const token = request.cookies.get('auth_token')?.value;
     // if (!token) {
     //   return NextResponse.json({ error: '未授權訪問' }, { status: 401 });
@@ -18,17 +21,20 @@ export async function GET(
     //   return NextResponse.json({ error: '無效的令牌' }, { status: 401 });
     // }
     
-    // 临时使用请求参数中的用户ID
+    // 臨時使用請求參數中的用戶ID
     const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get('userId');
     
-    // 正確獲取 id 參數
-    const conversationId = parseInt(context.params.id);
+    // 從 URL 路徑直接獲取 ID
+    const pathParts = request.nextUrl.pathname.split('/');
+    const idFromPath = pathParts[pathParts.length - 1];
+    const conversationId = parseInt(idFromPath);
+    
     if (isNaN(conversationId)) {
       return NextResponse.json({ error: '無效的對話ID' }, { status: 400 });
     }
 
-    // 获取对话详情
+    // 獲取對話詳情
     const conversation = await prisma.conversation.findUnique({
       where: {
         id: conversationId,
@@ -88,19 +94,25 @@ export async function GET(
   }
 }
 
-export async function PATCH(request: Request, context: { params: { id: string } }) {
+export async function PATCH(
+  request: Request,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = context.params;
-    const conversationId = parseInt(id);
+    // 從 URL 路徑直接獲取 ID
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const idFromPath = pathParts[pathParts.length - 1];
+    const conversationId = parseInt(idFromPath);
     
     if (isNaN(conversationId)) {
-      return NextResponse.json({ error: '无效的会话ID' }, { status: 400 });
+      return NextResponse.json({ error: '無效的對話ID' }, { status: 400 });
     }
     
     const body = await request.json();
     const { endedAt, durationSec, overtime } = body;
     
-    // 更新会话
+    // 更新會話
     const updatedConversation = await prisma.conversation.update({
       where: { id: conversationId },
       data: {
@@ -112,7 +124,7 @@ export async function PATCH(request: Request, context: { params: { id: string } 
     
     return NextResponse.json(updatedConversation);
   } catch (error) {
-    console.error('更新会话失败:', error);
-    return NextResponse.json({ error: '更新会话失败', details: error }, { status: 500 });
+    console.error('更新會話失敗:', error);
+    return NextResponse.json({ error: '更新會話失敗', details: error }, { status: 500 });
   }
 } 
