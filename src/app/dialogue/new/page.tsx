@@ -91,6 +91,8 @@ export default function NewDialoguePage() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   
+  const [conversationId, setConversationId] = useState<number | null>(null);
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const scenarioCode = searchParams.get('scenario');
@@ -101,10 +103,12 @@ export default function NewDialoguePage() {
       try {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
+          console.error('未登入，重定向到登入頁面');
           throw new Error('未登入');
         }
         
         const userData = JSON.parse(userJson);
+        console.log('已獲取用戶資料:', userData);
         setUser(userData);
         
         // 获取场景数据
@@ -277,7 +281,7 @@ export default function NewDialoguePage() {
     }
   };
   
-  const handleScenarioSelect = (scenarioCode: string) => {
+  const handleScenarioSelect = async (scenarioCode: string) => {
     const scenario = scenarios.find(s => s.scenarioCode === scenarioCode);
     if (scenario) {
       setSelectedScenario(scenario);
@@ -298,85 +302,343 @@ export default function NewDialoguePage() {
         setElapsedTime(prev => prev + 1);
       }, 1000);
       setTimerInterval(interval);
+      
+      // 添加日誌以追蹤執行流程
+      console.log('準備創建新對話，場景ID:', scenario.id, '用戶ID:', user?.id);
+      
+      // 创建新的会话记录
+      try {
+        // 確保用戶ID存在
+        if (!user?.id) {
+          console.error('用戶ID不存在，無法創建對話');
+          return;
+        }
+        
+        const response = await fetch('/api/conversations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            scenarioId: scenario.id,
+            role: '考生',
+            prompt: '開始對話',
+            response: '請開始與虛擬病人對話',
+            topic: scenario.title,
+            triggerType: '系統',
+            orderIndex: 0
+          }),
+        });
+        
+        console.log('對話創建請求已發送，狀態碼:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('創建會話失敗', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+          
+          // 顯示錯誤訊息給用戶
+          alert(`創建對話失敗: ${response.statusText}`);
+        } else {
+          const data = await response.json();
+          console.log('會話創建成功，ID:', data.id);
+          setConversationId(data.id);
+        }
+      } catch (error) {
+        console.error('創建會話時發生錯誤', error);
+        // 顯示錯誤訊息給用戶
+        alert(`創建對話時發生錯誤: ${(error as Error).message}`);
+      }
     }
   };
   
-  const handleSendVoiceMessage = (voiceMessage: string) => {
-    if (!voiceMessage.trim()) return;
+  const handleSendVoiceMessage = async (voiceMessage: string) => {
+    if (!voiceMessage.trim() || !conversationId) return;
     
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
+    // 计算与上一条消息的延迟
+    let delayFromPrev = 0;
+    let isDelayed = false;
+    const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
+    
+    if (lastMessage && lastMessage.timestamp) {
+      delayFromPrev = Math.floor((now.getTime() - lastMessage.timestamp.getTime()) / 1000);
+      isDelayed = delayFromPrev > 10;
+    }
+    
     // 添加用戶訊息到對話
-    const updatedConversation = [
-      ...conversation,
-      { 
-        role: 'user' as const, 
-        content: voiceMessage,
-        timestamp: now,
-        elapsedSeconds: seconds
-      }
-    ];
+    const userMessage = { 
+      role: 'user' as const, 
+      content: voiceMessage,
+      timestamp: now,
+      elapsedSeconds: seconds
+    };
+    
+    const updatedConversation = [...conversation, userMessage];
     setConversation(updatedConversation);
     
+    // 保存用户语音消息到数据库
+    try {
+      const apiUrl = `/api/conversations/${conversationId}/messages`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [
+            {
+              sender: 'user',
+              text: voiceMessage,
+              timestamp: now.toISOString(),
+              elapsedSeconds: seconds,
+              delayFromPrev,
+              isDelayed
+            }
+          ] 
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('保存用戶語音訊息失敗', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+      } else {
+        const data = await response.json();
+        console.log('用戶語音訊息保存成功', data);
+      }
+    } catch (error) {
+      console.error('保存用戶語音訊息時發生錯誤', error);
+    }
+    
     // 模擬虛擬病人回覆
-    setTimeout(() => {
+    setTimeout(async () => {
       const replyTime = new Date();
       const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
       
-      setConversation([
-        ...updatedConversation,
-        { 
-          role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
-          timestamp: replyTime,
-          elapsedSeconds: replySeconds
+      const assistantMessage = { 
+        role: 'assistant' as const, 
+        content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
+        timestamp: replyTime,
+        elapsedSeconds: replySeconds
+      };
+      
+      setConversation([...updatedConversation, assistantMessage]);
+      
+      // 计算虚拟病人回复的延迟
+      const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
+      const patientIsDelayed = patientDelayFromPrev > 3;
+      
+      // 保存虚拟病人消息到数据库
+      try {
+        const apiUrl = `/api/conversations/${conversationId}/messages`;
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            messages: [
+              {
+                sender: 'patient',
+                text: assistantMessage.content,
+                timestamp: replyTime.toISOString(),
+                elapsedSeconds: replySeconds,
+                delayFromPrev: patientDelayFromPrev,
+                isDelayed: patientIsDelayed
+              }
+            ] 
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('保存虛擬病人訊息失敗', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+        } else {
+          const data = await response.json();
+          console.log('虛擬病人訊息保存成功', data);
         }
-      ]);
+      } catch (error) {
+        console.error('保存虛擬病人訊息時發生錯誤', error);
+      }
     }, 1000);
   };
   
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
+  const handleSendMessage = async () => {
+    if (!message.trim() || !conversationId) return;
     
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
+    // 计算与上一条消息的延迟
+    let delayFromPrev = 0;
+    let isDelayed = false;
+    const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
+    
+    if (lastMessage && lastMessage.timestamp) {
+      delayFromPrev = Math.floor((now.getTime() - lastMessage.timestamp.getTime()) / 1000);
+      isDelayed = delayFromPrev > 10;
+    }
+    
     // 添加用戶訊息到對話
-    const updatedConversation = [
-      ...conversation,
-      { 
-        role: 'user' as const, 
-        content: message,
-        timestamp: now,
-        elapsedSeconds: seconds
-      }
-    ];
+    const userMessage = { 
+      role: 'user' as const, 
+      content: message,
+      timestamp: now,
+      elapsedSeconds: seconds
+    };
+    
+    const updatedConversation = [...conversation, userMessage];
     setConversation(updatedConversation);
     setMessage('');
     
+    // 保存用户消息到数据库
+    try {
+      const apiUrl = `/api/conversations/${conversationId}/messages`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [
+            {
+              sender: 'user',
+              text: message,
+              timestamp: now.toISOString(),
+              elapsedSeconds: seconds,
+              delayFromPrev,
+              isDelayed
+            }
+          ] 
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('保存用戶訊息失敗', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+      } else {
+        const data = await response.json();
+        console.log('用戶訊息保存成功', data);
+      }
+    } catch (error) {
+      console.error('保存用戶訊息時發生錯誤', error);
+    }
+    
     // 模擬虛擬病人回覆
-    setTimeout(() => {
+    setTimeout(async () => {
       const replyTime = new Date();
       const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
       
-      setConversation([
-        ...updatedConversation,
-        { 
-          role: 'assistant' as const, 
-          content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
-          timestamp: replyTime,
-          elapsedSeconds: replySeconds
+      const assistantMessage = { 
+        role: 'assistant' as const, 
+        content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
+        timestamp: replyTime,
+        elapsedSeconds: replySeconds
+      };
+      
+      setConversation([...updatedConversation, assistantMessage]);
+      
+      // 计算虚拟病人回复的延迟
+      const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
+      const patientIsDelayed = patientDelayFromPrev > 3;
+      
+      // 保存虚拟病人消息到数据库
+      try {
+        const apiUrl = `/api/conversations/${conversationId}/messages`;
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            messages: [
+              {
+                sender: 'patient',
+                text: assistantMessage.content,
+                timestamp: replyTime.toISOString(),
+                elapsedSeconds: replySeconds,
+                delayFromPrev: patientDelayFromPrev,
+                isDelayed: patientIsDelayed
+              }
+            ] 
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('保存虛擬病人訊息失敗', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+        } else {
+          const data = await response.json();
+          console.log('虛擬病人訊息保存成功', data);
         }
-      ]);
+      } catch (error) {
+        console.error('保存虛擬病人訊息時發生錯誤', error);
+      }
     }, 1000);
   };
   
-  const handleEndDialogue = () => {
+  const handleEndDialogue = async () => {
     // 清除計時器
     if (timerInterval) {
       clearInterval(timerInterval);
       setTimerInterval(null);
+    }
+    
+    if (conversationId) {
+      console.log('準備更新對話結束時間，對話ID:', conversationId);
+      
+      try {
+        const response = await fetch(`/api/conversations/${conversationId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            endedAt: new Date().toISOString(),
+            durationSec: elapsedTime,
+            overtime: elapsedTime > 600, // 10分钟 = 600秒
+          }),
+        });
+        
+        console.log('對話結束時間更新請求已發送，狀態碼:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('更新對話結束時間失敗', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+        } else {
+          console.log('對話結束時間更新成功');
+        }
+      } catch (error) {
+        console.error('更新對話結束時間失敗', error);
+      }
+    } else {
+      console.warn('無法更新對話結束時間：對話ID不存在');
     }
     
     // 在實際應用中，這裡會儲存對話記錄到資料庫
@@ -400,6 +662,31 @@ export default function NewDialoguePage() {
       }
     };
   }, [timerInterval]);
+  
+  // 添加網絡請求監控
+  useEffect(() => {
+    // 只在開發環境中啟用
+    if (process.env.NODE_ENV === 'development') {
+      const originalFetch = window.fetch;
+      window.fetch = async function(...args) {
+        const [url, options] = args;
+        console.log(`🌐 發送請求: ${options?.method || 'GET'} ${url}`, options?.body ? JSON.parse(options.body as string) : '');
+        
+        try {
+          const response = await originalFetch.apply(this, args);
+          console.log(`✅ 請求成功: ${options?.method || 'GET'} ${url}`, response.status);
+          return response;
+        } catch (error) {
+          console.error(`❌ 請求失敗: ${options?.method || 'GET'} ${url}`, error);
+          throw error;
+        }
+      };
+      
+      return () => {
+        window.fetch = originalFetch;
+      };
+    }
+  }, []);
   
   if (loading) {
     return (

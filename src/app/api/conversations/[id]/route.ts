@@ -86,4 +86,33 @@ export async function GET(
     console.error('獲取對話詳情失敗:', error);
     return NextResponse.json({ error: '伺服器錯誤' }, { status: 500 });
   }
+}
+
+export async function PATCH(request: Request, context: { params: { id: string } }) {
+  try {
+    const { id } = context.params;
+    const conversationId = parseInt(id);
+    
+    if (isNaN(conversationId)) {
+      return NextResponse.json({ error: '无效的会话ID' }, { status: 400 });
+    }
+    
+    const body = await request.json();
+    const { endedAt, durationSec, overtime } = body;
+    
+    // 更新会话
+    const updatedConversation = await prisma.conversation.update({
+      where: { id: conversationId },
+      data: {
+        endedAt: endedAt ? new Date(endedAt) : undefined,
+        durationSec,
+        overtime,
+      },
+    });
+    
+    return NextResponse.json(updatedConversation);
+  } catch (error) {
+    console.error('更新会话失败:', error);
+    return NextResponse.json({ error: '更新会话失败', details: error }, { status: 500 });
+  }
 } 
