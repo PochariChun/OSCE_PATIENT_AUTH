@@ -1028,10 +1028,10 @@ export default function NewDialoguePage() {
                     </p>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                    {/* 計時器顯示 - 更明顯的樣式 */}
-                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md w-full sm:w-auto">
-                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center justify-center sm:justify-start">
+                  <div className="flex flex-row justify-between items-center gap-3 w-full sm:w-auto">
+                    {/* 計時器顯示 */}
+                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md flex-1 sm:flex-none">
+                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -1042,7 +1042,7 @@ export default function NewDialoguePage() {
                     
                     <button 
                       onClick={handleEndDialogue}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors w-full sm:w-auto"
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none"
                     >
                       結束對話
                     </button>
@@ -1050,28 +1050,110 @@ export default function NewDialoguePage() {
                 </div>
               </div>
               
-              {/* 虛擬病人頭像區塊 */}
+              {/* 虛擬病人頭像區塊 - 添加点击功能并防止长按下载 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
-                <div className="relative w-full max-w-md">
+                <div 
+                  className="relative w-full max-w-md cursor-pointer select-none" 
+                  onMouseDown={handleRecordButtonMouseDown}
+                  onMouseUp={handleRecordButtonMouseUp}
+                  onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
+                  onTouchStart={(e) => {
+                    e.preventDefault(); // 防止默认行为
+                    handleRecordButtonTouchStart(e);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault(); // 防止默认行为
+                    handleRecordButtonTouchEnd(e);
+                  }}
+                  onContextMenu={(e) => e.preventDefault()} // 防止右键菜单
+                >
                   <Image
                     src="/image/virtualpatient.png"
                     alt="虛擬病人"
                     width={400}
                     height={400}
-                    className="rounded-lg mx-auto"
+                    className="rounded-lg mx-auto pointer-events-none" // 禁用图片的指针事件
                     priority
+                    draggable="false" // 禁止拖拽
+                    style={{ WebkitTouchCallout: 'none' }} // 禁止iOS长按呼出菜单
                   />
                   {isListening && (
                     <div className="absolute bottom-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm animate-pulse">
                       正在聆聽...
                     </div>
                   )}
+                  {/* 添加提示信息 */}
+                  <div className="absolute bottom-2 left-0 right-0 text-center text-white bg-black bg-opacity-50 py-1 rounded-b-lg pointer-events-none">
+                    點擊頭像開始錄音
+                  </div>
                 </div>
               </div>
               
-              {/* 對話區域 - 確保顯示時間 */}
+              {/* 對話區域 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
+                {/* 輸入區域 */}
+                <div className="flex items-center space-x-2 mb-4">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="輸入訊息或按住麥克風說話..."
+                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                  />
+                  
+                  {/* 錄音按鈕 */}
+                  <button
+                    onMouseDown={handleRecordButtonMouseDown}
+                    onMouseUp={handleRecordButtonMouseUp}
+                    onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
+                    onTouchStart={handleRecordButtonTouchStart}
+                    onTouchEnd={handleRecordButtonTouchEnd}
+                    className={`p-3 rounded-full transition-all duration-200 ${
+                      isRecordButtonPressed 
+                        ? 'bg-red-600 scale-110' 
+                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
+                    aria-label="按住說話"
+                  >
+                    <div className="relative">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className={`w-6 h-6 ${isRecordButtonPressed ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}
+                      >
+                        <path d="M12 16c2.206 0 4-1.794 4-4V6c0-2.217-1.785-4.021-3.979-4.021a.933.933 0 0 0-.209.025A4.006 4.006 0 0 0 8 6v6c0 2.206 1.794 4 4 4z" />
+                        <path d="M11 19.931V22h2v-2.069c3.939-.495 7-3.858 7-7.931h-2c0 3.309-2.691 6-6 6s-6-2.691-6-6H4c0 4.072 3.061 7.436 7 7.931z" />
+                      </svg>
+                      
+                      {isRecordButtonPressed && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                </div>
+                
+                {/* 語音識別狀態 */}
+                {isListening && (
+                  <div className="mb-4 text-center">
+                    <span className="inline-flex items-center text-sm text-red-500">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                      正在錄音...
+                    </span>
+                    {interimTranscript && (
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
+                        {interimTranscript}...
+                      </p>
+                    )}
+                  </div>
+                )}
+                
+                {/* 对话显示区域 - 移到输入区域下方 */}
+                <div className="space-y-4 max-h-96 overflow-y-auto">
                   {conversation.map((msg, index) => (
                     <div 
                       key={index} 
@@ -1098,68 +1180,6 @@ export default function NewDialoguePage() {
                     </div>
                   ))}
                 </div>
-                
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="輸入訊息或按住麥克風說話..."
-                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-                  />
-                  
-                  {/* 现代化录音按钮 - 使用更流行的麦克风图标 */}
-                  <button
-                    onMouseDown={handleRecordButtonMouseDown}
-                    onMouseUp={handleRecordButtonMouseUp}
-                    onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
-                    onTouchStart={handleRecordButtonTouchStart}
-                    onTouchEnd={handleRecordButtonTouchEnd}
-                    className={`p-3 rounded-full transition-all duration-200 ${
-                      isRecordButtonPressed 
-                        ? 'bg-red-600 scale-110' 
-                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
-                    }`}
-                    aria-label="按住說話"
-                  >
-                    <div className="relative">
-                      {/* 更现代的麦克风图标 */}
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="currentColor" 
-                        className={`w-6 h-6 ${isRecordButtonPressed ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}
-                      >
-                        <path d="M12 16c2.206 0 4-1.794 4-4V6c0-2.217-1.785-4.021-3.979-4.021a.933.933 0 0 0-.209.025A4.006 4.006 0 0 0 8 6v6c0 2.206 1.794 4 4 4z" />
-                        <path d="M11 19.931V22h2v-2.069c3.939-.495 7-3.858 7-7.931h-2c0 3.309-2.691 6-6 6s-6-2.691-6-6H4c0 4.072 3.061 7.436 7 7.931z" />
-                      </svg>
-                      
-                      {/* 录音中的动画效果 - 使用红点脉动 */}
-                      {isRecordButtonPressed && (
-                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                </div>
-                
-                {/* 显示语音识别状态 */}
-                {isListening && (
-                  <div className="mt-2 text-center">
-                    <span className="inline-flex items-center text-sm text-red-500">
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
-                      正在錄音...
-                    </span>
-                    {interimTranscript && (
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
-                        {interimTranscript}...
-                      </p>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           )
