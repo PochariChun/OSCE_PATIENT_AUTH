@@ -101,6 +101,8 @@ export default function NewDialoguePage() {
   
   const [isInitializingSpeech, setIsInitializingSpeech] = useState(false);
   
+  const [lastRecognizedText, setLastRecognizedText] = useState('');
+  
   useEffect(() => {
     // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
@@ -129,7 +131,10 @@ export default function NewDialoguePage() {
   }, [router]);
   
   useEffect(() => {
-    if (micCheckCompleted && typeof window !== 'undefined') {
+    // 只在 micCheckCompleted 為 true 且沒有現有的 speechRecognition 實例時初始化
+    if (micCheckCompleted && typeof window !== 'undefined' && !speechRecognition) {
+      console.log('初始化語音識別功能');
+      
       // 檢查瀏覽器是否支持語音識別
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       
@@ -194,35 +199,32 @@ export default function NewDialoguePage() {
         console.warn('您的瀏覽器不支持語音識別');
       }
     }
-  }, [micCheckCompleted]);
+  }, [micCheckCompleted, speechRecognition]);
   
   useEffect(() => {
-    if (speechRecognition) {
-      if (isListening) {
-        try {
-          speechRecognition.start();
-        } catch (error) {
-          // 處理可能的錯誤，例如已經在監聽中
-          console.log('語音識別已經在運行中或發生錯誤', error);
-        }
-      } else {
-        try {
-          speechRecognition.stop();
-          // 重置語音識別相關狀態
-          setInterimTranscript('');
-          setFinalTranscript('');
-          setLastSentenceEnd(0);
-          setMessage('');
-        } catch (error) {
-          console.log('停止語音識別時發生錯誤', error);
-        }
+    // 移除這裡的啟動邏輯，只保留停止邏輯
+    if (speechRecognition && !isListening) {
+      try {
+        speechRecognition.stop();
+        console.log('通過 useEffect 停止語音識別');
+        // 重置語音識別相關狀態
+        setInterimTranscript('');
+        setLastSentenceEnd(0);
+        setMessage('');
+      } catch (error) {
+        console.log('停止語音識別時發生錯誤', error);
       }
     }
     
     return () => {
       // 組件卸載時停止語音識別
-      if (speechRecognition && isListening) {
-        speechRecognition.stop();
+      if (speechRecognition) {
+        try {
+          speechRecognition.stop();
+          console.log('組件卸載時停止語音識別');
+        } catch (e) {
+          // 忽略錯誤
+        }
       }
     };
   }, [isListening, speechRecognition]);
@@ -715,12 +717,16 @@ export default function NewDialoguePage() {
       return;
     }
     
-    // 清空臨時文本
+    setIsInitializingSpeech(true); // 標記正在初始化
+    
+    // 清空臨時文本，但不清空最終文本
     setInterimTranscript('');
-    setFinalTranscript('');
     
     // 檢查瀏覽器支持
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      setIsInitializingSpeech(false);
+      return;
+    }
     
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
@@ -728,6 +734,7 @@ export default function NewDialoguePage() {
       console.error('您的瀏覽器不支持語音識別');
       alert('您的瀏覽器不支持語音識別功能，請使用 Chrome、Edge 或 Safari 瀏覽器。');
       setIsRecordButtonPressed(false);
+      setIsInitializingSpeech(false);
       return;
     }
     
@@ -740,15 +747,13 @@ export default function NewDialoguePage() {
         } catch (e) {
           console.error('停止現有語音識別實例失敗:', e);
         }
-        // 確保設置為 null，避免引用舊實例
-        setSpeechRecognition(null);
       }
       
       // 創建新的識別實例
       const recognition = new SpeechRecognition();
       recognition.lang = 'zh-TW'; // 設置為繁體中文
       recognition.interimResults = true; // 獲取臨時結果
-      recognition.continuous = false; // 不連續識別
+      recognition.continuous = true; // 改為連續識別模式
       
       // 處理結果
       recognition.onresult = (event) => {
@@ -786,12 +791,27 @@ export default function NewDialoguePage() {
         console.log(`語音識別錯誤: ${event.error || '未知錯誤'}`);
         setIsListening(false);
         setIsRecordButtonPressed(false);
+        setIsInitializingSpeech(false);
       };
       
       // 處理結束
       recognition.onend = () => {
         console.log('語音識別會話結束');
-        setIsListening(false);
+        
+        // 如果用戶仍在按住按鈕，自動重啟識別
+        if (isRecordButtonPressed) {
+          try {
+            recognition.start();
+            console.log('自動重啟語音識別');
+          } catch (e) {
+            console.error('重啟語音識別失敗:', e);
+            setIsListening(false);
+          }
+        } else {
+          setIsListening(false);
+        }
+        
+        setIsInitializingSpeech(false);
       };
       
       // 啟動識別
@@ -799,10 +819,12 @@ export default function NewDialoguePage() {
       setSpeechRecognition(recognition);
       setIsListening(true);
       console.log('語音識別已啟動');
+      setIsInitializingSpeech(false);
     } catch (error) {
       console.error('啟動語音識別失敗:', error);
       setIsListening(false);
       setIsRecordButtonPressed(false);
+      setIsInitializingSpeech(false);
       alert('啟動語音識別失敗，請刷新頁面重試。');
     }
   };
@@ -813,8 +835,11 @@ export default function NewDialoguePage() {
     // 保存當前的臨時文本和最終文本，以防在停止過程中丟失
     const currentInterimTranscript = interimTranscript;
     const currentFinalTranscript = finalTranscript;
+    const currentLastRecognizedText = lastRecognizedText;
+    
     console.log('停止錄音時的最終文本:', currentFinalTranscript);
     console.log('停止錄音時的臨時文本:', currentInterimTranscript);
+    console.log('停止錄音時的最後識別文本:', currentLastRecognizedText);
     
     // 如果沒有在錄音，不做任何事
     if (!isListening && !speechRecognition) {
@@ -831,99 +856,90 @@ export default function NewDialoguePage() {
       } catch (e) {
         console.error('停止語音識別失敗:', e);
       }
-      // 清除語音識別實例
-      setSpeechRecognition(null);
     }
     
     setIsListening(false);
     
     // 增加更長的延遲，確保最終文本已更新
     setTimeout(() => {
-      // 首先檢查是否有最終識別文本
-      if (currentFinalTranscript) {
-        console.log('發送保存的最終識別文本:', currentFinalTranscript);
-        sendMessageToServer(currentFinalTranscript);
-        setFinalTranscript(''); // 清空最終文本
-        return;
-      }
+      // 檢查是否有文本可以發送
+      const textToSend = currentFinalTranscript || currentInterimTranscript || currentLastRecognizedText;
       
-      // 如果沒有最終文本，但有保存的臨時文本，也發送它
-      if (currentInterimTranscript) {
-        console.log('發送保存的臨時識別文本:', currentInterimTranscript);
-        sendMessageToServer(currentInterimTranscript);
-        setInterimTranscript(''); // 清空臨時文本
-        return;
+      if (textToSend) {
+        console.log('發送識別文本:', textToSend);
+        sendMessageToServer(textToSend);
+        
+        // 清空所有文本
+        setFinalTranscript('');
+        setInterimTranscript('');
+        setLastRecognizedText('');
+      } else {
+        console.log('沒有識別到文本，不發送消息');
       }
-      
-      // 如果沒有保存的臨時文本，但有當前的臨時文本，也發送它
-      if (interimTranscript) {
-        console.log('發送當前臨時識別文本:', interimTranscript);
-        sendMessageToServer(interimTranscript);
-        setInterimTranscript(''); // 清空臨時文本
-        return;
-      }
-      
-      console.log('沒有識別到文本，不發送消息');
-    }, 300); // 增加延遲時間，給最終文本更多時間更新
+    }, 300);
   };
 
   // 修改按鈕事件處理函數
-  const handleRecordButtonMouseDown = (e) => {
+  const handleRecordButtonMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isInitializingSpeech || isListening) return; // 防止重複啟動
     
+    console.log('按下錄音按鈕');
     setIsRecordButtonPressed(true);
-    setIsInitializingSpeech(true); // 設置初始化標誌
     
-    // 延遲啟動錄音，確保狀態已更新
-    setTimeout(() => {
-      startRecording();
-      setIsInitializingSpeech(false); // 清除初始化標誌
-    }, 100);
+    // 設置開始時間
+    if (!startTime) {
+      setStartTime(new Date());
+      
+      // 啟動計時器
+      const interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+      
+      setTimerInterval(interval);
+    }
+    
+    startRecording();
   };
 
-  const handleRecordButtonTouchStart = (e) => {
+  // 添加回被刪除的 handleRecordButtonMouseUp 函數
+  const handleRecordButtonMouseUp = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('釋放錄音按鈕');
+    setIsRecordButtonPressed(false);
+    stopRecording();
+  };
+
+  // 觸摸事件處理函數
+  const handleRecordButtonTouchStart = (e: React.TouchEvent) => {
     e.preventDefault(); // 防止觸摸事件觸發滑鼠事件
     if (isInitializingSpeech || isListening) return; // 防止重複啟動
     
+    console.log('觸摸開始錄音按鈕');
     setIsRecordButtonPressed(true);
-    setIsInitializingSpeech(true); // 設置初始化標誌
     
-    // 延遲啟動錄音，確保狀態已更新
-    setTimeout(() => {
-      startRecording();
-      setIsInitializingSpeech(false); // 清除初始化標誌
-    }, 100);
+    // 設置開始時間
+    if (!startTime) {
+      setStartTime(new Date());
+      
+      // 啟動計時器
+      const interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+      
+      setTimerInterval(interval);
+    }
+    
+    startRecording();
   };
 
-  const handleRecordButtonTouchEnd = (e) => {
+  const handleRecordButtonTouchEnd = (e: React.TouchEvent) => {
     e.preventDefault();
+    console.log('觸摸結束錄音按鈕');
     setIsRecordButtonPressed(false);
     stopRecording();
   };
   
-  // 确保组件卸载时清理语音识别实例
-  useEffect(() => {
-    return () => {
-      if (speechRecognition) {
-        try {
-          speechRecognition.stop();
-          console.log('組件卸載，停止語音識別');
-        } catch (e) {
-          // 忽略錯誤
-        }
-        setSpeechRecognition(null);
-      }
-    };
-  }, []);
-  
-  // 只添加缺失的 handleRecordButtonMouseUp 函数
-  const handleRecordButtonMouseUp = (e) => {
-    e.preventDefault();
-    setIsRecordButtonPressed(false);
-    stopRecording();
-  };
-
   // 只在特定條件下執行，並且添加額外的檢查
   useEffect(() => {
     if (selectedScenario && !isListening && !isInitializingSpeech && !speechRecognition) {
