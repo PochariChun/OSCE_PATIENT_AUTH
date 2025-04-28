@@ -102,7 +102,7 @@ export default function NewDialoguePage() {
   const [isInitializingSpeech, setIsInitializingSpeech] = useState(false);
   
   useEffect(() => {
-    // 从 localStorage 获取用户信息
+    // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
@@ -115,10 +115,10 @@ export default function NewDialoguePage() {
         console.log('已獲取用戶資料:', userData);
         setUser(userData);
         
-        // 获取场景数据
+        // 獲取場景數據
         await fetchScenarios();
       } catch (error) {
-        console.error('获取用户信息失败', error);
+        console.error('獲取用戶信息失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -366,7 +366,7 @@ export default function NewDialoguePage() {
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
-    // 计算与上一条消息的延迟
+    // 計算與上一條消息的延遲
     let delayFromPrev = 0;
     let isDelayed = false;
     const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
@@ -387,7 +387,7 @@ export default function NewDialoguePage() {
     const updatedConversation = [...conversation, userMessage];
     setConversation(updatedConversation);
     
-    // 保存用户语音消息到数据库
+    // 保存用戶消息到數據庫
     try {
       const apiUrl = `/api/conversations/${conversationId}/messages`;
       const response = await fetch(apiUrl, {
@@ -411,17 +411,17 @@ export default function NewDialoguePage() {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('保存用戶語音訊息失敗', {
+        console.error('保存用戶訊息失敗', {
           status: response.status,
           statusText: response.statusText,
           errorData
         });
       } else {
         const data = await response.json();
-        console.log('用戶語音訊息保存成功', data);
+        console.log('用戶訊息保存成功', data);
       }
     } catch (error) {
-      console.error('保存用戶語音訊息時發生錯誤', error);
+      console.error('保存用戶訊息時發生錯誤', error);
     }
     
     // 模擬虛擬病人回覆
@@ -438,11 +438,11 @@ export default function NewDialoguePage() {
       
       setConversation([...updatedConversation, assistantMessage]);
       
-      // 计算虚拟病人回复的延迟
+      // 計算虛擬病人回覆的延遲
       const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
       const patientIsDelayed = patientDelayFromPrev > 3;
       
-      // 保存虚拟病人消息到数据库
+      // 保存虛擬病人消息到數據庫
       try {
         const apiUrl = `/api/conversations/${conversationId}/messages`;
         const response = await fetch(apiUrl, {
@@ -487,7 +487,7 @@ export default function NewDialoguePage() {
     const now = new Date();
     const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
     
-    // 计算与上一条消息的延迟
+    // 計算與上一條消息的延遲
     let delayFromPrev = 0;
     let isDelayed = false;
     const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
@@ -508,7 +508,7 @@ export default function NewDialoguePage() {
     const updatedConversation = [...conversation, userMessage];
     setConversation(updatedConversation);
     
-    // 保存用户消息到数据库
+    // 保存用戶消息到數據庫
     try {
       const apiUrl = `/api/conversations/${conversationId}/messages`;
       const response = await fetch(apiUrl, {
@@ -559,11 +559,11 @@ export default function NewDialoguePage() {
       
       setConversation([...updatedConversation, assistantMessage]);
       
-      // 计算虚拟病人回复的延迟
+      // 計算虛擬病人回覆的延遲
       const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
       const patientIsDelayed = patientDelayFromPrev > 3;
       
-      // 保存虚拟病人消息到数据库
+      // 保存虛擬病人消息到數據庫
       try {
         const apiUrl = `/api/conversations/${conversationId}/messages`;
         const response = await fetch(apiUrl, {
@@ -707,50 +707,50 @@ export default function NewDialoguePage() {
   }, []);
   
   const startRecording = () => {
-    console.log('开始录音...');
+    console.log('開始錄音...');
     
-    // 如果已经在录音，不做任何事
+    // 如果已經在錄音，不做任何事
     if (isListening || isInitializingSpeech) {
-      console.log('已经在录音中或正在初始化，忽略此次请求');
+      console.log('已經在錄音中或正在初始化，忽略此次請求');
       return;
     }
     
-    // 清空临时文本
+    // 清空臨時文本
     setInterimTranscript('');
     setFinalTranscript('');
     
-    // 检查浏览器支持
+    // 檢查瀏覽器支持
     if (typeof window === 'undefined') return;
     
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
-      console.error('您的浏览器不支持语音识别');
-      alert('您的浏览器不支持语音识别功能，请使用 Chrome、Edge 或 Safari 浏览器。');
+      console.error('您的瀏覽器不支持語音識別');
+      alert('您的瀏覽器不支持語音識別功能，請使用 Chrome、Edge 或 Safari 瀏覽器。');
       setIsRecordButtonPressed(false);
       return;
     }
     
     try {
-      // 如果已经有一个语音识别实例在运行，先停止它
+      // 如果已經有一個語音識別實例在運行，先停止它
       if (speechRecognition) {
         try {
           speechRecognition.stop();
-          console.log('停止现有语音识别实例');
+          console.log('停止現有語音識別實例');
         } catch (e) {
-          console.error('停止现有语音识别实例失败:', e);
+          console.error('停止現有語音識別實例失敗:', e);
         }
-        // 确保设置为 null，避免引用旧实例
+        // 確保設置為 null，避免引用舊實例
         setSpeechRecognition(null);
       }
       
-      // 创建新的识别实例
+      // 創建新的識別實例
       const recognition = new SpeechRecognition();
-      recognition.lang = 'zh-TW'; // 设置为繁体中文
-      recognition.interimResults = true; // 获取临时结果
-      recognition.continuous = false; // 不连续识别
+      recognition.lang = 'zh-TW'; // 設置為繁體中文
+      recognition.interimResults = true; // 獲取臨時結果
+      recognition.continuous = false; // 不連續識別
       
-      // 处理结果
+      // 處理結果
       recognition.onresult = (event) => {
         let interimText = '';
         let finalText = '';
@@ -765,115 +765,134 @@ export default function NewDialoguePage() {
         }
         
         if (interimText) {
-          console.log('识别到临时文本:', interimText);
+          console.log('識別到臨時文本:', interimText);
           setInterimTranscript(interimText);
         }
         
         if (finalText) {
-          console.log('识别到最终文本:', finalText);
+          console.log('識別到最終文本:', finalText);
+          // 將最終文本添加到 finalTranscript 中，而不是替換它
           setInterimTranscript('');
-          setFinalTranscript(prev => prev + finalText);
+          setFinalTranscript(prev => {
+            const newText = prev + finalText;
+            console.log('更新最終文本為:', newText);
+            return newText;
+          });
         }
       };
       
-      // 处理错误
+      // 處理錯誤
       recognition.onerror = (event) => {
-        console.log(`语音识别错误: ${event.error || '未知错误'}`);
+        console.log(`語音識別錯誤: ${event.error || '未知錯誤'}`);
         setIsListening(false);
         setIsRecordButtonPressed(false);
       };
       
-      // 处理结束
+      // 處理結束
       recognition.onend = () => {
-        console.log('语音识别会话结束');
+        console.log('語音識別會話結束');
         setIsListening(false);
       };
       
-      // 启动识别
+      // 啟動識別
       recognition.start();
       setSpeechRecognition(recognition);
       setIsListening(true);
-      console.log('语音识别已启动');
+      console.log('語音識別已啟動');
     } catch (error) {
-      console.error('启动语音识别失败:', error);
+      console.error('啟動語音識別失敗:', error);
       setIsListening(false);
       setIsRecordButtonPressed(false);
-      alert('启动语音识别失败，请刷新页面重试。');
+      alert('啟動語音識別失敗，請刷新頁面重試。');
     }
   };
 
   const stopRecording = () => {
-    console.log('停止录音...');
+    console.log('停止錄音...');
     
-    // 如果没有在录音，不做任何事
+    // 保存當前的臨時文本和最終文本，以防在停止過程中丟失
+    const currentInterimTranscript = interimTranscript;
+    const currentFinalTranscript = finalTranscript;
+    console.log('停止錄音時的最終文本:', currentFinalTranscript);
+    console.log('停止錄音時的臨時文本:', currentInterimTranscript);
+    
+    // 如果沒有在錄音，不做任何事
     if (!isListening && !speechRecognition) {
-      console.log('没有正在进行的录音，忽略此次请求');
+      console.log('沒有正在進行的錄音，忽略此次請求');
       setIsRecordButtonPressed(false);
       return;
     }
     
-    // 停止语音识别
+    // 停止語音識別
     if (speechRecognition) {
       try {
         speechRecognition.stop();
-        console.log('语音识别已停止');
+        console.log('語音識別已停止');
       } catch (e) {
-        console.error('停止语音识别失败:', e);
+        console.error('停止語音識別失敗:', e);
       }
-      // 清除语音识别实例
+      // 清除語音識別實例
       setSpeechRecognition(null);
     }
     
     setIsListening(false);
     
-    // 延迟一下再发送消息，确保最终文本已更新
+    // 增加更長的延遲，確保最終文本已更新
     setTimeout(() => {
-      // 首先检查是否有最终识别文本
-      if (finalTranscript) {
-        console.log('发送最终识别文本:', finalTranscript);
-        sendMessageToServer(finalTranscript);
-        setFinalTranscript(''); // 清空最终文本
+      // 首先檢查是否有最終識別文本
+      if (currentFinalTranscript) {
+        console.log('發送保存的最終識別文本:', currentFinalTranscript);
+        sendMessageToServer(currentFinalTranscript);
+        setFinalTranscript(''); // 清空最終文本
         return;
       }
       
-      // 如果没有最终文本，但有临时文本，也发送它
+      // 如果沒有最終文本，但有保存的臨時文本，也發送它
+      if (currentInterimTranscript) {
+        console.log('發送保存的臨時識別文本:', currentInterimTranscript);
+        sendMessageToServer(currentInterimTranscript);
+        setInterimTranscript(''); // 清空臨時文本
+        return;
+      }
+      
+      // 如果沒有保存的臨時文本，但有當前的臨時文本，也發送它
       if (interimTranscript) {
-        console.log('发送临时识别文本:', interimTranscript);
+        console.log('發送當前臨時識別文本:', interimTranscript);
         sendMessageToServer(interimTranscript);
-        setInterimTranscript(''); // 清空临时文本
+        setInterimTranscript(''); // 清空臨時文本
         return;
       }
       
-      console.log('没有识别到文本，不发送消息');
-    }, 100);
+      console.log('沒有識別到文本，不發送消息');
+    }, 300); // 增加延遲時間，給最終文本更多時間更新
   };
 
-  // 3. 添加按钮事件处理函数
+  // 修改按鈕事件處理函數
   const handleRecordButtonMouseDown = (e) => {
     e.preventDefault();
-    if (isInitializingSpeech || isListening) return; // 防止重复启动
+    if (isInitializingSpeech || isListening) return; // 防止重複啟動
     
     setIsRecordButtonPressed(true);
-    setIsInitializingSpeech(true); // 设置初始化标志
+    setIsInitializingSpeech(true); // 設置初始化標誌
     
-    // 延迟启动录音，确保状态已更新
+    // 延遲啟動錄音，確保狀態已更新
     setTimeout(() => {
       startRecording();
-      setIsInitializingSpeech(false); // 清除初始化标志
+      setIsInitializingSpeech(false); // 清除初始化標誌
     }, 100);
   };
 
   const handleRecordButtonTouchStart = (e) => {
-    e.preventDefault(); // 防止触摸事件触发鼠标事件
-    if (isInitializingSpeech || isListening) return; // 防止重复启动
+    e.preventDefault(); // 防止觸摸事件觸發滑鼠事件
+    if (isInitializingSpeech || isListening) return; // 防止重複啟動
     
     setIsRecordButtonPressed(true);
-    setIsInitializingSpeech(true); // 设置初始化标志
+    setIsInitializingSpeech(true); // 設置初始化標誌
     
-    // 延迟启动录音，确保状态已更新
+    // 延遲啟動錄音，確保狀態已更新
     setTimeout(() => {
       startRecording();
-      setIsInitializingSpeech(false); // 清除初始化标志
+      setIsInitializingSpeech(false); // 清除初始化標誌
     }, 100);
   };
 
@@ -889,9 +908,9 @@ export default function NewDialoguePage() {
       if (speechRecognition) {
         try {
           speechRecognition.stop();
-          console.log('组件卸载，停止语音识别');
+          console.log('組件卸載，停止語音識別');
         } catch (e) {
-          // 忽略错误
+          // 忽略錯誤
         }
         setSpeechRecognition(null);
       }
@@ -904,6 +923,14 @@ export default function NewDialoguePage() {
     setIsRecordButtonPressed(false);
     stopRecording();
   };
+
+  // 只在特定條件下執行，並且添加額外的檢查
+  useEffect(() => {
+    if (selectedScenario && !isListening && !isInitializingSpeech && !speechRecognition) {
+      // 可能的其他操作，但不要自動啟動語音識別
+      console.log('場景已選擇，但不自動啟動語音識別');
+    }
+  }, [selectedScenario, isListening, isInitializingSpeech, speechRecognition]);
 
   if (loading) {
     return (

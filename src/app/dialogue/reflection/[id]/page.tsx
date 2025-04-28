@@ -3,8 +3,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
-import Link from 'next/link';
-import Image from 'next/image';
 
 interface User {
   id: number;

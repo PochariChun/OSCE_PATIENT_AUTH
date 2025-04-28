@@ -5,35 +5,29 @@ import { signJWT } from '@/lib/jwt';
 
 export async function POST(req: Request) {
   try {
-    const { login, password } = await req.json();
-    console.log('登入請求:', { login });
+    const { email, password } = await req.json();
+    console.log('登入請求:', { email });
 
-    if (!login || !password) {
-      return NextResponse.json({ error: '帳號和密碼為必填項' }, { status: 400 });
+    if (!email || !password) {
+      return NextResponse.json({ error: '電子郵件和密碼為必填項' }, { status: 400 });
     }
 
-    // 檢查 login 是電子郵件還是用戶名
-    const isEmail = login.includes('@');
-    
-    // 根據登入類型查詢用戶
-    const user = await prisma.user.findFirst({
-      where: isEmail 
-        ? { email: login } 
-        : { username: login },
+    // 查找用戶
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
-
+    
     if (!user) {
-      return NextResponse.json({ error: '帳號不存在' }, { status: 401 });
-    }
-
-
-    // 所有用戶都使用 bcrypt 比較
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-        return NextResponse.json({ error: '密碼錯誤' }, { status: 401 });
+      return NextResponse.json({ error: '用戶不存在' }, { status: 404 });
     }
     
-
+    // 驗證密碼
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    
+    if (!passwordMatch) {
+      return NextResponse.json({ error: '密碼不正確' }, { status: 401 });
+    }
+    
     // 不要返回密碼
     const { password: _, ...userWithoutPassword } = user;
     
@@ -54,7 +48,7 @@ export async function POST(req: Request) {
 
     // 設置 cookie
     response.cookies.set({
-      name: 'auth_token',
+      name: 'auth-token',
       value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

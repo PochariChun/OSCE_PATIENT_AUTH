@@ -26,11 +26,10 @@ export async function POST(
     const reflectionMessage = await prisma.reflectionMessage.create({
       data: {
         conversationId,
-        userMessage,
+        content: userMessage,
         aiResponse,
         stage,
         timestamp: new Date(timestamp),
-        sender: 'user', // 添加缺少的 sender 字段
       },
     });
     

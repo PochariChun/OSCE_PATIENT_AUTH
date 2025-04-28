@@ -28,7 +28,7 @@ export async function POST(
       summary: '反思報告摘要',
       content: '這是一份自動生成的反思報告，基於學生的反思內容。',
       timestamp: new Date(),
-      reflectionMessages: conversation.filter(msg => msg.role !== 'system').length,
+      reflectionMessages: conversation.filter((msg: any) => msg.role !== 'system').length,
     };
     
     // 保存报告到数据库

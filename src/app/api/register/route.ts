@@ -1,44 +1,68 @@
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
+import { generateJWT } from '@/lib/jwt';
 
 export async function POST(req: Request) {
-  const { email, username, nickname, password } = await req.json();
-
-  if (!username || !password) {
-    return NextResponse.json({ error: '帳號和密碼為必填' }, { status: 400 });
-  }
-
-  // 檢查 username 是否已存在
-  const existingUsername = await prisma.user.findFirst({ where: { username } });
-  if (existingUsername) {
-    return NextResponse.json({ error: '帳號已存在' }, { status: 400 });
-  }
-
-  // 如果提供了電子郵件，檢查是否已存在
-  if (email) {
-    const existingEmail = await prisma.user.findUnique({ where: { email } });
-    if (existingEmail) {
-      return NextResponse.json({ error: '電子郵件已被註冊' }, { status: 400 });
+  try {
+    const { name, email, password } = await req.json();
+    
+    // 驗證輸入
+    if (!name || !email || !password) {
+      return NextResponse.json({ error: '姓名、電子郵件和密碼為必填項' }, { status: 400 });
     }
+    
+    // 檢查電子郵件是否已存在
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+    
+    if (existingUser) {
+      return NextResponse.json({ error: '該電子郵件已被註冊' }, { status: 409 });
+    }
+    
+    // 加密密碼
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // 創建用戶
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: 'student', // 預設角色
+        isActive: true,
+      },
+    });
+    
+    // 生成 JWT
+    const token = generateJWT({ id: user.id });
+    
+    // 創建響應
+    const response = NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+    
+    // 設置 cookie
+    response.cookies.set({
+      name: 'auth-token',
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 7 天
+      path: '/',
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('註冊失敗:', error);
+    return NextResponse.json({ error: '註冊失敗' }, { status: 500 });
   }
-
-  const hash = await bcrypt.hash(password, 10);
-
-  // 創建用戶，使用隨機生成的電子郵件如果未提供
-  const user = await prisma.user.create({
-    data: { 
-      email: email || '', // 如果未提供電子郵件，就保留空位
-      username, 
-      nickname: nickname || username, // 如果未提供暱稱，使用用戶名
-      password: hash,
-      role: 'nurse', // 預設角色
-      name: username, // 使用 username 作為 name
-    },
-  });
-
-  return NextResponse.json({ 
-    message: '註冊成功', 
-    user: { username: user.username, nickname: user.nickname } 
-  });
 } 

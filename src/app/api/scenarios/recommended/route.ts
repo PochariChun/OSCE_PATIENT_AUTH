@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';  // 使用共享的 Prisma 实例
+import { prisma } from '@/lib/prisma';  // 使用共享的 Prisma 實例
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,12 +7,12 @@ export async function GET(request: NextRequest) {
     const userId = searchParams.get('userId');
     
     if (!userId) {
-      return NextResponse.json({ error: '缺少用户ID' }, { status: 400 });
+      return NextResponse.json({ error: '缺少用戶ID' }, { status: 400 });
     }
     
-    console.log('正在获取推荐场景，用户ID:', userId);
+    console.log('正在獲取推薦場景，用戶ID:', userId);
     
-    // 从数据库获取推荐场景
+    // 從數據庫獲取推薦場景
     const recommendedScenarios = await prisma.scenario.findMany({
       where: {
         isActive: true
@@ -20,12 +20,12 @@ export async function GET(request: NextRequest) {
       orderBy: {
         difficulty: 'asc'
       },
-      take: 4 // 只获取4个场景
+      take: 4 // 只獲取4個場景
     });
     
-    console.log('获取到的场景数量:', recommendedScenarios.length);
+    console.log('獲取到的場景數量:', recommendedScenarios.length);
     
-    // 转换为前端需要的格式
+    // 轉換為前端需要的格式
     const scenarios = recommendedScenarios.map((scenario: any) => ({
       id: scenario.id,
       title: scenario.title,
@@ -35,10 +35,10 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(scenarios);
   } catch (error) {
-    console.error('获取推荐场景失败', error);
-    // 返回更详细的错误信息
+    console.error('獲取推薦場景失敗', error);
+    // 返回更詳細的錯誤信息
     return NextResponse.json({ 
-      error: '获取推荐场景失败', 
+      error: '獲取推薦場景失敗', 
       message: error instanceof Error ? error.message : String(error),
       stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined
     }, { status: 500 });
