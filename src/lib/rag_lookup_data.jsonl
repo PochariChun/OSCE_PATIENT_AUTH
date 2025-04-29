@@ -1,0 +1,374 @@
+// 病人辨識(8)
+
+// 向病人與案母自我介紹，並說明自己的角色與目的 2
+{"question": "你好，我是照顧你的護生，要為你做入院護理評估哦", "answer": "病童安靜地看著護生", "tags": ["入院評估"], "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Self Introduction and Purpose"}
+{"question": "你好，我是照顧弟弟的護理師，要做入院評估", "answer": "病童眼神看向護理師", "tags": ["入院評估"], "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Self Introduction and Purpose"}
+{"question": "你好小威，我是你的護生，要幫你做入院評估", "answer": "病童安靜地看著護生", "tags": ["入院評估"], "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Self Introduction and Purpose"}
+{"question": "你好，我是負責照顧你的護理師，現在要做入院評估", "answer": "病童眼神專注看著護理師", "tags": ["入院評估"], "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Self Introduction and Purpose"}
+
+// 詢問病人姓名：請問小朋友叫什麼名字?? 2
+{"question": "請問弟弟叫什麼名字？", "answer": "張小威", "tags": ["病人辨識", "姓名確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Name"}
+{"question": "請問小朋友幾歲？", "answer": "2歲", "tags": ["病人辨識", "年齡確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Age"}
+{"question": "請問弟弟叫什麼名字？他幾歲？", "answer": "他叫張小威 2歲", "tags": ["病人辨識", "姓名確認", "年齡確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Name,Ask Patient Age"}
+{"question": "請問你叫什麼名字，幾歲？", "answer": "他叫張小威2 歲", "tags": ["病人辨識", "姓名確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Name,Ask Patient Age"}
+
+// 詢問病人年紀 
+{"question": "張小威2歲 嘛？", "answer": "對", "tags": ["病人辨識", "手圈確認"], "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+{"question": "你是張小威嗎？", "answer": "對", "tags": ["病人辨識", "姓名確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Name"}
+{"question": "你今年2歲對嗎？", "answer": "對", "tags": ["病人辨識", "年齡確認"], "scoringCategory": "Patient Identification", "scoringItem": "Ask Patient Age"}
+
+// 核對病人手圈或腳圈
+{"question": "可以借我看你的手圈嗎？", "answer": "好", "tags": ["病人辨識", "手圈確認"], "imageToShow": "Bracelet.png", "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+{"question": "可以讓我確認一下手圈上的資料嗎？", "answer": "好", "tags": ["病人辨識", "手圈確認"], "imageToShow": "Bracelet.png", "answerType": "narration", "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+{"question": "我需要看一下手圈確認身份", "answer": "好", "tags": ["病人辨識", "手圈確認"], "imageToShow": "Bracelet.png", "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+{"question": "讓我看一下你的手圈", "answer": "好", "tags": ["病人辨識", "手圈確認"], "imageToShow": "Bracelet.png", "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+{"question": "張小威2歲 對嘛？", "answer": "對", "tags": ["病人辨識", "手圈確認"], "scoringCategory": "Patient Identification", "scoringItem": "Check Wristband or Ankle Band"}
+
+// 針對媽媽的問題 - 病史詢問
+{"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "tags": ["病情詢問", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Comprehensive Symptom Evaluation"}
+{"question": "請問媽媽，弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "媽媽，弟弟的腹瀉情況可以詳細說明一下嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "tags": ["病情詢問", "大便評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+
+// ===================================================================================
+// ===================================================================================
+
+// 病人情況(52)
+{"question": "可以描述一下弟弟的大便情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "tags": ["病情詢問", "大便評估"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+{"question": "弟弟的腹瀉情況如何？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "tags": ["病情詢問", "大便評估"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+{"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "tags": ["病情詢問", "大便評估"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+
+// 開始不舒服的時間
+{"question": "弟弟是從何時開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "症狀是什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "不舒服是從什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "腹瀉和發燒是什麼時候開始的？", "answer": "昨天晚上", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "弟弟從什麼時候開始有症狀的？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "這些症狀持續多久了？", "answer": "從昨天晚上開始到現在", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Duration of Symptoms"}
+{"question": "弟弟是從昨天開始不舒服的嗎？", "answer": "是的，昨天晚上開始", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "腹瀉是什麼時候開始的？", "answer": "昨天晚上開始", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "發燒是從什麼時候開始的？", "answer": "昨天晚上8點開始燒", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "弟弟是什麼時候開始覺得肚子不舒服的？", "answer": "昨天晚上開始", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+{"question": "這個情況持續多久了？", "answer": "從昨天晚上到現在", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Duration of Symptoms"}
+{"question": "弟弟從何時開始有這些症狀？", "answer": "昨天晚上開始腹瀉發燒", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Onset Time of Symptoms"}
+//大便情況:次數(2)、
+{"question": "弟弟總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "tags": ["病情詢問", "大便次數"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Frequency"}
+{"question": "從昨天到現在拉了幾次肚子？", "answer": "到今天中午總共拉五次", "tags": ["病情詢問", "大便次數"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Frequency"}
+{"question": "腹瀉的頻率如何？", "answer": "昨晚兩次，今天早上三次", "tags": ["病情詢問", "大便次數"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Frequency"}
+{"question": "一天大概拉幾次肚子？", "answer": "昨晚兩次，今天早上三次", "tags": ["病情詢問", "大便次數"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Frequency"}
+
+//大便情況: 性狀(3)
+{"question": "大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "tags": ["病情詢問", "大便性狀"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Consistency"}
+{"question": "便便是什麼樣子的？", "answer": "開始三次是糊便，後來二次是水便", "tags": ["病情詢問", "大便性狀"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Consistency"}
+{"question": "大便是水狀還是糊狀？", "answer": "開始三次是糊便，後來二次是水便", "tags": ["病情詢問", "大便性狀"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Consistency"}
+{"question": "大便的性質如何？", "answer": "開始三次是糊便，後來二次是水便", "tags": ["病情詢問", "大便性狀"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Consistency"}
+{"question": "大便的質地如何？", "answer": "開始三次是糊便，後來二次是水便", "tags": ["病情詢問", "大便性狀"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Consistency"}
+
+//大便情況: 量(3)
+{"question": "每次大便的量大概多少？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+{"question": "大便的量如何？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+{"question": "每次腹瀉的量多嗎？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+{"question": "大便量是多還是少？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+{"question": "腹瀉時排出的量大概有多少？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+
+//大便情況: 有無血絲(1)
+{"question": "大便中有沒有血絲？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便血絲"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "有沒有在便便中看到血？", "answer": "有一點血絲", "tags": ["病情詢問", "大便血絲"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "大便有沒有帶血？", "answer": "有一點血絲", "tags": ["病情詢問", "大便血絲"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "有沒有發現便便中有紅色的東西？", "answer": "有一點血絲", "tags": ["病情詢問", "大便血絲"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "大便是什麼顏色的？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便顏色"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "便便的顏色如何？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便顏色"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "腹瀉的顏色是怎樣的？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便顏色"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+// 針對媽媽的問題 - 大便顏色評估(1)
+{"question": "媽媽，弟弟的大便是什麼顏色的？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "請問媽媽，您觀察到弟弟的便便顏色有什麼變化嗎？", "answer": "一直都是黃色，但最近兩次有血絲", "tags": ["病情詢問", "大便顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "媽媽，弟弟的大便顏色是正常的嗎？", "answer": "顏色是黃色，但有血絲讓我很擔心", "tags": ["病情詢問", "大便顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "媽媽，您能描述一下弟弟大便的顏色嗎？", "answer": "黃色，最近兩次有血絲", "tags": ["病情詢問", "大便顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+
+// 針對媽媽的問題 - 有無血絲(2)
+{"question": "媽媽，您有注意到弟弟的大便顏色嗎？", "answer": "黃色，有一點血絲", "tags": ["病情詢問", "大便顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Color"}
+{"question": "請問媽媽，您有發現弟弟的便便中有血絲嗎？", "answer": "有一點血絲", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "媽媽，您觀察到弟弟每次大便的量大概是多少？", "answer": "前三次量中等，後兩次量較多", "tags": ["病情詢問", "大便量", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Amount"}
+
+// 針對媽媽的問題 - 大便血絲評估
+{"question": "媽媽，您是什麼時候發現弟弟的便便有血絲的？", "answer": "今天早上最後兩次大便時發現的", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "請問媽媽，弟弟便便中的血絲量多嗎？", "answer": "不多，只有一點點紅色的絲狀物", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "媽媽，弟弟的便便中除了血絲還有其他異常嗎？", "answer": "沒有其他異常，就是有點黏液和血絲", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "媽媽，您確定看到的是血絲而不是食物殘渣嗎？", "answer": "確定是血絲，不是食物，我看得很清楚", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+{"question": "媽媽，弟弟的便便中有血絲讓您擔心嗎？", "answer": "很擔心，所以趕緊帶他來醫院", "tags": ["病情詢問", "大便血絲", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Blood"}
+
+// 針對媽媽的問題 - 綜合大便評估
+{"question": "媽媽，您能完整描述一下弟弟大便的情況嗎？包括次數、性狀、顏色和有無血絲", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，最後兩次有一點血絲", "tags": ["病情詢問", "大便評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+{"question": "請問媽媽，弟弟的大便從開始到現在有什麼變化？", "answer": "一開始是糊狀，後來變成水狀，顏色一直是黃色，但最近兩次出現血絲", "tags": ["病情詢問", "大便評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Bowel Movement Details", "scoringSubItem": "Comprehensive"}
+
+// ===================================================================================
+// 嘔吐情況:次數(1)、時間(1)、內容(3)、顏色(3)、量(2)
+{"question": "有嘔吐嗎？", "answer": "有", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details"}
+{"question": "弟弟有沒有吐過？", "answer": "有", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details"}
+
+// 次數(1)、
+{"question": "吐了幾次？", "answer": "吐2次", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Frequency"}
+{"question": "總共吐了幾次？", "answer": "吐2次", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Frequency"}
+// 針對媽媽的問題 - 嘔吐評估 (次數1分)
+{"question": "媽媽，弟弟總共吐了幾次？", "answer": "吐了2次", "tags": ["病情詢問", "嘔吐次數", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Frequency"}
+{"question": "請問媽媽，弟弟從昨天到現在吐過幾次？", "answer": "今天早上吐了2次", "tags": ["病情詢問", "嘔吐次數", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Frequency"}
+{"question": "媽媽，您觀察到弟弟嘔吐的次數是多少？", "answer": "總共吐了2次", "tags": ["病情詢問", "嘔吐次數", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Frequency"}
+
+
+// 時間(1)、
+{"question": "什麼時候吐？", "answer": "早上8點和11點", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Time"}
+{"question": "是在什麼時間點吐的？", "answer": "早上8點和11點", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Time"}
+// 針對媽媽的問題 - 嘔吐評估 (時間1分)
+{"question": "媽媽，弟弟是什麼時候吐的？", "answer": "早上8點和11點", "tags": ["病情詢問", "嘔吐時間", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Time"}
+{"question": "請問媽媽，您記得弟弟嘔吐的具體時間嗎？", "answer": "早上8點和11點", "tags": ["病情詢問", "嘔吐時間", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Time"}
+{"question": "媽媽，弟弟嘔吐是在什麼時間發生的？", "answer": "早上8點和11點各吐了一次", "tags": ["病情詢問", "嘔吐時間", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Time"}
+
+
+// 內容(3)、
+{"question": "吐了什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+{"question": "吐出來的東西是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+// 針對媽媽的問題 - 嘔吐評估 (內容3分)
+{"question": "媽媽，弟弟吐出來的是什麼東西？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問", "嘔吐內容", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+{"question": "請問媽媽，弟弟嘔吐物的內容是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問", "嘔吐內容", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+{"question": "媽媽，您能描述一下弟弟吐出來的東西嗎？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問", "嘔吐內容", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+{"question": "媽媽，弟弟吐出來的食物是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問", "嘔吐內容", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Content"}
+
+// 量(2)
+{"question": "吐的量多少？", "answer": "第一次比較多，吃的都吐出來", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+{"question": "吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+// 針對媽媽的問題 - 嘔吐評估 (量2分)
+{"question": "媽媽，弟弟每次吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "tags": ["病情詢問", "嘔吐量", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+{"question": "請問媽媽，弟弟嘔吐的量多嗎？", "answer": "第一次比較多，吃的都吐出來，第二次比較少", "tags": ["病情詢問", "嘔吐量", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+{"question": "媽媽，您能估計一下弟弟吐出來的量嗎？", "answer": "第一次大概有半碗飯的量，第二次只有一點點", "tags": ["病情詢問", "嘔吐量", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+{"question": "媽媽，弟弟吐的量是多還是少？", "answer": "第一次比較多，第二次比較少", "tags": ["病情詢問", "嘔吐量", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Amount"}
+
+// 顏色(3)
+{"question": "嘔吐物顏色？", "answer": "稀飯跟水", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+{"question": "吐出來的東西是什麼顏色？", "answer": "稀飯跟水", "tags": ["病情詢問"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+// 針對媽媽的問題 - 嘔吐評估 (顏色3分)
+{"question": "媽媽，弟弟吐出來的東西是什麼顏色的？", "answer": "稀飯是白色的，藥水是粉紅色的", "tags": ["病情詢問", "嘔吐顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+{"question": "請問媽媽，您注意到弟弟嘔吐物的顏色嗎？", "answer": "稀飯是白色的，藥水是粉紅色的", "tags": ["病情詢問", "嘔吐顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+{"question": "媽媽，弟弟嘔吐物的顏色有什麼特別的嗎？", "answer": "沒有特別的，就是食物原本的顏色", "tags": ["病情詢問", "嘔吐顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+{"question": "媽媽，弟弟吐出來的東西有沒有異常的顏色？", "answer": "沒有，就是食物原本的顏色", "tags": ["病情詢問", "嘔吐顏色", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Color"}
+
+// 針對媽媽的問題 - 綜合嘔吐評估
+{"question": "媽媽，您能完整描述一下弟弟嘔吐的情況嗎？包括次數、時間、內容和量", "answer": "今天早上總共吐了2次，分別在8點和11點。第一次吐出稀飯，量比較多；第二次吐出藥水，量比較少", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Comprehensive"}
+{"question": "請問媽媽，弟弟嘔吐的整體情況如何？", "answer": "今天早上8點吐了一次稀飯，量比較多；11點又吐了一次藥水，量比較少", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Comprehensive"}
+{"question": "媽媽，弟弟嘔吐後有什麼不適反應嗎？", "answer": "吐完後看起來很疲倦，不想吃東西也不想喝水", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details", "scoringSubItem": "Comprehensive"}
+{"question": "媽媽，弟弟吐了幾次？吐了什麼東西？", "answer": "吐了2次，第一次是稀飯，第二次是藥跟水", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details"}
+{"question": "請問媽媽，弟弟是在什麼時間點吐的？", "answer": "早上8點和11點", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details"}
+{"question": "媽媽，弟弟吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "tags": ["病情詢問", "嘔吐評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Vomiting Details"}
+// ===================================================================================
+// 食慾:減少(2)?吃什麼(2)?量(2)? 共6分
+// 針對媽媽的問題 - 食慾與進食評估
+// 減少(2)
+{"question": "弟弟的食慾怎麼樣？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+{"question": "媽媽，弟弟的食慾怎麼樣？", "answer": "沒有食慾", "tags": ["食慾與進食評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+{"question": "弟弟最近胃口好嗎？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+{"question": "小朋友有沒有想吃東西？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+{"question": "弟弟現在願意吃東西嗎？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+
+// 吃什麼(2)?
+{"question": "請問媽媽，弟弟今天吃了什麼？", "answer": "吃碗稀飯", "tags": ["食慾與進食評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type,Amount"}
+{"question": "弟弟今天進食了哪些食物？", "answer": "吃碗稀飯", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type"}
+{"question": "小朋友今天吃了什麼東西？", "answer": "吃碗稀飯", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type"}
+{"question": "弟弟最近都吃些什麼？", "answer": "吃碗稀飯", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type"}
+{"question": "能告訴我弟弟今天的飲食內容嗎？", "answer": "吃碗稀飯", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type"}
+
+// 量(2)?
+{"question": "媽媽，弟弟喝水的情況如何？", "answer": "喝一點就吐，現在不太敢給他喝", "tags": ["食慾與進食評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Fluid Intake Status"}
+{"question": "弟弟吃了多少東西？", "answer": "吃了3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Amount"}
+{"question": "小朋友的進食量大概有多少？", "answer": "吃了3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Amount"}
+{"question": "弟弟能吃下多少食物？", "answer": "吃了3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Amount"}
+{"question": "弟弟每餐的進食量如何？", "answer": "吃了3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Amount"}
+
+// 綜合
+{"question": "食慾如何？吃了什麼？量多少？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease,Food Type,Amount"}
+{"question": "弟弟吃了什麼東西？吃了多少？", "answer": "吃3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Food Type,Amount"}
+{"question": "能詳細說明一下弟弟的飲食情況嗎？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease,Food Type,Amount"}
+{"question": "弟弟的進食狀況如何？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease,Food Type,Amount"}
+
+// 進食與症狀的關聯(沒吃有比較好嗎?或吃東西會更嚴重嗎?) 共4分
+{"question": "不吃東西之後有比較好嗎？", "answer": "沒有再吐", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+{"question": "停止進食後症狀有改善嗎？", "answer": "沒有再吐", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+{"question": "吃東西後症狀會變得更嚴重嗎？", "answer": "會，吃完就吐", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+{"question": "進食與嘔吐之間有什麼關聯嗎？", "answer": "吃完就吐，不吃就沒事", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+{"question": "弟弟吃東西後會有什麼反應？", "answer": "吃完就吐", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+{"question": "空腹時弟弟的症狀會比較輕嗎？", "answer": "沒有再吐", "tags": ["食慾與症狀關聯"], "scoringCategory": "Patient Condition", "scoringItem": "Eating and Symptom Relation"}
+
+
+// ===================================================================================
+// 發燒史評估:何時開始燒(2)?體溫最高幾度(2)?有無處置及處置方式(2)?處置後退燒情形(2)? 共8分
+// 何時開始燒(2)
+{"question": "弟弟是什麼時候開始發燒的？", "answer": "昨天晚上8點開始燒", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Onset Time"}
+{"question": "發燒是從何時開始的？", "answer": "昨天晚上8點開始燒", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Onset Time"}
+{"question": "弟弟發燒持續多久了？", "answer": "從昨天晚上8點到現在", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Onset Time"}
+{"question": "發燒大概是什麼時間點開始的？", "answer": "昨天晚上8點開始燒", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Onset Time"}
+
+// 體溫最高幾度(2)
+{"question": "發燒最高到幾度？", "answer": "最高39.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Maximum Temperature"}
+{"question": "體溫最高測到多少？", "answer": "最高39.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Maximum Temperature"}
+{"question": "弟弟發燒的溫度有多高？", "answer": "最高39.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Maximum Temperature"}
+{"question": "量體溫時最高是幾度？", "answer": "最高39.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Maximum Temperature"}
+
+// 有無處置及處置方式(2)
+{"question": "發燒後怎麼處理的？", "answer": "塞屁股的藥後降到38.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Treatment Method"}
+{"question": "有沒有採取什麼方法來退燒？", "answer": "塞屁股的藥", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Treatment Method"}
+{"question": "弟弟發燒時，您採取了什麼措施？", "answer": "塞屁股的藥", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Treatment Method"}
+{"question": "有給弟弟吃退燒藥嗎？", "answer": "有，塞屁股的藥", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Treatment Method"}
+
+// 處置後退燒情形(2)
+{"question": "退燒藥吃了之後體溫有降低嗎？", "answer": "降到38.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Post-treatment Condition"}
+{"question": "用藥後體溫變化如何？", "answer": "降到38.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Post-treatment Condition"}
+{"question": "處理後發燒情況有改善嗎？", "answer": "降到38.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Post-treatment Condition"}
+{"question": "退燒藥的效果如何？", "answer": "降到38.5度", "tags": ["發燒評估"], "scoringCategory": "Patient Condition", "scoringItem": "Fever History Evaluation", "scoringSubItem": "Post-treatment Condition"}
+
+// 小便情況:量(2)、濃度(2) 共4分
+// 量(2)
+{"question": "弟弟有尿尿嗎？", "answer": "有尿但量少", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Amount"}
+{"question": "小朋友的尿量如何？", "answer": "量少", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Amount"}
+{"question": "弟弟排尿的量多嗎？", "answer": "量少", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Amount"}
+{"question": "弟弟今天尿了幾次？尿量如何？", "answer": "只有兩次，量都很少", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Amount"}
+
+// 濃度(2)
+{"question": "尿尿的顏色如何？", "answer": "深黃色", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Concentration"}
+{"question": "弟弟的尿液顏色是怎樣的？", "answer": "深黃色", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Concentration"}
+{"question": "小朋友的尿液是什麼顏色？", "answer": "深黃色", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Concentration"}
+{"question": "尿液看起來是什麼顏色？", "answer": "深黃色", "tags": ["小便情況"], "scoringCategory": "Patient Condition", "scoringItem": "Urination Status", "scoringSubItem": "Concentration"}
+
+// 就醫過程:診所(2)?診斷(2)?醫師處置(2)? 共6分
+// 診所(2)
+{"question": "之前有帶弟弟去看醫生嗎？", "answer": "早上去診所，診斷感冒", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Clinic Visit"}
+{"question": "弟弟之前有就醫嗎？", "answer": "早上去診所", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Clinic Visit"}
+{"question": "生病後有帶去哪裡看診？", "answer": "早上去診所", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Clinic Visit"}
+{"question": "弟弟是在哪裡就醫的？", "answer": "早上去診所，後來來急診", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Clinic Visit"}
+
+// 診斷(2)
+{"question": "醫師怎麼說？", "answer": "診斷感冒，後來急診醫師診斷急性腸胃炎", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Diagnosis"}
+{"question": "醫生診斷是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Diagnosis"}
+{"question": "醫師的診斷結果是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Diagnosis"}
+{"question": "弟弟被診斷出什麼疾病？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Diagnosis"}
+
+// 醫師處置(2)
+{"question": "醫生有開什麼藥嗎？", "answer": "有開退燒藥和止瀉藥，但吃了就吐出來", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Treatment"}
+{"question": "醫師有給什麼治療建議嗎？", "answer": "診斷急性腸胃炎建議住院", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Treatment"}
+{"question": "醫生怎麼處理弟弟的症狀？", "answer": "開退燒藥和止瀉藥，建議住院", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Treatment"}
+{"question": "醫師有提供什麼治療方案嗎？", "answer": "開退燒藥和止瀉藥，建議住院", "tags": ["就醫過程"], "scoringCategory": "Patient Condition", "scoringItem": "Medical Visit Process", "scoringSubItem": "Treatment"}
+
+// ===================================================================================
+// 三、評估檢查(9分)
+// 1.一般護理評估(口述)
+{"question": "我現在要幫你做一般的護理評估，好嗎？", "answer": "病童點頭", "tags": ["一般護理評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "General Nursing Assessment"}
+{"question": "我需要檢查一下你的身體狀況", "answer": "病童安靜配合", "tags": ["一般護理評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "General Nursing Assessment"}
+{"question": "我要看看你哪裡不舒服", "answer": "病童指著肚子", "tags": ["一般護理評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "General Nursing Assessment"}
+
+// 2.測量生命徵象(口述量心尖脈)
+{"question": "我要幫你量一下心跳", "answer": "病童安靜配合", "tags": ["生命徵象測量"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Vital Signs Measurement"}
+{"question": "我現在要聽一下你的心跳聲音", "answer": "病童點頭", "tags": ["生命徵象測量"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Vital Signs Measurement"}
+{"question": "我要用聽診器聽一下你的心跳", "answer": "病童安靜配合", "tags": ["生命徵象測量"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Vital Signs Measurement"}
+{"question": "脈博測心尖脈", "answer": "病童安靜配合", "tags": ["生命徵象測量"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Vital Signs Measurement"}
+
+// 3.腹部評估(口述視、聽、扣、觸)
+{"question": "我要檢查一下你的肚子", "answer": "病童安靜配合", "tags": ["腹部評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Abdominal Assessment"}
+{"question": "我先看一下你的肚子", "answer": "病童露出肚子", "tags": ["腹部評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Abdominal Assessment", "scoringSubItem": "Inspection"}
+{"question": "現在我要聽一下你肚子的聲音", "answer": "病童安靜配合", "tags": ["腹部評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Abdominal Assessment", "scoringSubItem": "Auscultation"}
+{"question": "我要輕輕敲一下你的肚子", "answer": "病童表情緊張但配合", "tags": ["腹部評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Abdominal Assessment", "scoringSubItem": "Percussion"}
+{"question": "我要摸一下你的肚子，如果痛要告訴我", "answer": "病童點頭", "tags": ["腹部評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Abdominal Assessment", "scoringSubItem": "Palpation"}
+
+// 4.腹痛評估(3歲以上使用臉譜量表，3歲以下使用行為量表)
+// 臉譜量表(3歲以上)
+{"question": "小威，你看這些臉，哪一個最像你現在肚子痛的感覺？", "answer": "病童指著痛苦程度6分的臉", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment"}
+{"question": "你的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment"}
+{"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment"}
+
+// FLACC行為量表(3歲以下)
+{"question": "小威2歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale"}
+{"question": "觀察小威的臉部表情", "answer": "病童臉部緊繃，偶爾顫抖", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Face"}
+{"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Legs"}
+{"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Activity"}
+{"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Cry"}
+{"question": "觀察小威的可安慰度", "answer": "病童需要頻繁撫摸才能安撫", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Consolability"}
+{"question": "根據FLACC量表評估小威的疼痛程度", "answer": "總分7分，表示中度疼痛", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Total"}
+
+// ===================================================================================
+// 四、護理指導(10分)
+// 腹瀉護理指導:記錄顏色(2)、性質(2)、必要時禁食(2)、皮膚護理(2)、開始進食後飲食選擇BART(2)
+// 記錄顏色(2)
+{"question": "媽媽，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color"}
+{"question": "每次大便後，請記下大便的顏色變化", "answer": "我會記錄的", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color"}
+
+// 性質(2)
+{"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好的，我會觀察", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Consistency"}
+{"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "我會注意這些細節", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Consistency"}
+
+// 必要時禁食(2)
+{"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "了解，那要禁食多久？", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Fasting If Necessary"}
+{"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我會遵醫囑", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Fasting If Necessary"}
+
+// 皮膚護理(2)
+{"question": "每次大便後，請用溫水清洗臀部並擦乾", "answer": "好的，我會這樣做", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Skin Care"}
+{"question": "頻繁腹瀉可能造成臀部皮膚紅腫，可塗抹護膚霜保護", "answer": "了解，我會注意保護皮膚", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Skin Care"}
+
+// 開始進食後飲食選擇BART(2)
+{"question": "弟弟可以進食時，建議從香蕉、蘋果泥、白飯和吐司開始", "answer": "好的，這些食物比較容易消化是嗎？", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "BART Diet"}
+{"question": "恢復進食時，請遵循BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "BART Diet"}
+
+// 綜合性腹瀉護理指導（涉及多個scoringSubItem）
+{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care"}
+{"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "我明白了，這些都很重要", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet"}
+{"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好的，我會按照這些建議做", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet"}
+{"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "tags": ["腹瀉護理指導", "家屬溝通"], "scoringCategory": "Nursing Guidance", "scoringItem": "Diarrhea Care", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care"}
+
+// ===================================================================================
+// // 五、記錄(15分)
+// // 發燒:開始時間(1)、最高溫度(1)、如何處理(1)及處理結果(1)
+// {"question": "記錄：病童發燒始於昨晚8點", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Fever Record", "scoringSubItem": "Onset Time"}
+// {"question": "記錄：最高體溫達39.5度", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Fever Record", "scoringSubItem": "Maximum Temperature"}
+// {"question": "記錄：家屬使用肛門塞劑退燒", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Fever Record", "scoringSubItem": "Treatment Method"}
+// {"question": "記錄：用藥後體溫降至38.5度", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Fever Record", "scoringSubItem": "Treatment Result"}
+
+// // 腹瀉:開始時間(1)、頻率(1)、量(1)、性狀(1)、顏色(1)、有無血絲(1)
+// {"question": "記錄：腹瀉始於今早6點", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Onset Time"}
+// {"question": "記錄：腹瀉頻率為每2小時一次", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Frequency"}
+// {"question": "記錄：每次腹瀉量約半碗", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Amount"}
+// {"question": "記錄：大便呈水狀", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Consistency"}
+// {"question": "記錄：大便顏色為黃綠色", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Color"}
+// {"question": "記錄：大便中無血絲", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Diarrhea Record", "scoringSubItem": "Blood Presence"}
+
+// // 嘔吐:開始時間(1)、頻率(1)、量(1)、性狀(1)、顏色(1)
+// {"question": "記錄：嘔吐始於今早8點", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Vomiting Record", "scoringSubItem": "Onset Time"}
+// {"question": "記錄：嘔吐頻率為2次/天", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Vomiting Record", "scoringSubItem": "Frequency"}
+// {"question": "記錄：第一次嘔吐量較多，約半碗", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Vomiting Record", "scoringSubItem": "Amount"}
+// {"question": "記錄：嘔吐物為未消化食物", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Vomiting Record", "scoringSubItem": "Consistency"}
+// {"question": "記錄：嘔吐物為稀飯和水的顏色", "answer": "", "tags": ["記錄"], "answerType": "narration", "scoringCategory": "Documentation", "scoringItem": "Vomiting Record", "scoringSubItem": "Color"}
+
+// ===================================================================================
+
+// 一般性问候和交流
+{"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您好，我是護理師", "answer": "您好，謝謝您來照顧小威", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "小威媽媽您好", "answer": "您好，請問有什麼事嗎？", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "我是今天負責照顧小威的護理師", "answer": "謝謝您，小威現在很不舒服", "tags": ["一般交流"], "answerType": "dialogue"}
+
+// 关于妈妈的问题
+{"question": "您還好嗎？看起來很疲倦", "answer": "是有點累，昨晚小威一直哭鬧，沒怎麼睡", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您看起來很擔心", "answer": "是的，小威從來沒這麼不舒服過，我很擔心", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您需要休息一下嗎？", "answer": "不用了，我想陪著小威", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您吃過飯了嗎？", "answer": "還沒有，但我現在沒什麼胃口", "tags": ["一般交流"], "answerType": "dialogue"}
+
+// 安抚和支持
+{"question": "不用太擔心，我們會好好照顧小威的", "answer": "謝謝您，這讓我安心不少", "tags": ["安抚支持"], "answerType": "dialogue"}
+{"question": "您有什麼需要幫忙的嗎？", "answer": "現在沒有，謝謝您的關心", "tags": ["安抚支持"], "answerType": "dialogue"}
+{"question": "如果您有任何問題，隨時可以問我", "answer": "好的，謝謝您", "tags": ["安抚支持"], "answerType": "dialogue"}
+{"question": "我理解您的擔憂，這是很正常的", "answer": "謝謝您的理解，我確實很擔心小威", "tags": ["安抚支持"], "answerType": "dialogue"}
+
+// 关于小威的一般问题
+{"question": "小威平時的健康狀況如何？", "answer": "平時很健康，很少生病，這次是突然發燒腹瀉", "tags": ["病史询问"], "answerType": "dialogue"}
+{"question": "小威有沒有兄弟姐妹？", "answer": "沒有，他是獨生子", "tags": ["家庭询问"], "answerType": "dialogue"}
+{"question": "小威平時喜歡吃什麼？", "answer": "他很喜歡吃水果和麵條，不太喜歡蔬菜", "tags": ["饮食习惯"], "answerType": "dialogue"}
+{"question": "小威在家都和誰玩？", "answer": "主要是和我和他爸爸，有時候和鄰居家的小朋友", "tags": ["家庭询问"], "answerType": "dialogue"}
+
+// 其他一般性问题
+{"question": "您家住在附近嗎？", "answer": "是的，就住在醫院附近的社區", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您先生呢？他會來嗎？", "answer": "他在趕來的路上，應該很快就到了", "tags": ["家庭询问"], "answerType": "dialogue"}
+{"question": "您之前有帶小威來過這家醫院嗎？", "answer": "沒有，這是第一次", "tags": ["一般交流"], "answerType": "dialogue"}
+{"question": "您有其他家人可以幫忙照顧小威嗎？", "answer": "有我的母親，但她住得有點遠", "tags": ["家庭询问"], "answerType": "dialogue"}
