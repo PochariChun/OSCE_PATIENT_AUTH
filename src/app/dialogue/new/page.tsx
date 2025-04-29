@@ -68,6 +68,12 @@ interface SpeechRecognition extends EventTarget {
   onend: (() => void) | null;
 }
 
+// 标准化名称变体
+const normalizeNames = (text: string): string => {
+  // 将所有"小威"的变体统一为"小威"
+  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小葳/g, '小威');
+};
+
 export default function NewDialoguePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -160,7 +166,9 @@ export default function NewDialoguePage() {
           
           // 如果有新的最終結果
           if (final !== finalTranscript && final.trim() !== '') {
-            setFinalTranscript(final);
+            // 标准化名称
+            const normalizedText = normalizeNames(final);
+            setFinalTranscript(normalizedText);
             
             // 檢測句子結束（句號、問號、驚嘆號等）
             const sentenceEndRegex = /[。！？\.!?]/g;
@@ -362,6 +370,47 @@ export default function NewDialoguePage() {
     }
   };
   
+  // 添加一个函数来获取AI回复
+  const getAIResponse = async (userMessage: string, conversationHistory: any[]) => {
+    try {
+      console.log('发送请求到 AI 回复服务...');
+      
+      const response = await fetch('/api/ai-response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          history: conversationHistory,
+          scenarioId: selectedScenario?.id
+        }),
+      });
+      
+      console.log('收到 AI 回复服务响应，状态码:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('AI 回复服务返回错误:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText
+        });
+        throw new Error(`获取AI回复失败: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log('成功解析 AI 回复:', data);
+      
+      return data.response;
+    } catch (error) {
+      console.error('获取AI回复时发生错误:', error);
+      // 返回一个友好的错误消息
+      return '抱歉，我现在无法回答您的问题。请稍后再试。';
+    }
+  };
+  
+  // 修改handleSendVoiceMessage和sendMessageToServer函数
   const handleSendVoiceMessage = async (voiceMessage: string) => {
     if (!voiceMessage.trim() || !conversationId) return;
     
@@ -426,61 +475,61 @@ export default function NewDialoguePage() {
       console.error('保存用戶訊息時發生錯誤', error);
     }
     
-    // 模擬虛擬病人回覆
-    setTimeout(async () => {
-      const replyTime = new Date();
-      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+    // 获取AI回复
+    const aiResponse = await getAIResponse(voiceMessage, conversation);
+    
+    const replyTime = new Date();
+    const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+    
+    const assistantMessage = { 
+      role: 'assistant' as const, 
+      content: aiResponse,
+      timestamp: replyTime,
+      elapsedSeconds: replySeconds
+    };
+    
+    setConversation([...updatedConversation, assistantMessage]);
+    
+    // 計算虛擬病人回覆的延遲
+    const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
+    const patientIsDelayed = patientDelayFromPrev > 3;
+    
+    // 保存虛擬病人消息到數據庫
+    try {
+      const apiUrl = `/api/conversations/${conversationId}/messages`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [
+            {
+              sender: 'patient',
+              text: assistantMessage.content,
+              timestamp: replyTime.toISOString(),
+              elapsedSeconds: replySeconds,
+              delayFromPrev: patientDelayFromPrev,
+              isDelayed: patientIsDelayed
+            }
+          ] 
+        }),
+      });
       
-      const assistantMessage = { 
-        role: 'assistant' as const, 
-        content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
-        timestamp: replyTime,
-        elapsedSeconds: replySeconds
-      };
-      
-      setConversation([...updatedConversation, assistantMessage]);
-      
-      // 計算虛擬病人回覆的延遲
-      const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
-      const patientIsDelayed = patientDelayFromPrev > 3;
-      
-      // 保存虛擬病人消息到數據庫
-      try {
-        const apiUrl = `/api/conversations/${conversationId}/messages`;
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            messages: [
-              {
-                sender: 'patient',
-                text: assistantMessage.content,
-                timestamp: replyTime.toISOString(),
-                elapsedSeconds: replySeconds,
-                delayFromPrev: patientDelayFromPrev,
-                isDelayed: patientIsDelayed
-              }
-            ] 
-          }),
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('保存虛擬病人訊息失敗', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
         });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('保存虛擬病人訊息失敗', {
-            status: response.status,
-            statusText: response.statusText,
-            errorData
-          });
-        } else {
-          const data = await response.json();
-          console.log('虛擬病人訊息保存成功', data);
-        }
-      } catch (error) {
-        console.error('保存虛擬病人訊息時發生錯誤', error);
+      } else {
+        const data = await response.json();
+        console.log('虛擬病人訊息保存成功', data);
       }
-    }, 1000);
+    } catch (error) {
+      console.error('保存虛擬病人訊息時發生錯誤', error);
+    }
   };
   
   const sendMessageToServer = async (messageText: string) => {
@@ -547,68 +596,71 @@ export default function NewDialoguePage() {
       console.error('保存用戶訊息時發生錯誤', error);
     }
     
-    // 模擬虛擬病人回覆
-    setTimeout(async () => {
-      const replyTime = new Date();
-      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+    // 获取AI回复
+    const aiResponse = await getAIResponse(messageText, conversation);
+    
+    const replyTime = new Date();
+    const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+    
+    const assistantMessage = { 
+      role: 'assistant' as const, 
+      content: aiResponse,
+      timestamp: replyTime,
+      elapsedSeconds: replySeconds
+    };
+    
+    setConversation([...updatedConversation, assistantMessage]);
+    
+    // 計算虛擬病人回覆的延遲
+    const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
+    const patientIsDelayed = patientDelayFromPrev > 3;
+    
+    // 保存虛擬病人消息到數據庫
+    try {
+      const apiUrl = `/api/conversations/${conversationId}/messages`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [
+            {
+              sender: 'patient',
+              text: assistantMessage.content,
+              timestamp: replyTime.toISOString(),
+              elapsedSeconds: replySeconds,
+              delayFromPrev: patientDelayFromPrev,
+              isDelayed: patientIsDelayed
+            }
+          ] 
+        }),
+      });
       
-      const assistantMessage = { 
-        role: 'assistant' as const, 
-        content: '我明白您的意思了。您能告訴我更多關於這個問題的資訊嗎？',
-        timestamp: replyTime,
-        elapsedSeconds: replySeconds
-      };
-      
-      setConversation([...updatedConversation, assistantMessage]);
-      
-      // 計算虛擬病人回覆的延遲
-      const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
-      const patientIsDelayed = patientDelayFromPrev > 3;
-      
-      // 保存虛擬病人消息到數據庫
-      try {
-        const apiUrl = `/api/conversations/${conversationId}/messages`;
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            messages: [
-              {
-                sender: 'patient',
-                text: assistantMessage.content,
-                timestamp: replyTime.toISOString(),
-                elapsedSeconds: replySeconds,
-                delayFromPrev: patientDelayFromPrev,
-                isDelayed: patientIsDelayed
-              }
-            ] 
-          }),
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('保存虛擬病人訊息失敗', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
         });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('保存虛擬病人訊息失敗', {
-            status: response.status,
-            statusText: response.statusText,
-            errorData
-          });
-        } else {
-          const data = await response.json();
-          console.log('虛擬病人訊息保存成功', data);
-        }
-      } catch (error) {
-        console.error('保存虛擬病人訊息時發生錯誤', error);
+      } else {
+        const data = await response.json();
+        console.log('虛擬病人訊息保存成功', data);
       }
-    }, 1000);
+    } catch (error) {
+      console.error('保存虛擬病人訊息時發生錯誤', error);
+    }
   };
   
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
+    // 标准化名称
+    const normalizedMessage = normalizeNames(message.trim());
+    
     // 发送消息到服务器
-    sendMessageToServer(message.trim());
+    sendMessageToServer(normalizedMessage);
     
     // 清空输入框
     setMessage('');
@@ -649,6 +701,26 @@ export default function NewDialoguePage() {
           });
         } else {
           console.log('對話結束時間更新成功');
+          
+          // 添加評分請求
+          try {
+            console.log('開始對對話進行評分...');
+            const scoreResponse = await fetch(`/api/conversations/${conversationId}/score`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+            
+            if (scoreResponse.ok) {
+              const scoreResult = await scoreResponse.json();
+              console.log('對話評分成功，分數:', scoreResult.score);
+            } else {
+              console.error('對話評分失敗:', scoreResponse.status, scoreResponse.statusText);
+            }
+          } catch (scoreError) {
+            console.error('評分過程中發生錯誤:', scoreError);
+          }
           
           // 導向到反思頁面，而不是歷史頁面
           router.push(`/dialogue/reflection/${conversationId}`);
@@ -776,10 +848,14 @@ export default function NewDialoguePage() {
         
         if (finalText) {
           console.log('識別到最終文本:', finalText);
+          // 标准化名称
+          const normalizedText = normalizeNames(finalText);
+          console.log('標準化後的文本:', normalizedText);
+          
           // 將最終文本添加到 finalTranscript 中，而不是替換它
           setInterimTranscript('');
           setFinalTranscript(prev => {
-            const newText = prev + finalText;
+            const newText = prev + normalizedText;
             console.log('更新最終文本為:', newText);
             return newText;
           });
