@@ -372,3 +372,10 @@
 {"question": "您先生呢？他會來嗎？", "answer": "他在趕來的路上，應該很快就到了", "tags": ["家庭询问"], "answerType": "dialogue"}
 {"question": "您之前有帶小威來過這家醫院嗎？", "answer": "沒有，這是第一次", "tags": ["一般交流"], "answerType": "dialogue"}
 {"question": "您有其他家人可以幫忙照顧小威嗎？", "answer": "有我的母親，但她住得有點遠", "tags": ["家庭询问"], "answerType": "dialogue"}
+
+// 修改關心病人的語句，確保不會被錯誤識別為評估問題
+{"question": "弟弟今天的精神狀況如何？", "answer": "他很不舒服，一直哭鬧", "tags": ["關心問候", "非評估"], "answerType": "dialogue", "isNotScoring": true}
+{"question": "小朋友現在感覺好一些了嗎？", "answer": "還是很不舒服，剛才又哭了一陣子", "tags": ["關心問候", "非評估"], "answerType": "dialogue", "isNotScoring": true}
+{"question": "弟弟看起來很不舒服，我能做什麼幫助他？", "answer": "謝謝您的關心，希望能快點退燒", "tags": ["關心問候", "非評估"], "answerType": "dialogue", "isNotScoring": true}
+{"question": "小威今天的情緒怎麼樣？", "answer": "還是很不舒服，但沒有剛來時那麼嚴重了", "tags": ["關心問候", "非評估"], "answerType": "dialogue", "isNotScoring": true}
+{"question": "弟弟今天有沒有比較舒服一點？", "answer": "還是很不舒服，但至少不像昨天那麼嚴重", "tags": ["關心問候", "非評估"], "answerType": "dialogue", "isNotScoring": true}
