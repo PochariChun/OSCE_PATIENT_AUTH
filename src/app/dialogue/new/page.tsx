@@ -6,6 +6,7 @@ import { Navbar } from '../../../components/navbar';
 import Link from 'next/link';
 import { MicrophoneCheck } from '@/components/MicrophoneCheck';
 import Image from 'next/image';
+import { normalizeNames } from '@/lib/textUtils'; // 導入共用函數，而不是在本地定義
 
 interface User {
   id: number;
@@ -67,12 +68,6 @@ interface SpeechRecognition extends EventTarget {
   onerror: ((event: SpeechRecognitionEvent) => void) | null;
   onend: (() => void) | null;
 }
-
-// 标准化名称变体
-const normalizeNames = (text: string): string => {
-  // 将所有"小威"的变体统一为"小威"
-  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小葳/g, '小威');
-};
 
 export default function NewDialoguePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -166,7 +161,7 @@ export default function NewDialoguePage() {
           
           // 如果有新的最終結果
           if (final !== finalTranscript && final.trim() !== '') {
-            // 标准化名称
+            // 標準化名稱
             const normalizedText = normalizeNames(final);
             setFinalTranscript(normalizedText);
             
@@ -656,7 +651,7 @@ export default function NewDialoguePage() {
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
-    // 标准化名称
+    // 標準化名稱
     const normalizedMessage = normalizeNames(message.trim());
     
     // 发送消息到服务器
@@ -848,7 +843,7 @@ export default function NewDialoguePage() {
         
         if (finalText) {
           console.log('識別到最終文本:', finalText);
-          // 标准化名称
+          // 標準化名稱
           const normalizedText = normalizeNames(finalText);
           console.log('標準化後的文本:', normalizedText);
           
@@ -1134,11 +1129,11 @@ export default function NewDialoguePage() {
                   onMouseUp={handleRecordButtonMouseUp}
                   onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
                   onTouchStart={(e) => {
-                    e.preventDefault(); // 防止默认行为
+                    e.preventDefault(); // 防止預設行為
                     handleRecordButtonTouchStart(e);
                   }}
                   onTouchEnd={(e) => {
-                    e.preventDefault(); // 防止默认行为
+                    e.preventDefault(); // 防止預設行為
                     handleRecordButtonTouchEnd(e);
                   }}
                   onContextMenu={(e) => e.preventDefault()} // 防止右键菜单
@@ -1148,10 +1143,10 @@ export default function NewDialoguePage() {
                     alt="虛擬病人"
                     width={400}
                     height={400}
-                    className="rounded-lg mx-auto pointer-events-none" // 禁用图片的指针事件
+                    className="rounded-lg mx-auto pointer-events-none" // 禁用圖片的指針事件
                     priority
                     draggable="false" // 禁止拖拽
-                    style={{ WebkitTouchCallout: 'none' }} // 禁止iOS长按呼出菜单
+                    style={{ WebkitTouchCallout: 'none' }} // 禁止iOS長按呼出選單
                   />
                   {isListening && (
                     <div className="absolute bottom-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm animate-pulse">
@@ -1228,7 +1223,7 @@ export default function NewDialoguePage() {
                   </div>
                 )}
                 
-                {/* 对话显示区域 - 移到输入区域下方 */}
+                {/* 對話顯示區域 - 移到輸入區域下方 */}
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {conversation.map((msg, index) => (
                     <div 
