@@ -22,8 +22,8 @@ model User {
 
   conversations Conversation[]
 
-  @@index([email])
   @@index([username])
+  @@index([email])
 }
 
 model Conversation {

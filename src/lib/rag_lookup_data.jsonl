@@ -286,7 +286,7 @@
 {"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Legs"}
 {"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Activity"}
 {"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Cry"}
-{"question": "觀察小威的可安慰度", "answer": "病童需要頻繁撫摸才能安撫", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Consolability"}
+// {"question": "觀察小威的可安慰度", "answer": "病童需要頻繁撫摸才能安撫", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Consolability"}
 {"question": "根據FLACC量表評估小威的疼痛程度", "answer": "總分7分，表示中度疼痛", "tags": ["腹痛評估"], "answerType": "narration", "scoringCategory": "Assessment", "scoringItem": "Pain Assessment", "scoringSubItem": "FLACC Scale Total"}
 
 // ===================================================================================

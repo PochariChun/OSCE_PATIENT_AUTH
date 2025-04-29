@@ -53,6 +53,7 @@ export default function NotFound() {
           <Link 
             href="/"
             className="px-8 py-3 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+            prefetch={false}
           >
             返回首頁
           </Link>

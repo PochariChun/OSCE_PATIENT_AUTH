@@ -55,6 +55,7 @@ export default function Error({
           <Link 
             href="/"
             className="px-8 py-3 font-semibold rounded-md bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"
+            prefetch={false}
           >
             返回首頁
           </Link>

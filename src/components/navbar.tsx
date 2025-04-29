@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ThemeToggle } from "./theme-toggle"
+import { Button } from '@/components/ui/button';
 
 interface User {
   id: number;
@@ -13,14 +14,33 @@ interface User {
 }
 
 interface NavbarProps {
-  user: User | null;
+  user?: any;
 }
 
-export function Navbar({ user }: NavbarProps) {
+export function Navbar({ user: propUser }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter()
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [user, setUser] = useState<any>(propUser);
+
+  useEffect(() => {
+    // 如果通過 props 提供了用戶，使用它
+    if (propUser) {
+      setUser(propUser);
+      return;
+    }
+
+    // 否則，嘗試從 localStorage 獲取用戶
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error('無法從 localStorage 獲取用戶:', error);
+    }
+  }, [propUser]);
 
   // 初始化時檢查夜間模式狀態
   useEffect(() => {
@@ -57,12 +77,77 @@ export function Navbar({ user }: NavbarProps) {
     }
   };
 
-  const handleLogout = () => {
-    // 清除本地存储的用户信息
-    localStorage.removeItem('user');
-    // 重定向到登录页面
-    router.push('/login');
+  const handleLogout = async () => {
+    try {
+      // 呼叫登出 API
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error('登出失敗:', response.statusText);
+      }
+      
+      // 無論 API 是否成功，都清除本地存儲
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      
+      // 重置用戶狀態
+      setUser(null);
+      
+      // 關閉用戶菜單
+      setIsProfileMenuOpen(false);
+      
+      // 重定向到登入頁面
+      router.push('/login');
+    } catch (error) {
+      console.error('登出過程中發生錯誤:', error);
+      
+      // 即使出錯，也嘗試清除本地存儲
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      
+      // 重置用戶狀態
+      setUser(null);
+      
+      // 重定向到登入頁面
+      router.push('/login');
+    }
+  };
+
+  // 添加一個輔助函數來獲取用戶的首字母
+  function getUserInitial(user: any): string {
+    if (!user) return '?';
+    
+    // 優先使用 nickname
+    if (user.nickname && typeof user.nickname === 'string' && user.nickname.length > 0) {
+      return user.nickname.charAt(0).toUpperCase();
+    }
+    
+    // 其次使用 username
+    if (user.username && typeof user.username === 'string' && user.username.length > 0) {
+      return user.username.charAt(0).toUpperCase();
+    }
+    
+    // 再次使用 name
+    if (user.name && typeof user.name === 'string' && user.name.length > 0) {
+      return user.name.charAt(0).toUpperCase();
+    }
+    
+    // 最後使用 email
+    if (user.email && typeof user.email === 'string' && user.email.length > 0) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    
+    // 如果都沒有，返回一個問號
+    return '?';
   }
+
+  // 在顯示用戶信息時檢查電子郵件是否存在
+  const userEmail = user?.email || '未設置電子郵件';
 
   return (
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -126,7 +211,7 @@ export function Navbar({ user }: NavbarProps) {
                   >
                     <span className="sr-only">打開用戶菜單</span>
                     <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-                      {user.name.charAt(0).toUpperCase()}
+                      {getUserInitial(user)}
                     </div>
                   </button>
                 </div>
@@ -139,8 +224,10 @@ export function Navbar({ user }: NavbarProps) {
                     tabIndex={-1}
                   >
                     <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600">
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-gray-500 dark:text-gray-400 truncate">{user.email}</div>
+                      <div className="font-medium">
+                        {user.name || user.nickname || user.username || '用戶'}
+                      </div>
+                      <div className="text-gray-500 dark:text-gray-400 truncate">{userEmail}</div>
                     </div>
                     <Link
                       href="/profile"
@@ -280,12 +367,16 @@ export function Navbar({ user }: NavbarProps) {
               <div className="flex items-center px-4">
                 <div className="flex-shrink-0">
                   <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-                    {user.name.charAt(0).toUpperCase()}
+                    {getUserInitial(user)}
                   </div>
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800 dark:text-white">{user.name}</div>
-                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{user.email}</div>
+                  <div className="text-base font-medium text-gray-800 dark:text-white">
+                    {user.name || user.nickname || user.username || '用戶'}
+                  </div>
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {userEmail}
+                  </div>
                 </div>
               </div>
               <div className="mt-3 space-y-1">

@@ -36,6 +36,8 @@ export default function ReflectionPage() {
   const [message, setMessage] = useState('');
   const [conversationTitle, setConversationTitle] = useState('');
   const [currentStage, setCurrentStage] = useState<string>('');
+  const [reflection, setReflection] = useState(null);
+  const [error, setError] = useState(null);
   
   const router = useRouter();
   const params = useParams();
@@ -49,23 +51,40 @@ export default function ReflectionPage() {
   };
   
   useEffect(() => {
-    // 從 localStorage 獲取用戶信息
+    // 改進的 fetchUser 函數
     const fetchUser = async () => {
       try {
+        console.log('ReflectionPage: 開始獲取用戶資訊');
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          console.error('未登入，重定向到登入頁面');
-          throw new Error('未登入');
+          console.log('ReflectionPage: 未找到用戶資訊，重定向到登入頁面');
+          router.push('/login');
+          return;
         }
         
-        const userData = JSON.parse(userJson);
-        console.log('已獲取用戶資料:', userData);
+        let userData;
+        try {
+          userData = JSON.parse(userJson);
+          console.log('ReflectionPage: 成功解析用戶資料');
+        } catch (parseError) {
+          console.error('ReflectionPage: 用戶資料解析失敗', parseError);
+          localStorage.removeItem('user'); // 清除無效資料
+          router.push('/login');
+          return;
+        }
+        
         setUser(userData);
         
-        // 獲取對話資料
-        await fetchConversationData();
+        // 分開處理反思數據獲取
+        try {
+          console.log(`ReflectionPage: 開始獲取反思數據，ID: ${conversationId}`);
+          await fetchConversationData(userData.id);
+        } catch (reflectionError) {
+          console.error('ReflectionPage: 獲取反思數據失敗', reflectionError);
+          setError('無法加載反思數據，請稍後再試');
+        }
       } catch (error) {
-        console.error('獲取用戶信息失敗', error);
+        console.error('ReflectionPage: 獲取用戶資訊失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -79,7 +98,7 @@ export default function ReflectionPage() {
     scrollToBottom();
   }, [conversation]);
   
-  const fetchConversationData = async () => {
+  const fetchConversationData = async (userId: number) => {
     try {
       if (!conversationId) {
         console.error('對話ID不存在');
@@ -87,7 +106,7 @@ export default function ReflectionPage() {
       }
       
       // 獲取對話詳情
-      const response = await fetch(`/api/conversations/${conversationId}?userId=${user?.id || ''}`);
+      const response = await fetch(`/api/conversations/${conversationId}?userId=${userId}`);
       
       if (!response.ok) {
         console.error('獲取對話詳情失敗:', response.status, response.statusText);

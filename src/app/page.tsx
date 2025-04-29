@@ -42,19 +42,43 @@ export default function HomePage() {
     // 從 localStorage 獲取用戶資訊
     const fetchUser = async () => {
       try {
+        console.log('開始獲取用戶資訊');
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          throw new Error('未登入');
+          console.log('未找到用戶資訊，重定向到登入頁面');
+          router.push('/login');
+          return;
         }
         
-        const userData = JSON.parse(userJson);
+        let userData;
+        try {
+          userData = JSON.parse(userJson);
+          console.log('成功解析用戶資料');
+        } catch (parseError) {
+          console.error('用戶資料解析失敗', parseError);
+          localStorage.removeItem('user'); // 清除無效資料
+          router.push('/login');
+          return;
+        }
+        
         setUser(userData);
         
-        // 從 API 獲取對話歷史和推薦場景
-        await Promise.all([
-          fetchDialogueHistory(userData.id),
-          fetchRecommendedScenarios(userData.id)
-        ]);
+        // 分開處理每個 API 請求，避免一個失敗影響另一個
+        try {
+          console.log('開始獲取對話歷史');
+          await fetchDialogueHistory(userData.id);
+        } catch (historyError) {
+          console.error('獲取對話歷史失敗', historyError);
+          setDialogueHistory([]);
+        }
+        
+        try {
+          console.log('開始獲取推薦場景');
+          await fetchRecommendedScenarios(userData.id);
+        } catch (scenarioError) {
+          console.error('獲取推薦場景失敗', scenarioError);
+          setRecommendedScenarios([]);
+        }
       } catch (error) {
         console.error('獲取用戶資訊失敗', error);
         router.push('/login');
@@ -158,7 +182,7 @@ export default function HomePage() {
               <div className="space-y-3">
                 <div>
                   <p className="text-gray-500 dark:text-gray-400">帳號 (學號):</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{user.name}</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{user.nickname}</p>
                 </div>
                 <div>
                   <p className="text-gray-500 dark:text-gray-400">電子郵件:</p>
