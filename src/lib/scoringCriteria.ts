@@ -1,5 +1,19 @@
 // 評分標準定義
-export const scoringCriteria = {
+export interface ScoringItem {
+  score: number;
+  studentKeywords?: string[];
+  spKeywords?: string[];
+}
+
+export interface ScoringCategory {
+  [key: string]: ScoringItem;
+}
+
+export interface ScoringCriteria {
+  [key: string]: ScoringCategory;
+}
+
+export const scoringCriteria: ScoringCriteria = {
     "Patient Identification": {
       "Confirm Bed Number": {
         score: 2,

@@ -49,12 +49,15 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
   const [dialogue, setDialogue] = useState<DialogueDetail | null>(null);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   
   // 正确使用 React.use() 解包 params
   const resolvedParams = params instanceof Promise ? React.use(params) : params;
   const dialogueId = resolvedParams.id;
 
   useEffect(() => {
+    // 在组件挂载后标记为客户端渲染
+    setIsClient(true);
     setMounted(true);
     
     // 从 localStorage 获取用户信息
@@ -107,17 +110,22 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
   };
 
   // 避免服务器端和客户端渲染不匹配
-  if (!mounted) {
+  if (!mounted || !isClient) {
     return null;
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">加載中...</p>
-        </div>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Navbar user={user} />
+        <main className="container mx-auto px-4 py-8">
+          <div className="flex justify-center items-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
+              <p className="mt-2 text-gray-700 dark:text-gray-300">載入中...</p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -208,10 +216,10 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">總分：</span>
                     <span className={`font-semibold ${
-                      dialogue.score && dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
-                      dialogue.score && dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
-                      dialogue.score && dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
-                      dialogue.score ? 'text-red-600 dark:text-red-400' :
+                      dialogue.score !== null && dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
+                      dialogue.score !== null && dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
+                      dialogue.score !== null && dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
+                      dialogue.score !== null ? 'text-red-600 dark:text-red-400' :
                       'text-gray-600 dark:text-gray-400'
                     }`}>
                       {dialogue.score !== null ? `${dialogue.score}/100` : '未評分'}
@@ -219,7 +227,7 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                   </div>
                   
                   {/* 添加評分等級 */}
-                  {dialogue.score && (
+                  {dialogue.score !== null && (
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">等級：</span>
                       <span className={`font-semibold ${
@@ -277,14 +285,16 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                       // 判斷是否為用戶消息
                       const isUserMessage = msg.role === 'user';
                       
-                      // 只對用戶消息檢查延遲
-                      const showDelayWarning = isUserMessage && msg.delayFromPrev && msg.delayFromPrev > 5;
+                      // 只對用戶消息檢查延遲，確保 delayFromPrev 是數字且大於 5
+                      const showDelayWarning = isUserMessage && 
+                                               typeof msg.delayFromPrev === 'number' && 
+                                               msg.delayFromPrev > 5;
                       
                       // 計算與上一條消息的間距（基於 elapsedSeconds）
                       const prevMsg = index > 0 ? arr[index - 1] : null;
                       const prevElapsed = prevMsg ? (prevMsg.elapsedSeconds || 0) : 0;
                       const currentElapsed = msg.elapsedSeconds || 0;
-                      const timeDiff = currentElapsed - prevElapsed;
+                      const timeDiff = index === 0 && currentElapsed === 0 ? 0 : currentElapsed - prevElapsed;
                       
                       // 根據時間差計算間距高度（每秒 5px，最小 40px）
                       const spacing = Math.max(40, timeDiff * 5);
@@ -304,9 +314,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                           
                           {/* 時間標籤 - 置中 */}
                           <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
-                            {msg.elapsedSeconds !== undefined 
+                            {msg.elapsedSeconds !== undefined && msg.elapsedSeconds !== null && msg.elapsedSeconds !== 0
                               ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
-                              : '00:00'}
+                              : ''}
                           </div>
                           
                           {/* 對話內容 - 分左右兩側 */}
@@ -320,9 +330,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                                   }`}>
                                     <p className="break-words">{msg.content}</p>
                                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                                      {msg.elapsedSeconds !== undefined 
+                                      {msg.elapsedSeconds !== undefined && msg.elapsedSeconds !== null && msg.elapsedSeconds !== 0
                                         ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
-                                        : '00:00'}
+                                        : ''}
                                     </div>
                                   </div>
                                 </div>
@@ -348,9 +358,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                                   }`}>
                                     <p className="break-words">{msg.content}</p>
                                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                                      {msg.elapsedSeconds !== undefined 
+                                      {msg.elapsedSeconds !== undefined && msg.elapsedSeconds !== null && msg.elapsedSeconds !== 0
                                         ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
-                                        : '00:00'}
+                                        : ''}
                                     </div>
                                   </div>
                                 </div>
