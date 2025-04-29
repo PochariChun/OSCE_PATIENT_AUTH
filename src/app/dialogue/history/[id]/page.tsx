@@ -304,7 +304,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                           
                           {/* 時間標籤 - 置中 */}
                           <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
-                            {msg.elapsedSeconds ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` : '00:00'}
+                            {msg.elapsedSeconds !== undefined 
+                              ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
+                              : '00:00'}
                           </div>
                           
                           {/* 對話內容 - 分左右兩側 */}
@@ -318,8 +320,8 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                                   }`}>
                                     <p className="break-words">{msg.content}</p>
                                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                                      {msg.elapsedSeconds 
-                                        ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
+                                      {msg.elapsedSeconds !== undefined 
+                                        ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
                                         : '00:00'}
                                     </div>
                                   </div>
@@ -346,8 +348,8 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                                   }`}>
                                     <p className="break-words">{msg.content}</p>
                                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                                      {msg.elapsedSeconds 
-                                        ? `${Math.floor(msg.elapsedSeconds / 60)}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
+                                      {msg.elapsedSeconds !== undefined 
+                                        ? `${Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:${(msg.elapsedSeconds % 60).toString().padStart(2, '0')}` 
                                         : '00:00'}
                                     </div>
                                   </div>

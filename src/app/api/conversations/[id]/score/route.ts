@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { evaluateConversation } from '@/lib/scoringService';
+import { evaluateConversationWithRAG } from '@/lib/ragScoringService';
 
 // 添加動態配置
 export const dynamic = 'force-dynamic';
@@ -41,8 +41,8 @@ export async function POST(
       return NextResponse.json({ error: '對話不存在' }, { status: 404 });
     }
 
-    // 評分對話
-    const { score, evaluationDetails } = evaluateConversation(conversation);
+    // 使用 RAG 評分方法評分對話
+    const { score, evaluationDetails } = await evaluateConversationWithRAG(conversation);
 
     // 更新對話的分數
     await prisma.conversation.update({

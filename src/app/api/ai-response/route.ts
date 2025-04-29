@@ -69,18 +69,31 @@ export async function POST(request: Request) {
       // 檢查是否在開發環境
       const isDevelopment = process.env.NODE_ENV === 'development';
       
+      // 檢查是否有 answerType 為 narration
+      const isNarration = bestMatch.answerType === 'narration';
+      
+      const response = {
+        response: bestMatch.answer,
+        answerType: bestMatch.answerType || 'dialogue', // 預設為 dialogue
+        imageToShow: bestMatch.imageToShow || null, // 如果有圖片要顯示
+      };
+      
       if (isDevelopment) {
         // 在開發環境中，在回覆中包含匹配信息
         return NextResponse.json({ 
-          response: bestMatch.answer,
+          ...response,
           debug: {
             matchedQuestion: bestMatch.question,
-            score: bestMatch.score
+            score: bestMatch.score,
+            tags: bestMatch.tags,
+            scoringCategory: bestMatch.scoringCategory,
+            scoringItem: bestMatch.scoringItem,
+            scoringSubItem: bestMatch.scoringSubItem
           }
         });
       } else {
-        // 在生產環境中，只返回回答
-        return NextResponse.json({ response: bestMatch.answer });
+        // 在生產環境中，只返回回答和類型
+        return NextResponse.json(response);
       }
     }
     
@@ -95,7 +108,10 @@ export async function POST(request: Request) {
     
     const randomResponse = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     
-    return NextResponse.json({ response: randomResponse });
+    return NextResponse.json({ 
+      response: randomResponse,
+      answerType: 'dialogue'
+    });
     
   } catch (error) {
     console.error('AI回覆處理錯誤:', error);

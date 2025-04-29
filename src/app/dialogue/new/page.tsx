@@ -1238,15 +1238,18 @@ export default function NewDialoguePage() {
                         }`}
                       >
                         <p>{msg.content}</p>
-                        {msg.elapsedSeconds !== undefined && msg.role !== 'system' && (
-                          <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300 text-right">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:
-                            {(msg.elapsedSeconds % 60).toString().padStart(2, '0')}
-                          </div>
-                        )}
+                        {msg.elapsedSeconds 
+                          ? (
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                                {Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:{(msg.elapsedSeconds % 60).toString().padStart(2, '0')}
+                              </div>
+                            )
+                          : (
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                                00:00
+                              </div>
+                            )
+                        }
                       </div>
                     </div>
                   ))}
