@@ -1,5 +1,8 @@
 import sys
 import os
+import jieba
+from opencc import OpenCC
+import argparse
 
 # 只在直接運行腳本時才檢查依賴
 if __name__ == "__main__":
@@ -33,9 +36,7 @@ try:
     import numpy as np
     import pickle
     import re
-    import jieba
     import random
-    import opencc
 except ImportError as e:
     if __name__ == "__main__":
         print(f"錯誤：缺少必要的依賴 - {str(e)}")
@@ -86,24 +87,9 @@ except Exception as e:
         print("4. 修改代码使用本地模型路径")
         sys.exit(1)
 
-# 添加繁簡轉換器
-try:
-    import opencc
-    cc_t2s = opencc.OpenCC('t2s')  # 繁體轉簡體
-    cc_s2t = opencc.OpenCC('s2t')  # 簡體轉繁體
-except ImportError:
-    print("警告: 未找到 opencc 模块。正在尝试安装...")
-    import subprocess
-    import sys
-    
-    # 尝试安装 opencc-python-reimplemented
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "opencc-python-reimplemented"])
-    
-    # 安装后再次导入
-    import opencc
-    cc_t2s = opencc.OpenCC('t2s')  # 繁體轉簡體
-    cc_s2t = opencc.OpenCC('s2t')  # 簡體轉繁體
-    print("opencc 模块已成功安装")
+# 初始化繁簡轉換器
+cc_t2s = OpenCC('t2s')  # 繁體轉簡體
+cc_s2t = OpenCC('s2t')  # 簡體轉繁體
 
 # 从 JSONL 文件加载数据
 def load_data_from_jsonl(file_path):
@@ -267,67 +253,63 @@ def create_index(documents):
     
     return index, doc_map, documents
 
-# 添加问题分类函数
-def classify_question(question):
-    # 定義不同類型的問題特徵 (繁體中文版)
-    question_types = {
-        'symptom': ['症狀', '不舒服', '難受', '疼', '痛', '發燒', '腹瀉', '嘔吐', '咳嗽', '不適'],
-        'treatment': ['治療', '吃藥', '用藥', '處理', '怎麼辦', '如何處理', '該怎麼', '醫治'],
-        'cause': ['原因', '為什麼', '怎麼會', '是不是因為', '導致', '引起'],
-        'duration': ['多久', '多長時間', '幾天', '什麼時候', '何時', '時間'],
-        'severity': ['嚴重', '危險', '需要去醫院', '需要就醫', '緊急', '嚴重性'],
-        'prevention': ['預防', '避免', '防止', '不要', '別', '如何避免'],
-        'general': ['是什麼', '介紹', '告訴我', '解釋', '說明']
-    }
+# # 添加问题分类函数
+# def classify_question(question):
+#     # 定義不同類型的問題特徵 (繁體中文版)
+#     question_types = {
+#         'symptom': ['症狀', '不舒服', '難受', '疼', '痛', '發燒', '腹瀉', '嘔吐', '咳嗽', '不適'],
+#         'treatment': ['治療', '吃藥', '用藥', '處理', '怎麼辦', '如何處理', '該怎麼', '醫治'],
+#         'cause': ['原因', '為什麼', '怎麼會', '是不是因為', '導致', '引起'],
+#         'duration': ['多久', '多長時間', '幾天', '什麼時候', '何時', '時間'],
+#         'severity': ['嚴重', '危險', '需要去醫院', '需要就醫', '緊急', '嚴重性'],
+#         'prevention': ['預防', '避免', '防止', '不要', '別', '如何避免'],
+#         'general': ['是什麼', '介紹', '告訴我', '解釋', '說明']
+#     }
     
-    # 檢查問題屬於哪些類型
-    question_classes = []
+#     # 檢查問題屬於哪些類型
+#     question_classes = []
     
-    # 轉換為簡體進行匹配 (因為特徵詞可能是簡體)
-    simplified_question = cc_t2s.convert(question)
+#     # 轉換為簡體進行匹配 (因為特徵詞可能是簡體)
+#     simplified_question = cc_t2s.convert(question)
     
-    for q_type, features in question_types.items():
-        # 檢查繁體和簡體版本
-        if any(feature in question for feature in features) or any(feature in simplified_question for feature in features):
-            question_classes.append(q_type)
+#     for q_type, features in question_types.items():
+#         # 檢查繁體和簡體版本
+#         if any(feature in question for feature in features) or any(feature in simplified_question for feature in features):
+#             question_classes.append(q_type)
     
-    # 如果沒有匹配任何類型，歸為一般問題
-    if not question_classes:
-        question_classes = ['general']
+#     # 如果沒有匹配任何類型，歸為一般問題
+#     if not question_classes:
+#         question_classes = ['general']
     
-    return question_classes
+#     return question_classes
 
-# 添加繁體中文醫學術語同義詞映射
-medical_synonyms = {
-    '腹瀉': ['拉肚子', '肚子不好', '大便稀', '大便次數多', '水樣便', '稀便', '腸胃炎'],
-    '嘔吐': ['吐', '噁心吐', '吐出來', '反胃', '嘔'],
-    '發熱': ['發燒', '體溫高', '溫度高', '燒', '發高燒'],
-    '腹痛': ['肚子痛', '肚子疼', '腹部疼痛', '肚子不舒服', '腹絞痛'],
-    '頭痛': ['頭疼', '腦袋痛', '腦袋疼', '偏頭痛'],
-    '咳嗽': ['咳', '乾咳', '咳痰', '咳嗽不止'],
-    '脫水': ['缺水', '水分不足', '沒有水分', '體液流失'],
-    '食慾不振': ['不想吃東西', '沒胃口', '不想吃飯', '沒有食慾'],
-    '疫苗': ['預防針', '防疫針', '接種', '預防注射'],
-    '藥物': ['藥', '藥品', '吃的藥', '服用的藥']
-}
+# # 添加繁體中文醫學術語同義詞映射
+# medical_synonyms = {
+#     '腹瀉': ['拉肚子', '肚子不好', '大便稀', '大便次數多', '水樣便', '稀便', '腸胃炎'],
+#     '嘔吐': ['吐', '噁心吐', '吐出來', '反胃', '嘔'],
+#     '發熱': ['發燒', '體溫高', '溫度高', '燒', '發高燒'],
+#     '腹痛': ['肚子痛', '肚子疼', '腹部疼痛', '肚子不舒服', '腹絞痛'],
+#     '頭痛': ['頭疼', '腦袋痛', '腦袋疼', '偏頭痛'],
+#     '咳嗽': ['咳', '乾咳', '咳痰', '咳嗽不止'],
+#     '脫水': ['缺水', '水分不足', '沒有水分', '體液流失'],
+#     '食慾不振': ['不想吃東西', '沒胃口', '不想吃飯', '沒有食慾'],
+#     '疫苗': ['預防針', '防疫針', '接種', '預防注射'],
+#     '藥物': ['藥', '藥品', '吃的藥', '服用的藥']
+# }
 
-# 添加繁體中文症狀-疾病映射
-symptom_disease_map = {
-    '腹瀉+嘔吐+發熱': ['胃腸炎', '腸胃感染', '食物中毒'],
-    '腹瀉+嘔吐': ['胃腸功能紊亂', '消化不良'],
-    '發熱+咳嗽': ['上呼吸道感染', '感冒', '流感'],
-    '腹痛+腹瀉': ['腸炎', '腸易激綜合徵'],
-    '頭痛+發熱': ['感染', '病毒感染', '細菌感染']
-}
+# # 添加繁體中文症狀-疾病映射
+# symptom_disease_map = {
+#     '腹瀉+嘔吐+發熱': ['胃腸炎', '腸胃感染', '食物中毒'],
+#     '腹瀉+嘔吐': ['胃腸功能紊亂', '消化不良'],
+#     '發熱+咳嗽': ['上呼吸道感染', '感冒', '流感'],
+#     '腹痛+腹瀉': ['腸炎', '腸易激綜合徵'],
+#     '頭痛+發熱': ['感染', '病毒感染', '細菌感染']
+# }
 
 # 修改 query_index 函数，添加繁體中文支持
 def query_index(index, doc_map, documents, query_text, top_k=5):
     # 查詢預處理
     query_text = clean_text(query_text)
-    
-    # 問題分類
-    question_classes = classify_question(query_text)
-    print(f"問題分類: {question_classes}")
     
     # 創建多種查詢變體
     query_variants = [query_text]
@@ -337,22 +319,10 @@ def query_index(index, doc_map, documents, query_text, top_k=5):
     if simplified_query != query_text:
         query_variants.append(simplified_query)
     
-    # 添加關鍵詞提取變體
-    keywords = extract_keywords(query_text)
-    if len(keywords) >= 2:
-        query_variants.append(' '.join(keywords))
-        # 也添加簡體版本
-        query_variants.append(' '.join([cc_t2s.convert(k) for k in keywords]))
-    
-    # 添加分詞變體
-    words = list(jieba.cut(query_text))
-    if len(words) > 3:
-        query_variants.append(' '.join(words))
-    
-    # 添加醫學術語擴展
-    expanded_query = expand_medical_terms(query_text)
-    if expanded_query != query_text:
-        query_variants.append(expanded_query)
+    # 添加繁體變體
+    traditional_query = cc_s2t.convert(query_text)
+    if traditional_query != query_text:
+        query_variants.append(traditional_query)
     
     # 對每個查詢變體進行嵌入和搜索
     all_results = []
@@ -387,18 +357,6 @@ def query_index(index, doc_map, documents, query_text, top_k=5):
                     "metadata": doc
                 })
     
-    # 在結果處理時考慮問題類型
-    for result in all_results:
-        doc = result["metadata"]
-        
-        # 如果文檔有標籤，檢查是否與問題類型匹配
-        if 'tags' in doc and doc['tags']:
-            # 計算標籤匹配分數
-            tag_match_score = calculate_tag_match(question_classes, doc['tags'])
-            
-            # 調整總分，增加標籤匹配的權重
-            result["score"] = 0.6 * result["score"] + 0.4 * tag_match_score
-    
     # 去重並按分數排序
     seen_docs = set()
     final_results = []
@@ -413,32 +371,6 @@ def query_index(index, doc_map, documents, query_text, top_k=5):
                 break
     
     return final_results
-
-# 擴展醫學術語
-def expand_medical_terms(text):
-    expanded = text
-    
-    # 檢查是否包含醫學術語，如果有則添加同義詞
-    for term, synonyms in medical_synonyms.items():
-        if term in text:
-            # 找到最相關的同義詞
-            relevant_synonym = synonyms[0] if synonyms else None
-            if relevant_synonym:
-                # 添加同義詞，但不替換原詞
-                if relevant_synonym not in text:
-                    expanded += f" {relevant_synonym}"
-    
-    # 檢查是否匹配症狀組合，如果有則添加可能的疾病
-    for symptom_combo, diseases in symptom_disease_map.items():
-        symptoms = symptom_combo.split('+')
-        if all(symptom in text for symptom in symptoms):
-            # 添加可能的疾病
-            for disease in diseases:
-                if disease not in text:
-                    expanded += f" {disease}"
-            break
-    
-    return expanded
 
 # 計算文本相似度，支持繁體中文
 def calculate_text_similarity(text1, text2):
@@ -543,16 +475,16 @@ if __name__ == "__main__":
     
     # 設置數據路徑
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../lib/rag_lookup_data.jsonl")
-    index_dir = os.path.join(script_dir, "../../lib/faiss_index")
+    data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../../lib/rag_lookup_data.jsonl")
+    index_dir = os.path.join(script_dir, "../../../lib/faiss_index")
     
     # 檢查數據文件是否存在
     if not os.path.exists(data_path):
         print(f"錯誤：找不到數據文件 {data_path}")
         # 嘗試查找可能的位置
         possible_locations = [
-            os.path.join(script_dir, "../lib/rag_lookup_data.jsonl"),
-            os.path.join(script_dir, "lib/rag_lookup_data.jsonl"),
+            os.path.join(script_dir, "../../../lib/rag_lookup_data.jsonl"),
+            os.path.join(script_dir, "../../lib/rag_lookup_data.jsonl"),
             os.path.join(os.getcwd(), "lib/rag_lookup_data.jsonl"),
             os.path.join(os.getcwd(), "src/lib/rag_lookup_data.jsonl")
         ]

@@ -104,6 +104,10 @@ export default function NewDialoguePage() {
   
   const [lastRecognizedText, setLastRecognizedText] = useState('');
   
+  // 添加音頻播放相關狀態
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
   useEffect(() => {
     // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
@@ -365,7 +369,7 @@ export default function NewDialoguePage() {
     }
   };
   
-  // 添加一个函数来获取AI回复
+  // 修改 getAIResponse 函數以處理音頻 URL
   const getAIResponse = async (userMessage: string, conversationHistory: any[]) => {
     try {
       console.log('发送请求到 AI 回复服务...');
@@ -396,6 +400,18 @@ export default function NewDialoguePage() {
       
       const data = await response.json();
       console.log('成功解析 AI 回复:', data);
+      
+      // 如果有音頻 URL，設置它以便播放
+      if (data.audioUrl) {
+        setAudioUrl(data.audioUrl);
+        // 如果有音頻元素，播放音頻
+        if (audioRef.current) {
+          audioRef.current.src = data.audioUrl;
+          audioRef.current.play().catch(err => {
+            console.error('播放音頻失敗:', err);
+          });
+        }
+      }
       
       return data.response;
     } catch (error) {
@@ -1033,6 +1049,9 @@ export default function NewDialoguePage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Navbar user={user} />
+      
+      {/* 添加隱藏的音頻元素用於播放 */}
+      <audio ref={audioRef} className="hidden" controls />
       
       <main className="container mx-auto px-4 py-8">
         {/* 麥克風檢查頁面 */}

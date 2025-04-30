@@ -16,8 +16,8 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
       body: JSON.stringify({ 
         query, 
         top_k: 3,
-        // 可以選擇性地傳遞歷史記錄
-        history: history.slice(-5)  // 只傳遞最近的5條訊息
+        // // 可以選擇性地傳遞歷史記錄
+        // history: history.slice(-5)  // 只傳遞最近的5條訊息
       }),
     });
     
@@ -34,6 +34,53 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
   }
 }
 
+// 修改 generateVoiceWithBark 函數以更好地處理連接錯誤
+async function generateVoiceWithBark(text: string): Promise<string | null> {
+  try {
+    // 使用環境變量獲取 Bark API 地址
+    const barkApiUrl = process.env.BARK_API_URL || 'http://localhost:7860/api/generate';
+    
+    // 添加超時設置，避免長時間等待
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超時
+    
+    const response = await fetch(barkApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text,
+        voice_preset: 'mother', // 使用媽媽的聲音預設
+        // 可以添加其他 Bark 參數，如語速、音調等
+      }),
+      signal: controller.signal
+    }).finally(() => clearTimeout(timeoutId));
+    
+    if (!response.ok) {
+      throw new Error(`Bark API 請求失敗: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data.audio_url || null; // 假設 API 返回音頻 URL
+  } catch (error) {
+    // 更詳細的錯誤日誌
+    if (error instanceof Error) {
+      console.error(`生成語音時出錯: ${error.name}: ${error.message}`);
+      // 如果是 AbortError，提供更具體的錯誤信息
+      if (error.name === 'AbortError') {
+        console.error('Bark API 請求超時');
+      }
+    } else {
+      console.error('生成語音時出現未知錯誤:', error);
+    }
+    
+    // 返回 null，表示無法生成語音
+    return null;
+  }
+}
+
+// 修改 POST 處理函數，確保即使語音生成失敗也能返回文本回覆
 export async function POST(request: Request) {
   try {
     console.log('收到 AI 回覆請求');
@@ -52,8 +99,14 @@ export async function POST(request: Request) {
     
     if (isRepeatedQuestion) {
       // 如果是重複的問題，表示媽媽可能已經聽清楚了
+      const responseText = '我現在聽清楚了。讓我想想...';
+      
+      // 嘗試生成語音，但不阻止回覆
+      const audioUrl = await generateVoiceWithBark(responseText).catch(() => null);
+      
       return NextResponse.json({ 
-        response: '我現在聽清楚了。讓我想想...' 
+        response: responseText,
+        audioUrl: audioUrl
       });
     }
     
@@ -66,16 +119,20 @@ export async function POST(request: Request) {
       
       console.log(`最佳匹配分數: ${bestMatch.score}`);
       
-      // 檢查是否在開發環境
-      const isDevelopment = process.env.NODE_ENV === 'development';
+      // // 檢查是否在開發環境
+      // const isDevelopment = process.env.NODE_ENV === 'development';
       
       // 檢查是否有 answerType 為 narration
       const isNarration = bestMatch.answerType === 'narration';
       
+      // 嘗試生成語音，但不阻止回覆
+      const audioUrl = await generateVoiceWithBark(bestMatch.answer).catch(() => null);
+      
       const response = {
         response: bestMatch.answer,
         answerType: bestMatch.answerType || 'dialogue', // 預設為 dialogue
-        imageToShow: bestMatch.imageToShow || null, // 如果有圖片要顯示
+        // imageToShow: bestMatch.imageToShow || null, // 如果有圖片要顯示
+        audioUrl: audioUrl // 添加語音 URL，可能為 null
       };
       
       if (isDevelopment) {
@@ -92,7 +149,7 @@ export async function POST(request: Request) {
           }
         });
       } else {
-        // 在生產環境中，只返回回答和類型
+        // 在生產環境中，只返回回答、類型和語音 URL
         return NextResponse.json(response);
       }
     }
@@ -108,9 +165,13 @@ export async function POST(request: Request) {
     
     const randomResponse = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     
+    // 嘗試生成語音，但不阻止回覆
+    const audioUrl = await generateVoiceWithBark(randomResponse).catch(() => null);
+    
     return NextResponse.json({ 
       response: randomResponse,
-      answerType: 'dialogue'
+      answerType: 'dialogue',
+      audioUrl: audioUrl
     });
     
   } catch (error) {

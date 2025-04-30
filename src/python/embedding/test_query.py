@@ -1,10 +1,14 @@
 import sys
 import os
-from simple_embedding_service import load_index, query_index
+
+# 添加父目錄到路徑
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from embedding.simple_embedding_service import load_index, query_index
 
 # 獲取索引路徑
 script_dir = os.path.dirname(os.path.abspath(__file__))
-index_dir = os.path.join(script_dir, "../../lib/faiss_index")
+index_dir = os.path.join(script_dir, "../../../lib/faiss_index")
 
 # 檢查索引是否存在
 if not os.path.exists(index_dir):
