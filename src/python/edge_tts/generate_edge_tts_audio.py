@@ -96,20 +96,31 @@ async def process_dialogue_answers(input_file, output_dir, voice="zh-TW-HsiaoChe
     total_processed = 0
     for category, items in data.get("categories", {}).items():
         for i, item in enumerate(items):
-            if "answer" in item and item["answer"]:
-                question = item.get("question", f"unknown_question_{i}")
+            if "answer" in item and item["answer"] and "question" in item:
+                # 使用問題作為檔案名稱
+                question = item["question"]
                 # 清理文件名，移除不允許的字符
                 safe_question = "".join(c for c in question if c.isalnum() or c in " _-").strip()
                 safe_question = safe_question[:50]  # 限制文件名長度
                 
-                output_file = os.path.join(output_dir, f"{category}_{i}_{safe_question}.mp3")
-                print(f"正在為回答生成音頻: {item['answer'][:50]}...")
+                output_file = os.path.join(output_dir, f"{safe_question}.mp3")
+                print(f"正在為問題「{question}」生成音頻...")
                 await generate_speech(item["answer"], voice, output_file, emotion, emotion_degree)
+                
+                # 將音頻檔案名稱添加到JSON中
+                item["audio_file"] = os.path.basename(output_file)
+                
                 total_processed += 1
     
+    # 保存更新後的JSON
+    output_json = os.path.join(output_dir, "dialogue_with_audio.json")
+    with open(output_json, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    
     print(f"已完成處理 {total_processed} 個對話答案，音頻文件保存在 {output_dir}")
+    print(f"更新後的JSON已保存到 {output_json}")
 
-async def process_dialogue_answers_with_audio(input_file, output_file, voice="zh-TW-HsiaoChenNeural"):
+async def process_dialogue_answers_with_audio(input_file, output_file, voice="zh-TW-HsiaoChenNeural", emotion=None, emotion_degree=None):
     """
     處理對話答案並添加音頻
     
@@ -117,6 +128,8 @@ async def process_dialogue_answers_with_audio(input_file, output_file, voice="zh
         input_file (str): 輸入JSON文件路徑
         output_file (str): 輸出JSON文件路徑
         voice (str): 要使用的語音名稱
+        emotion (str): 情感類型 (sad, happy, angry, etc.)
+        emotion_degree (str): 情感程度 (0.01-2.00)
     """
     with open(input_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -125,8 +138,9 @@ async def process_dialogue_answers_with_audio(input_file, output_file, voice="zh
     for category, items in data.get("categories", {}).items():
         for item in items:
             if "answer" in item and item["answer"]:
-                print(f"正在為回答生成音頻: {item['answer'][:50]}...")
-                item["audio"] = await text_to_base64_audio(item["answer"], voice)
+                question = item.get("question", "unknown_question")
+                print(f"正在為問題「{question}」生成音頻...")
+                item["audio"] = await text_to_base64_audio(item["answer"], voice, emotion, emotion_degree)
     
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -144,16 +158,18 @@ def main():
     parser.add_argument("--input_json", help="輸入JSON文件路徑")
     parser.add_argument("--output_json", help="輸出JSON文件路徑")
     parser.add_argument("--output_dir", help="輸出音頻文件目錄")
+    parser.add_argument("--emotion", help="情感類型 (sad, happy, angry, worried 等)")
+    parser.add_argument("--emotion_degree", type=float, help="情感程度 (0.01-2.00)")
     
     args = parser.parse_args()
     
     if args.input_json and args.output_dir:
-        asyncio.run(process_dialogue_answers(args.input_json, args.output_dir, args.voice))
+        asyncio.run(process_dialogue_answers(args.input_json, args.output_dir, args.voice, args.emotion, args.emotion_degree))
     elif args.input_json and args.output_json:
-        asyncio.run(process_dialogue_answers_with_audio(args.input_json, args.output_json, args.voice))
+        asyncio.run(process_dialogue_answers_with_audio(args.input_json, args.output_json, args.voice, args.emotion, args.emotion_degree))
     elif args.text:
         output_file = args.output or "output.mp3"
-        asyncio.run(generate_speech(args.text, args.voice, output_file))
+        asyncio.run(generate_speech(args.text, args.voice, output_file, args.emotion, args.emotion_degree))
         print(f"已生成語音文件: {output_file}")
     else:
         parser.print_help()

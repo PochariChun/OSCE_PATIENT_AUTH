@@ -119,9 +119,6 @@ export async function POST(request: Request) {
       
       console.log(`最佳匹配分數: ${bestMatch.score}`);
       
-      // // 檢查是否在開發環境
-      // const isDevelopment = process.env.NODE_ENV === 'development';
-      
       // 檢查是否有 answerType 為 narration
       const isNarration = bestMatch.answerType === 'narration';
       
@@ -134,6 +131,9 @@ export async function POST(request: Request) {
         // imageToShow: bestMatch.imageToShow || null, // 如果有圖片要顯示
         audioUrl: audioUrl // 添加語音 URL，可能為 null
       };
+      
+      // 定义 isDevelopment 变量
+      const isDevelopment = process.env.NODE_ENV === 'development';
       
       if (isDevelopment) {
         // 在開發環境中，在回覆中包含匹配信息

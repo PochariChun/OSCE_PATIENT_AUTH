@@ -164,7 +164,7 @@
 {"question": "弟弟的食慾怎麼樣？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
 {"question": "媽媽，弟弟的食慾怎麼樣？", "answer": "沒有食慾", "tags": ["食慾與進食評估", "家屬溝通"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
 {"question": "弟弟最近胃口好嗎？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
-{"question": "小朋友有沒有想吃東西？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
+{"question": "小朋友有沒有想吃東西？", "answer": "沒有", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
 {"question": "弟弟現在願意吃東西嗎？", "answer": "沒有食慾", "tags": ["食慾與進食評估"], "scoringCategory": "Patient Condition", "scoringItem": "Appetite Status", "scoringSubItem": "Decrease"}
 
 // 吃什麼(2)?
