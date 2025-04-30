@@ -2,51 +2,68 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyJWT } from '@/lib/jwt';
 
-export async function PUT(req: Request) {
+export async function PATCH(request: Request) {
   try {
-    // 驗證用戶身份
-    const token = req.headers.get('Authorization')?.split(' ')[1];
+    // 從 cookie 獲取令牌
+    const cookieHeader = request.headers.get('cookie');
+    if (!cookieHeader) {
+      return NextResponse.json(
+        { error: '未授權訪問' },
+        { status: 401 }
+      );
+    }
+    
+    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = value;
+      return acc;
+    }, {} as Record<string, string>);
+    
+    const token = cookies['auth_token'];
     if (!token) {
-      return NextResponse.json({ error: '未授權' }, { status: 401 });
+      return NextResponse.json(
+        { error: '未授權訪問' },
+        { status: 401 }
+      );
     }
     
-    const payload = verifyJWT(token);
-    if (!payload) {
-      return NextResponse.json({ error: '無效的令牌' }, { status: 401 });
+    // 驗證令牌
+    const payload = await verifyJWT(token);
+    if (!payload || !payload.userId) {
+      return NextResponse.json(
+        { error: '無效的令牌' },
+        { status: 401 }
+      );
     }
     
-    // 解析請求數據
-    const { name, nickname } = await req.json();
+    // 獲取請求體
+    const { name, email } = await request.json();
     
-    // 更新用戶資料
+    // 更新用戶資訊
     const updatedUser = await prisma.user.update({
-      where: { id: payload.id },
+      where: { id: payload.userId },
       data: {
-        ...(name !== undefined && { name }),
-        ...(nickname !== undefined && { nickname }),
+        name: name || undefined,
+        email: email || undefined,
       },
     });
     
-    // 返回更新後的用戶資料
+    // 返回更新後的用戶資訊
     return NextResponse.json({
-      success: true,
-      user: {
-        id: updatedUser.id,
-        username: updatedUser.username,
-        nickname: updatedUser.nickname,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        createdAt: updatedUser.createdAt,
-        updatedAt: updatedUser.updatedAt,
-      },
+      id: updatedUser.id,
+      username: updatedUser.username,
+      nickname: updatedUser.username, // 使用學號作為暱稱
+      name: updatedUser.name,
+      email: updatedUser.email || `${updatedUser.username}@stu.ypu.edu.tw`, // 使用更新後的郵箱或生成臨時郵箱
+      role: 'NURSE',
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt
     });
   } catch (error) {
-    console.error('更新用戶資料失敗:', error);
-    return NextResponse.json({
-      success: false,
-      error: '更新用戶資料失敗',
-      details: process.env.NODE_ENV === 'development' ? error.toString() : undefined,
-    }, { status: 500 });
+    console.error('更新用戶資訊錯誤:', error);
+    return NextResponse.json(
+      { error: '更新用戶資訊失敗' },
+      { status: 500 }
+    );
   }
 } 

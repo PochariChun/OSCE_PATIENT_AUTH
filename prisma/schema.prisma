@@ -33,7 +33,6 @@ model Conversation {
   startedAt     DateTime       @default(now())
   endedAt       DateTime?
   durationSec   Int?
-  score         Float?
   overtime      Boolean        @default(false)   // 是否超過10分鐘
   reflection    String?                          // GPT summary
   createdAt     DateTime       @default(now())
@@ -44,6 +43,9 @@ model Conversation {
 
   messages      Message[]
   reflections   ReflectionMessage[]
+
+  score         Int?            // 總得分
+  scoringItems  ScoringItem[]  // 新增关联到评分项目
 
   role          String                 // 說話者角色，例如：考生、病人、媽媽、標準病人
   prompt        String                 // 考生提問或系統觸發句，例如：「請問你叫什麼名字？」
@@ -70,6 +72,8 @@ model Message {
   emotionScore    Float?        // 強度 0–1
 
   audioUrl        String?       // optional: 錄音檔連結
+
+  scoringRelations ScoringItemMessage[]
 }
 
 model ReflectionMessage {
@@ -107,4 +111,37 @@ model Scenario {
 
   // ✅ 對應標準化病人回應與考試互動紀錄
   conversations Conversation[]
+}
+
+// 新增评分项目模型
+model ScoringItem {
+  id              Int           @id @default(autoincrement())
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  conversationId  Int
+  
+  category        String        // 类别，如"病人辨識"
+  subcategory     String        // 子类别，如"確認床號"
+  code            String        // 评分代码，如"A11"
+  score           Int           // 该项目的分值
+  achieved        Boolean       @default(false)  // 是否达成
+  
+  // 关联到多个消息
+  relatedMessages ScoringItemMessage[]
+
+
+  @@index([conversationId])
+  @@index([code])
+  @@index([achieved])
+}
+
+// 新增评分项目与消息的关联模型
+model ScoringItemMessage {
+  id              Int           @id @default(autoincrement())
+  scoringItem     ScoringItem   @relation(fields: [scoringItemId], references: [id])
+  scoringItemId   Int
+  message         Message       @relation(fields: [messageId], references: [id])
+  messageId       Int
+
+  @@index([scoringItemId])
+  @@index([messageId])
 }

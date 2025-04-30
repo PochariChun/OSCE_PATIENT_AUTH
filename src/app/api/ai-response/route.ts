@@ -17,7 +17,7 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
         query, 
         top_k: 3,
         // // 可以選擇性地傳遞歷史記錄
-        // history: history.slice(-5)  // 只傳遞最近的5條訊息
+        history: history.slice(-5)  // 只傳遞最近的5條訊息
       }),
     });
     
@@ -44,22 +44,22 @@ async function generateVoiceWithBark(text: string): Promise<string | null> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超時
     
-    const response = await fetch(barkApiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        voice_preset: 'mother', // 使用媽媽的聲音預設
-        // 可以添加其他 Bark 參數，如語速、音調等
-      }),
-      signal: controller.signal
-    }).finally(() => clearTimeout(timeoutId));
+    // const response = await fetch(barkApiUrl, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     text,
+    //     voice_preset: 'mother', // 使用媽媽的聲音預設
+    //     // 可以添加其他 Bark 參數，如語速、音調等
+    //   }),
+    //   signal: controller.signal
+    // }).finally(() => clearTimeout(timeoutId));
     
-    if (!response.ok) {
-      throw new Error(`Bark API 請求失敗: ${response.status} ${response.statusText}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`Bark API 請求失敗: ${response.status} ${response.statusText}`);
+    // }
     
     const data = await response.json();
     return data.audio_url || null; // 假設 API 返回音頻 URL

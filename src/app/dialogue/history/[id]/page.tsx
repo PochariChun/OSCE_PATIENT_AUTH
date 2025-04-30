@@ -65,7 +65,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
       try {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          throw new Error('未登入');
+          console.error('未登入');
+          router.push('/login');
+          return;
         }
         
         const userData = JSON.parse(userJson);

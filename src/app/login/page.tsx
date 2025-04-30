@@ -9,8 +9,7 @@ import { Navbar } from '@/components/navbar';
 import { ErrorBoundary } from '@/components/error-boundary';
 
 export default function LoginPage() {
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -21,15 +20,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      console.log('開始登入流程，提交數據:', { login, passwordLength: password?.length || 0 });
+      console.log('開始登入流程，提交數據:', { username });
       
       // 檢查輸入數據
-      if (!login) {
-        throw new Error('用戶名/電子郵件不能為空');
-      }
-      
-      if (!password) {
-        throw new Error('密碼不能為空');
+      if (!username) {
+        setError('學號不能為空');
+        setLoading(false);
+        return;
       }
       
       const response = await fetch('/api/login', {
@@ -37,7 +34,7 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ login, password }),
+        body: JSON.stringify({ username }),
       });
       
       const responseText = await response.text();
@@ -62,9 +59,7 @@ export default function LoginPage() {
         
         // 針對特定錯誤提供更友好的提示
         if (errorMessage.includes('不存在') || errorMessage.includes('找不到')) {
-          errorMessage = '此用戶不存在，請檢查您的帳號或考慮註冊新帳號';
-        } else if (errorMessage.includes('密碼') || errorMessage.includes('驗證')) {
-          errorMessage = '密碼不正確，請重新輸入';
+          errorMessage = '此學號不存在，請檢查或註冊新帳號';
         }
         
         setError(errorMessage);
@@ -113,35 +108,20 @@ export default function LoginPage() {
               </p>
             </div>
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-              <div className="rounded-md shadow-sm -space-y-px">
+              <div className="rounded-md shadow-sm">
                 <div>
-                  <label htmlFor="login" className="sr-only">
-                    帳號或電子郵件
+                  <label htmlFor="username" className="sr-only">
+                    學號
                   </label>
                   <Input
-                    id="login"
-                    name="login"
+                    id="username"
+                    name="username"
                     type="text"
                     required
-                    className="rounded-t-md rounded-b-none"
-                    placeholder="帳號或電子郵件"
-                    value={login}
-                    onChange={(e) => setLogin(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="password" className="sr-only">
-                    密碼
-                  </label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    className="rounded-t-none rounded-b-md"
-                    placeholder="密碼"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className="rounded-md"
+                    placeholder="學號"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
               </div>

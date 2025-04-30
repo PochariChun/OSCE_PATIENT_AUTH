@@ -39,56 +39,34 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // 從 localStorage 獲取用戶資訊
     const fetchUser = async () => {
       try {
-        console.log('開始獲取用戶資訊');
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          console.log('未找到用戶資訊，重定向到登入頁面');
-          router.push('/login');
+          console.log('未登入，但首頁可以訪問');
+          setUser(null);
+          setLoading(false);
           return;
         }
         
-        let userData;
         try {
-          userData = JSON.parse(userJson);
-          console.log('成功解析用戶資料');
+          const userData = JSON.parse(userJson);
+          setUser(userData);
         } catch (parseError) {
-          console.error('用戶資料解析失敗', parseError);
-          localStorage.removeItem('user'); // 清除無效資料
-          router.push('/login');
-          return;
-        }
-        
-        setUser(userData);
-        
-        // 分開處理每個 API 請求，避免一個失敗影響另一個
-        try {
-          console.log('開始獲取對話歷史');
-          await fetchDialogueHistory(userData.id);
-        } catch (historyError) {
-          console.error('獲取對話歷史失敗', historyError);
-          setDialogueHistory([]);
-        }
-        
-        try {
-          console.log('開始獲取推薦場景');
-          await fetchRecommendedScenarios(userData.id);
-        } catch (scenarioError) {
-          console.error('獲取推薦場景失敗', scenarioError);
-          setRecommendedScenarios([]);
+          console.error('解析用戶數據失敗:', parseError);
+          localStorage.removeItem('user'); // 清除無效數據
+          setUser(null);
         }
       } catch (error) {
-        console.error('獲取用戶資訊失敗', error);
-        router.push('/login');
+        console.error('獲取用戶信息失敗:', error);
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchUser();
-  }, [router]);
+  }, []);
 
   // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
@@ -164,7 +142,7 @@ export default function HomePage() {
         {/* 歡迎橫幅 */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            歡迎回來，{user.name}！
+            歡迎回來，{user.nickname}！
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             您已成功登入 OSCE 虛擬病人對話系統。這個系統將幫助您練習和提高護理對話技能，為 OSCE 考試做好準備。
@@ -192,12 +170,6 @@ export default function HomePage() {
                   <p className="text-gray-500 dark:text-gray-400">角色:</p>
                   <p className="font-medium text-gray-900 dark:text-white">{user.role || '學生'}</p>
                 </div>
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400">帳號創建時間:</p>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {new Date(user.createdAt).toLocaleString('zh-TW')}
-                  </p>
-                </div>
               </div>
             </div>
 
@@ -213,12 +185,7 @@ export default function HomePage() {
                 >
                   開始新對話
                 </button>
-                <Link 
-                  href="/profile/edit"
-                  className="block w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium rounded-md transition-colors text-center"
-                >
-                  編輯個人資料
-                </Link>
+                
               </div>
             </div>
 
@@ -326,8 +293,15 @@ export default function HomePage() {
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                       {dialogueHistory.slice(0, 5).map((history) => (
                         <tr key={history.id}>
+                          
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            {history.title}
+                              <button
+                              onClick={() => handleViewHistory(history.id)}
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 text-left font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-none block"
+                              title={history.title}
+                            >
+                              {history.title}
+                            </button>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                             {new Date(history.startedAt).toLocaleDateString('zh-TW')}

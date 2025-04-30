@@ -10,9 +10,6 @@ import { ErrorBoundary } from '@/components/error-boundary';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -23,15 +20,13 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      console.log('開始註冊流程，提交數據:', { username, nickname, email: email || '未提供', passwordLength: password?.length || 0 });
+      console.log('開始註冊流程，提交數據:', { username });
       
       // 檢查輸入數據
       if (!username) {
-        throw new Error('用戶名不能為空');
-      }
-      
-      if (!password) {
-        throw new Error('密碼不能為空');
+        setError('學號不能為空');
+        setLoading(false);
+        return;
       }
       
       // 使用測試註冊 API
@@ -41,11 +36,7 @@ export default function RegisterPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          username, 
-          nickname,
-          password,
-          // 如果提供了電子郵件，也一併傳送
-          ...(email ? { email } : {})
+          username
         }),
       });
       
@@ -116,63 +107,20 @@ export default function RegisterPage() {
               </p>
             </div>
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-              <div className="rounded-md shadow-sm -space-y-px">
+              <div className="rounded-md shadow-sm">
                 <div>
                   <label htmlFor="username" className="sr-only">
-                    帳號(學號)
+                    學號
                   </label>
                   <Input
                     id="username"
                     name="username"
                     type="text"
                     required
-                    className="rounded-t-md rounded-b-none"
-                    placeholder="帳號 (學號)"
+                    className="rounded-md"
+                    placeholder="學號"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="nickname" className="sr-only">
-                    暱稱 (選填)
-                  </label>
-                  <Input
-                    id="nickname"
-                    name="nickname"
-                    type="text"
-                    className="rounded-t-none rounded-b-none"
-                    placeholder="暱稱 (選填)"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="sr-only">
-                    電子郵件 (選填)
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    className="rounded-t-none rounded-b-none"
-                    placeholder="電子郵件 (選填)"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="password" className="sr-only">
-                    密碼
-                  </label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    className="rounded-t-none rounded-b-md"
-                    placeholder="密碼"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>

@@ -57,35 +57,19 @@ export default function ReflectionPage() {
         console.log('ReflectionPage: 開始獲取用戶資訊');
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          console.log('ReflectionPage: 未找到用戶資訊，重定向到登入頁面');
+          setError('未登入，請先登入後再訪問此頁面');
           router.push('/login');
           return;
         }
         
-        let userData;
-        try {
-          userData = JSON.parse(userJson);
-          console.log('ReflectionPage: 成功解析用戶資料');
-        } catch (parseError) {
-          console.error('ReflectionPage: 用戶資料解析失敗', parseError);
-          localStorage.removeItem('user'); // 清除無效資料
-          router.push('/login');
-          return;
-        }
-        
+        const userData = JSON.parse(userJson);
         setUser(userData);
         
-        // 分開處理反思數據獲取
-        try {
-          console.log(`ReflectionPage: 開始獲取反思數據，ID: ${conversationId}`);
-          await fetchConversationData(userData.id);
-        } catch (reflectionError) {
-          console.error('ReflectionPage: 獲取反思數據失敗', reflectionError);
-          setError('無法加載反思數據，請稍後再試');
-        }
-      } catch (error) {
-        console.error('ReflectionPage: 獲取用戶資訊失敗', error);
-        router.push('/login');
+        // 獲取對話資訊
+        await fetchConversationData(userData.id);
+      } catch (reflectionError) {
+        console.error('ReflectionPage: 獲取反思數據失敗', reflectionError);
+        setError('無法加載反思數據，請稍後再試');
       } finally {
         setLoading(false);
       }

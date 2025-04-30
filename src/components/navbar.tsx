@@ -79,42 +79,31 @@ export function Navbar({ user: propUser }: NavbarProps) {
 
   const handleLogout = async () => {
     try {
-      // 呼叫登出 API
+      // 調用登出 API
       const response = await fetch('/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+      
       if (!response.ok) {
         console.error('登出失敗:', response.statusText);
+        // 即使 API 失敗，也清除本地存儲
       }
       
-      // 無論 API 是否成功，都清除本地存儲
+      // 清除本地存儲
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       
-      // 重置用戶狀態
-      setUser(null);
-      
-      // 關閉用戶菜單
-      setIsProfileMenuOpen(false);
-      
       // 重定向到登入頁面
-      router.push('/login');
+      window.location.href = '/login';
     } catch (error) {
       console.error('登出過程中發生錯誤:', error);
-      
-      // 即使出錯，也嘗試清除本地存儲
+      // 即使發生錯誤，也嘗試清除本地存儲
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      
-      // 重置用戶狀態
-      setUser(null);
-      
-      // 重定向到登入頁面
-      router.push('/login');
+      window.location.href = '/login';
     }
   };
 
@@ -229,24 +218,7 @@ export function Navbar({ user: propUser }: NavbarProps) {
                       </div>
                       <div className="text-gray-500 dark:text-gray-400 truncate">{userEmail}</div>
                     </div>
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="user-menu-item-0"
-                    >
-                      個人資料
-                    </Link>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="user-menu-item-1"
-                    >
-                      設置
-                    </Link>
+                    
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"

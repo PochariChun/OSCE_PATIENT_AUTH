@@ -1,14 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // 使用相對路徑導入，避免路徑解析問題
 const prisma = new PrismaClient();
+
+// 读取评分标准文件
+const scoringCriteriaPath = path.join(__dirname, '../src/lib/scoringCriteria.jsonl');
+const scoringCriteriaLines = fs.readFileSync(scoringCriteriaPath, 'utf8').split('\n').filter(Boolean);
+const scoringCriteria = scoringCriteriaLines.map(line => JSON.parse(line));
 
 async function main() {
   console.log('開始資料庫種子填充...');
 
   // 清理現有資料（可選）
   // 注意：在生產環境中請謹慎使用
+  await prisma.scoringItemMessage.deleteMany();
+  await prisma.scoringItem.deleteMany();
   await prisma.message.deleteMany();
   await prisma.reflectionMessage.deleteMany();
   await prisma.conversation.deleteMany();
@@ -87,7 +96,7 @@ async function main() {
       startedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 一週前
       endedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000 + 8 * 60 * 1000), // 8分鐘後
       durationSec: 480,
-      score: 85.5,
+      score: 85,
       overtime: false,
       reflection: '整體表現良好，但需要加強對患兒疼痛評估的技能',
       role: '護士',
@@ -223,7 +232,7 @@ async function main() {
       startedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 五天前
       endedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000 + 10 * 60 * 1000), // 10分鐘後
       durationSec: 600,
-      score: 78.5,
+      score: 78,
       overtime: false,
       reflection: '需要加強對兒童腹瀉脫水評估的技能，問診順序可以更有邏輯性',
       role: '護士',
@@ -329,6 +338,118 @@ async function main() {
 
   console.log('已創建對話記錄');
 
+  // 获取对话1的消息
+  const conversation1Messages = await prisma.message.findMany({
+    where: { conversationId: conversation1.id },
+    orderBy: { timestamp: 'asc' }
+  });
+
+  // 获取对话3的消息
+  const conversation3Messages = await prisma.message.findMany({
+    where: { conversationId: conversation3.id },
+    orderBy: { timestamp: 'asc' }
+  });
+
+  // 为对话1创建所有评分项目
+  console.log('為對話1創建所有評分項目...');
+  for (const criteria of scoringCriteria) {
+    await prisma.scoringItem.create({
+      data: {
+        conversationId: conversation1.id,
+        category: criteria.category,
+        subcategory: criteria.subcategory,
+        code: criteria.code,
+        score: criteria.score,
+        achieved: false, // 默认未达成
+      }
+    });
+  }
+
+  // 为对话3创建所有评分项目
+  console.log('為對話3創建所有評分項目...');
+  for (const criteria of scoringCriteria) {
+    await prisma.scoringItem.create({
+      data: {
+        conversationId: conversation3.id,
+        category: criteria.category,
+        subcategory: criteria.subcategory,
+        code: criteria.code,
+        score: criteria.score,
+        achieved: false, // 默认未达成
+      }
+    });
+  }
+
+  // 更新对话1中学生实际获得的评分项目
+  console.log('更新對話1中學生實際獲得的評分項目...');
+  const conversation1AchievedItems = [
+    { code: 'A12', messageIds: [conversation1Messages[0].id] },
+    { code: 'B21', messageIds: [conversation1Messages[4].id] },
+    { code: 'B22', messageIds: [conversation1Messages[4].id] },
+    { code: 'B31', messageIds: [conversation1Messages[6].id] },
+    { code: 'B41', messageIds: [conversation1Messages[8].id] }
+  ];
+
+  for (const item of conversation1AchievedItems) {
+    const scoringItem = await prisma.scoringItem.findFirst({
+      where: {
+        conversationId: conversation1.id,
+        code: item.code
+      }
+    });
+    
+    if (scoringItem) {
+      await prisma.scoringItem.update({
+        where: { id: scoringItem.id },
+        data: { achieved: true }
+      });
+      
+      for (const messageId of item.messageIds) {
+        await prisma.scoringItemMessage.create({
+          data: {
+            scoringItemId: scoringItem.id,
+            messageId: messageId
+          }
+        });
+      }
+    }
+  }
+
+  // 更新对话3中学生实际获得的评分项目
+  console.log('更新對話3中學生實際獲得的評分項目...');
+  const conversation3AchievedItems = [
+    { code: 'B10', messageIds: [conversation3Messages[0].id] },
+    { code: 'B21', messageIds: [conversation3Messages[6].id] },
+    { code: 'B22', messageIds: [conversation3Messages[6].id] },
+    { code: 'B62', messageIds: [conversation3Messages[4].id] }
+  ];
+
+  for (const item of conversation3AchievedItems) {
+    const scoringItem = await prisma.scoringItem.findFirst({
+      where: {
+        conversationId: conversation3.id,
+        code: item.code
+      }
+    });
+    
+    if (scoringItem) {
+      await prisma.scoringItem.update({
+        where: { id: scoringItem.id },
+        data: { achieved: true }
+      });
+      
+      for (const messageId of item.messageIds) {
+        await prisma.scoringItemMessage.create({
+          data: {
+            scoringItemId: scoringItem.id,
+            messageId: messageId
+          }
+        });
+      }
+    }
+  }
+
+  console.log('已創建並更新評分項目');
   console.log('資料庫種子填充完成！');
 }
 

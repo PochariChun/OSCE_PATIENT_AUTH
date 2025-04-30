@@ -36,7 +36,9 @@ export default function DialogueHistoryPage() {
       try {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          throw new Error('未登入');
+          console.error('未登入');
+          router.push('/login');
+          return;
         }
         
         const userData = JSON.parse(userJson);
@@ -117,19 +119,19 @@ export default function DialogueHistoryPage() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4 md:w-auto">
                       標題
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       日期
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       分數
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       時長
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       操作
                     </th>
                   </tr>
@@ -137,13 +139,19 @@ export default function DialogueHistoryPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {dialogueHistory.map((history) => (
                     <tr key={history.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        {history.title}
+                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white w-1/4 md:w-auto">
+                        <button
+                          onClick={() => handleViewHistory(history.id)}
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 text-left font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-none block"
+                          title={history.title}
+                        >
+                          {history.title}
+                        </button>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                         {new Date(history.startedAt).toLocaleDateString('zh-TW')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           history.score && history.score >= 90 ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
                           history.score && history.score >= 80 ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' :
@@ -154,11 +162,11 @@ export default function DialogueHistoryPage() {
                           {history.score !== null ? history.score : '未評分'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                         {history.durationSec ? `${Math.floor(history.durationSec / 60)}分${history.durationSec % 60}秒` : '未完成'}
                         {history.overtime && <span className="ml-1 text-red-500">⚠️</span>}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => handleViewHistory(history.id)}
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"

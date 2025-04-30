@@ -37,4 +37,34 @@ const [name, setName] = useState(user?.name || '');
     onChange={(e) => setName(e.target.value)}
     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
   />
-</div> 
+</div>
+
+const [user, setUser] = useState(null);
+const [error, setError] = useState('');
+const [loading, setLoading] = useState(true);
+const router = useRouter();
+
+// 在 useEffect 中
+useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        setError('請先登入');
+        router.push('/login');
+        return;
+      }
+      
+      const userData = JSON.parse(userJson);
+      setUser(userData);
+      setName(userData.name || '');
+    } catch (error) {
+      console.error('獲取用戶資料失敗:', error);
+      setError('獲取用戶資料失敗，請重新登入');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  fetchUserData();
+}, [router]); 
