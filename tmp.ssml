@@ -1,0 +1,7 @@
+<speak version='1.0' xml:lang='zh-TW'>
+  <voice name='zh-TW-HsiaoChenNeural'>
+    <mstts:express-as style='sad' xmlns:mstts='https://www.w3.org/2001/mstts'>
+      昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次
+    </mstts:express-as>
+  </voice>
+</speak>
