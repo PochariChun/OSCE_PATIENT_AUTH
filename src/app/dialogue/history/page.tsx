@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
 import Link from 'next/link';
+import { normalizeNames, preprocessText } from '@/lib/textUtils';
 
 interface User {
   id: number;
@@ -86,7 +87,14 @@ export default function DialogueHistoryPage() {
       
       const data = await response.json();
       console.log(`獲取到 ${data.length} 條對話歷史記錄`);
-      setDialogueHistory(data);
+      
+      // 处理对话历史中的文本
+      const processedData = data.map(dialogue => ({
+        ...dialogue,
+        title: preprocessText(dialogue.title)
+      }));
+      
+      setDialogueHistory(processedData);
     } catch (error) {
       console.error('獲取對話歷史失敗', error);
       // 如果獲取失敗，設置為空陣列
@@ -118,7 +126,14 @@ export default function DialogueHistoryPage() {
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
       if (response.ok) {
         const data = await response.json();
-        setDialogueHistory(data);
+        
+        // 处理对话历史中的文本
+        const processedData = data.map(dialogue => ({
+          ...dialogue,
+          title: preprocessText(dialogue.title)
+        }));
+        
+        setDialogueHistory(processedData);
       }
     } catch (error) {
       console.error('获取对话历史失败', error);

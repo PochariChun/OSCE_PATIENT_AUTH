@@ -124,16 +124,43 @@ export function MicrophoneCheck({ onComplete }: MicrophoneCheckProps) {
       return null;
     }
   };
-
+  const playTestSound = async () => {
+    try {
+      const audio = new Audio('/audio/test-sound.mp3'); // 放在 public/audio/ 下
+      const playPromise = audio.play();
+  
+      if (playPromise !== undefined) {
+        await playPromise;
+        console.log('✅ 測試聲音播放成功');
+      }
+    } catch (error) {
+      console.warn('❌ 測試聲音播放失敗，可能需要使用者互動:', error);
+      alert('播放聲音失敗，請確認您的裝置已開啟聲音並允許自動播放');
+    }
+  };
+  
   const handleContinue = () => {
-    // 停止所有正在进行的音频流
+    // ✅ 嘗試解鎖 AudioContext（for iOS / Android）
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+          console.log('🔊 AudioContext 已解鎖');
+        });
+      }
+    } catch (e) {
+      console.warn('🔇 無法初始化 AudioContext:', e);
+    }
+  
+    // 停止音訊流
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
     }
-    
-    // 通知父组件检查已完成，无论权限是否被授予
+  
+    // 通知主畫面進入下一階段
     onComplete(permission === 'granted');
   };
+  
 
   const retryPermission = async () => {
     setPermission('checking');
@@ -311,6 +338,15 @@ export function MicrophoneCheck({ onComplete }: MicrophoneCheckProps) {
       </div>
       
       <div className="flex justify-center space-x-4">
+        {permission === 'granted' && (
+          <Button
+            onClick={playTestSound}
+            variant="secondary"
+            className="px-6 py-2"
+          >
+            播放測試聲音
+          </Button>
+        )}
         <Button
           onClick={handleContinue}
           disabled={permission === 'checking'}
@@ -318,6 +354,7 @@ export function MicrophoneCheck({ onComplete }: MicrophoneCheckProps) {
         >
           {permission === 'granted' ? '繼續對話' : '跳過麥克風檢查'}
         </Button>
+
         
         {permission === 'denied' && (
           <Button

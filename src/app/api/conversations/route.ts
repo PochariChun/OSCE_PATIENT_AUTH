@@ -52,7 +52,6 @@ export async function POST(request: NextRequest) {
         userId: Number(userId),
         scenarioId: Number(scenarioId),
         startedAt: new Date(),
-        role: role || user.role || 'NURSE', // 優先使用傳入的角色，然後是用戶的角色，最後是預設值
         overtime: false,
       },
     });

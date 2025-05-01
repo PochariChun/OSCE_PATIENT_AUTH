@@ -1,21 +1,20 @@
 import { NextResponse, NextRequest } from 'next/server';
 import fetch from 'node-fetch';
-import { normalizeNames } from '@/lib/textUtils';
+import { normalizeNames, preprocessText } from '@/lib/textUtils';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 // 調用嵌入式查詢API服務
-async function queryEmbeddingService(query: string, history: any[] = []): Promise<any> {
+async function queryEmbeddingService(query: string, history: any[] = [], clientPreviousTag: string | null = null): Promise<any> {
   try {
     // 使用環境變量獲取API地址，預設為本地地址
     const apiUrl = process.env.EMBEDDING_API_URL || 'http://localhost:5000/query';
     
-    // 获取前一句对话的标签（如果存在）
-    let previousTag = null;
-    if (history.length > 0) {
+    // 使用前端傳來的 previousTag，如果沒有則從歷史記錄中提取
+    let previousTag = clientPreviousTag;
+    if (!previousTag && history.length > 0) {
       const lastMessage = history[history.length - 1];
-      // 假设消息对象中有code字段，从中提取标签
       if (lastMessage && lastMessage.tag) {
         const codeMatch = lastMessage.tag.match(/^([A-F]\d+)/);
         if (codeMatch) {
@@ -32,9 +31,7 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
       body: JSON.stringify({ 
         query, 
         top_k: 3,
-        previous_tag: previousTag, // 传递前一句对话的标签
-        // 可以选择性地传递历史记录
-        // history: history.slice(-5)  // 只传递最近的5条讯息
+        previous_tag: previousTag, // 使用前端傳來的或從歷史記錄中提取的 previousTag
       }),
     });
     
@@ -53,7 +50,7 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
 }
 
 // 添加 getAIResponse 函数，使用温和的错误处理
-async function getAIResponse(message: string, history: any[], scenario: any): Promise<{ response: string, tag?: string }> {
+async function getAIResponse(message: string, history: any[], scenario: any, results: any[]): Promise<{ response: string, tag?: string, audioUrl?: string }> {
   try {
     // 標準化名稱
     const normalizedMessage = normalizeNames(message);
@@ -64,7 +61,11 @@ async function getAIResponse(message: string, history: any[], scenario: any): Pr
     
     if (isRepeatedQuestion) {
       // 如果是重複的問題，表示媽媽可能已經聽清楚了
-      return { response: '我現在聽清楚了。讓我想想...' };
+      return { 
+        response: '我現在聽清楚了。讓我想想...', 
+        tag: undefined, 
+        audioUrl: undefined 
+      };
     }
     
     // 調用嵌入式查詢服務
@@ -73,10 +74,13 @@ async function getAIResponse(message: string, history: any[], scenario: any): Pr
     // 檢查是否有匹配結果
     if (results && results.length > 0) {
       const bestMatch = results[0];
+      // 在返回結果前添加日誌
+      console.log("bestMatch:", bestMatch);
       // 返回回复和标签
       return { 
         response: bestMatch.answer,
-        tag: bestMatch.code // 从匹配结果中提取标签
+        tag: bestMatch.tag,
+        audioUrl: bestMatch.audioUrl || findAudioUrlByCode(bestMatch.code)
       };
     }
     
@@ -89,17 +93,32 @@ async function getAIResponse(message: string, history: any[], scenario: any): Pr
       '對不起，我剛才沒聽清楚，請您再說一次好嗎？'
     ];
     
-    return { response: defaultResponses[Math.floor(Math.random() * defaultResponses.length)] };
+    return { 
+      response: defaultResponses[Math.floor(Math.random() * defaultResponses.length)], 
+      tag: undefined, 
+      audioUrl: undefined 
+    };
   } catch (error) {
     console.error('生成 AI 回覆時出錯:', error);
-    return { response: '抱歉，我現在無法回答您的問題。請稍後再試。' };
+    return { 
+      response: '抱歉，我現在無法回答您的問題。請稍後再試。', 
+      tag: undefined, 
+      audioUrl: undefined 
+    };
   }
 }
 
-// 修改 POST 處理函數，確保即使語音生成失敗也能返回文本回覆
+// 根據代碼查找音頻URL
+function findAudioUrlByCode(code: string): string | null {
+  // 實現查找邏輯，例如從映射表中查找
+  // 如果找不到，返回null
+  return null;
+}
+
+// 修改 POST 處理函數，接收前端傳來的 previousTag
 export async function POST(request: NextRequest) {
   try {
-    const { message, history, scenarioId } = await request.json();
+    const { message, history, scenarioId, previousTag: clientPreviousTag } = await request.json();
     
     if (!message) {
       return NextResponse.json(
@@ -120,11 +139,17 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // 調用 AI 服務獲取回覆
-    const { response: aiResponse, tag } = await getAIResponse(message, history, scenario);
+    // 使用 preprocessText 处理用户消息
+    const processedMessage = preprocessText(message);
     
-    // 返回回复和标签
-    return NextResponse.json({ response: aiResponse, tag: tag });
+    // 修改 queryEmbeddingService 調用，使用前端傳來的 previousTag
+    const results = await queryEmbeddingService(processedMessage, history, clientPreviousTag);
+    
+    // 調用 AI 服務獲取回覆
+    const { response: aiResponse, tag, audioUrl } = await getAIResponse(processedMessage, history, scenario, results);
+    
+    // 返回回复、标签和音频URL
+    return NextResponse.json({ response: aiResponse, tag: tag, audioUrl: audioUrl });
   } catch (error) {
     console.error('AI 回覆服務錯誤:', error);
     return NextResponse.json(

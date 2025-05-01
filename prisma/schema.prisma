@@ -41,11 +41,11 @@ model Conversation {
   scenario     Scenario?           @relation(fields: [scenarioId], references: [id])
 
   score        Int? 
-  
+
   user         User                @relation(fields: [userId], references: [id])
   messages     Message[]
   reflections  ReflectionMessage[]
-  scoringItems ScoringItem[]
+
 }
 
 model Message {
@@ -57,12 +57,16 @@ model Message {
   elapsedSeconds   Int
   delayFromPrev    Int?
   isDelayed        Boolean?
+  tag              String?
+
   isCorrect        Boolean?
   emotionLabel     String?
   emotionScore     Float?
   audioUrl         String?
   conversation     Conversation         @relation(fields: [conversationId], references: [id])
-  scoringRelations ScoringItemMessage[]
+
+  ScoringId      Int?
+  scoringItem    ScoringItem? @relation(fields: [ScoringId], references: [id])
 }
 
 model ReflectionMessage {
@@ -73,7 +77,9 @@ model ReflectionMessage {
   timestamp      DateTime     @default(now())
   sourceNodeId   String?
   strategyTag    String?
+
   conversation   Conversation @relation(fields: [conversationId], references: [id])
+
 }
 
 model Scenario {
@@ -98,28 +104,12 @@ model Scenario {
 }
 
 model ScoringItem {
-  id              Int                  @id @default(autoincrement())
-  conversationId  Int
-  category        String
-  subcategory     String
-  code            String
-  score           Int
-  achieved        Boolean              @default(false)
-  conversation    Conversation         @relation(fields: [conversationId], references: [id])
-  relatedMessages ScoringItemMessage[]
+  id         Int     @id @default(autoincrement())
+  code       String  @unique
+  category   String
+  subcategory String
+  score      Int
 
-  @@index([conversationId])
-  @@index([code])
-  @@index([achieved])
+  messages   Message[]  // ✅ 被哪些訊息觸發了（間接屬於對話）
 }
 
-model ScoringItemMessage {
-  id            Int         @id @default(autoincrement())
-  scoringItemId Int
-  messageId     Int
-  message       Message     @relation(fields: [messageId], references: [id])
-  scoringItem   ScoringItem @relation(fields: [scoringItemId], references: [id])
-
-  @@index([scoringItemId])
-  @@index([messageId])
-}

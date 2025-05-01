@@ -476,7 +476,7 @@ if __name__ == "__main__":
     # 設置數據路徑
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../../lib/rag_lookup_data_cleaned.jsonl")
-    index_dir = os.path.join(script_dir, "../../../lib/faiss_index")
+    index_dir = os.path.join(script_dir, "../../lib/faiss_index")
     
     # 檢查數據文件是否存在
     if not os.path.exists(data_path):
@@ -529,6 +529,7 @@ if __name__ == "__main__":
                     print(f"\n--- 結果 {i} (相似度: {result['score']:.4f}) ---")
                     print(f"問題: {result['metadata']['question']}")
                     print(f"回答: {result['metadata']['answer']}")
+                    print(f"回答: audioUrl = {result['metadata']['audioUrl']}")
     elif args.query:
         # 單次查詢模式
         results = query_index(index, doc_map, documents, args.query, top_k=3)
@@ -536,6 +537,7 @@ if __name__ == "__main__":
             print(f"分數: {result['score']}")
             print(f"問題: {result['metadata']['question']}")
             print(f"回答: {result['metadata']['answer']}")
+            print(f"回答: audioUrl = {result['metadata']['audioUrl']}")
             print("---")
     else:
         # 默認測試查詢
@@ -545,4 +547,5 @@ if __name__ == "__main__":
             print(f"分數: {result['score']}")
             print(f"問題: {result['metadata']['question']}")
             print(f"回答: {result['metadata']['answer']}")
+            print(f"回答: audioUrl = {result['metadata']['audioUrl']}")
             print("---") 

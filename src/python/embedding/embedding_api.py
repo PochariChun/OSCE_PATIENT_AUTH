@@ -57,15 +57,15 @@ def query():
                 weighted_score = original_score * 0.9
             
             weighted_results.append({
-                "score": weighted_score,
-                "question": result['metadata']['question'],
                 "answer": result['metadata']['answer'],
-                "tags": result['metadata'].get('tag', []),
-                "code": result['metadata'].get('code', None),
                 "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
-                # 可選字段
+                "audioUrl": result['metadata'].get('audioUrl', None),
+                "code": result['metadata'].get('code', None),
                 "imageToShow": result['metadata'].get('imageToShow', None),
-                "audioUrl": result['metadata'].get('audioUrl', None)
+                "question": result['metadata']['question'],
+                "score": weighted_score,
+                "tags": result['metadata'].get('tag', []),
+                # 可選字段
             })
         
         # 根據加權後的分數重新排序

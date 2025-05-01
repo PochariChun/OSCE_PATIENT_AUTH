@@ -77,6 +77,7 @@ const normalizeNames = (text: string): string => {
 
 // 創建一個包裝組件來使用 useSearchParams
 function DialogueNewContent() {
+  const [overlayText, setOverlayText] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
@@ -87,6 +88,7 @@ function DialogueNewContent() {
     elapsedSeconds?: number;
     timestamp?: Date;
     tag?: string;
+    audioUrl?: string;
   }[]>([]);
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
@@ -114,6 +116,43 @@ function DialogueNewContent() {
   
   const [startingDialogue, setStartingDialogue] = useState(false);
   
+  const [previousTag, setPreviousTag] = useState<string | null>(null);
+  
+  // 添加音頻播放相關狀態
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  const [showPlayButton, setShowPlayButton] = useState(false);
+
+  const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [lastAudioUrl, setLastAudioUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unlockAudioContext = () => {
+      try {
+        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(() => {
+            console.log('🔓 AudioContext 已在首次互動中解鎖');
+          });
+        }
+      } catch (e) {
+        console.warn('⚠️ 解鎖 AudioContext 失敗', e);
+      }
+    };
+  
+    // 使用 once: true 確保只觸發一次
+    window.addEventListener('click', unlockAudioContext, { once: true });
+  
+    return () => {
+      window.removeEventListener('click', unlockAudioContext);
+    };
+  }, []);
+  
+
+
+
   useEffect(() => {
     // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
@@ -371,53 +410,42 @@ function DialogueNewContent() {
     }
   };
   
-  // 添加一个函数来获取AI回复
-  const getAIResponse = async (userMessage: string, conversationHistory: any[]) => {
+  // 添加一个函数来获取AI回覆
+  const getAIResponse = async (message: string, conversation: any[]) => {
     try {
-      console.log('發送請求到 AI 回覆服務...');
-      
       const response = await fetch('/api/ai-response', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage,
-          history: conversationHistory,
-          scenarioId: selectedScenario?.id
+          message,
+          history: conversation,
+          scenarioId: selectedScenario?.id,
+          previousTag: previousTag,
         }),
       });
       
-      console.log('收到 AI 回覆服務響應，狀態碼:', response.status);
-      
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('AI 回覆服務返回錯誤:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorText
-        });
-        // 返回友好的错误消息，而不是抛出错误
-        return {
-          response: '抱歉，我現在無法回答您的問題。請稍後再試。',
-          tag: undefined
-        };
+        throw new Error('AI 回覆請求失敗');
       }
       
       const data = await response.json();
-      console.log('成功解析 AI 回覆:', data);
       
-      // 返回回复和标签
-      return {
-        response: data.response,
-        tag: data.tag
-      };
+      // 更新 previousTag 為當前回覆的 tag
+      if (data.tag) {
+        setPreviousTag(data.tag.charAt(0)); // 只取第一個字符作為標籤
+      }
+      
+      // 保存最新的音频URL
+      if (data.audioUrl) {
+        setLastAudioUrl(data.audioUrl);
+      }
+      
+      return data;
     } catch (error) {
-      console.error('獲取 AI 回覆失敗:', error);
-      return {
-        response: '抱歉，我暫時無法回應。請稍後再試。',
-        tag: undefined
-      };
+      console.error('獲取 AI 回覆時出錯:', error);
+      return { response: '抱歉，無法獲取回覆。請稍後再試。', tag: null, audioUrl: null };
     }
   };
   
@@ -487,24 +515,68 @@ function DialogueNewContent() {
     }
     
     // 获取AI回复
-    const { response: aiResponseText, tag } = await getAIResponse(voiceMessage, conversation);
+    const { response: aiResponseText, tag, audioUrl } = await getAIResponse(voiceMessage, conversation);
     
+    // 保存最新的音频URL
+    if (audioUrl) {
+      setLastAudioUrl(audioUrl);
+    }
+    
+    // 在头像上显示回复文本
+    setOverlayText(aiResponseText);
+    
+    // 創建臨時消息，稍後會更新時間戳
+    const tempAssistantMessage = { 
+      role: 'patient' as const, 
+      content: aiResponseText,
+      timestamp: new Date(), // 臨時時間戳，稍後會更新
+      elapsedSeconds: 0, // 臨時值，稍後會更新
+      tag: tag,
+      audioUrl: audioUrl
+    };
+    
+    // 先添加消息到對話，但時間戳和延遲稍後會更新
+    setConversation([...updatedConversation, tempAssistantMessage]);
+    
+    // 如果有音頻URL，播放音頻
+    if (audioUrl) {
+      try {
+        await playAudio(audioUrl);
+      } catch (error) {
+        console.error('播放音频失败:', error);
+      }
+    }
+    
+    // 設置一個定時器，在一段時間後清除頭像上的文本
+    setTimeout(() => {
+      setOverlayText(null);
+    }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
+    
+    // 音頻播放完成後，更新時間戳和計算延遲
     const replyTime = new Date();
     const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
     
-    const assistantMessage = { 
-      role: 'patient' as const, 
-      content: aiResponseText,
-      timestamp: replyTime,
-      elapsedSeconds: replySeconds,
-      tag: tag
-    };
-    
-    setConversation([...updatedConversation, assistantMessage]);
-    
     // 計算虛擬病人回覆的延遲
     const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
-    const patientIsDelayed = patientDelayFromPrev > 3;
+    
+    // 根據使用者輸入字數調整延遲閾值
+    // 每10個字符增加1秒閾值，基礎閾值為3秒
+    const delayThreshold = 3 + Math.floor(voiceMessage.length / 10);
+    const patientIsDelayed = patientDelayFromPrev > delayThreshold;
+    
+    // 更新助理消息的時間戳和延遲
+    const assistantMessage = { 
+      ...tempAssistantMessage,
+      timestamp: replyTime,
+      elapsedSeconds: replySeconds
+    };
+    
+    // 更新對話
+    setConversation(prev => {
+      const newConv = [...prev];
+      newConv[newConv.length - 1] = assistantMessage;
+      return newConv;
+    });
     
     // 保存虛擬病人消息到數據庫
     try {
@@ -523,7 +595,8 @@ function DialogueNewContent() {
               elapsedSeconds: replySeconds,
               delayFromPrev: patientDelayFromPrev,
               isDelayed: patientIsDelayed,
-              tag: tag
+              tag: tag,
+              audioUrl: audioUrl
             }
           ] 
         }),
@@ -573,26 +646,72 @@ function DialogueNewContent() {
         
         if (!saveResponse.ok) {
           console.error('保存用戶消息失敗:', saveResponse.statusText);
-          // 继续处理，但记录错误，不抛出异常
         }
       }
       
       // 获取AI回复
-      const { response: aiResponseText, tag } = await getAIResponse(
+      const { response: aiResponseText, tag, audioUrl } = await getAIResponse(
         messageText, 
         conversation.filter(msg => msg.role !== 'system')
       );
       
-      // 添加AI回复到对话
-      const aiMessage = {
+      // 保存最新的音频URL
+      if (audioUrl) {
+        setLastAudioUrl(audioUrl);
+      }
+      
+      // 在头像上显示回复文本
+      setOverlayText(aiResponseText);
+      
+      // 创建临时消息
+      const tempAiMessage = {
         role: 'patient' as const,
         content: aiResponseText,
         elapsedSeconds: elapsedTime,
         timestamp: new Date(),
-        tag: tag
+        tag: tag,
+        audioUrl: audioUrl
       };
       
-      setConversation(prev => [...prev, aiMessage]);
+      // 先添加消息到對話
+      setConversation(prev => [...prev, tempAiMessage]);
+      
+      // 如果有音頻URL，播放音頻
+      if (audioUrl) {
+        try {
+          await playAudio(audioUrl);
+        } catch (error) {
+          console.error('播放音频失败:', error);
+        }
+      }
+      
+      // 設置一個定時器，在一段時間後清除頭像上的文本
+      setTimeout(() => {
+        setOverlayText(null);
+      }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
+      
+      // 音頻播放完成後，更新時間戳
+      const replyTime = new Date();
+      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+      
+      // 根據使用者輸入字數調整延遲閾值
+      const delayThreshold = 3 + Math.floor(messageText.length / 10);
+      const patientDelayFromPrev = Math.floor((replyTime.getTime() - userMessage.timestamp.getTime()) / 1000);
+      const patientIsDelayed = patientDelayFromPrev > delayThreshold;
+      
+      // 更新助理消息
+      const aiMessage = {
+        ...tempAiMessage,
+        elapsedSeconds: replySeconds,
+        timestamp: replyTime
+      };
+      
+      // 更新對話
+      setConversation(prev => {
+        const newConv = [...prev];
+        newConv[newConv.length - 1] = aiMessage;
+        return newConv;
+      });
       
       // 保存AI回复到服务器
       if (conversationId) {
@@ -604,19 +723,21 @@ function DialogueNewContent() {
           body: JSON.stringify({
             sender: 'patient',
             content: aiResponseText,
-            elapsedSeconds: elapsedTime,
-            tag: tag
+            elapsedSeconds: replySeconds,
+            timestamp: replyTime.toISOString(),
+            delayFromPrev: patientDelayFromPrev,
+            isDelayed: patientIsDelayed,
+            tag: tag,
+            audioUrl: audioUrl
           }),
         });
         
         if (!saveAiResponse.ok) {
           console.error('保存AI回覆失敗:', saveAiResponse.statusText);
-          // 继续处理，但记录错误，不抛出异常
         }
       }
     } catch (error) {
       console.error('處理消息時出錯:', error);
-      // 添加一个系统消息，告知用户发送失败
       setConversation(prev => [
         ...prev, 
         {
@@ -726,6 +847,16 @@ function DialogueNewContent() {
         window.fetch = originalFetch;
       };
     }
+  }, []);
+  
+  // 在組件卸載時清理音頻
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
   }, []);
   
   const startRecording = () => {
@@ -1056,6 +1187,54 @@ function DialogueNewContent() {
     }
   };
 
+  // 添加 handleSendMessage 函数
+  const handleSendMessage = () => {
+    if (!message.trim() || !conversationId) return;
+    
+    // 标准化名称
+    const normalizedMessage = normalizeNames(message);
+    
+    // 发送消息并清空输入框
+    sendMessageToServer(normalizedMessage);
+    setMessage('');
+  };
+
+  // 修改音频播放逻辑，确保在移动设备上也能正常工作
+  const playAudio = async (audioUrl: string) => {
+    if (!audioUrl) return;
+  
+    try {
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      await audio.play(); // 不會再被拒絕（如果 AudioContext 已解鎖）
+      setIsAudioPlaying(true);
+      setShowPlayButton(false);
+    } catch (e) {
+      console.warn('❌ 自動播放失敗:', e);
+      setShowPlayButton(true);
+    }
+  };
+  
+  // 添加手动解锁音频的函数
+  const handleManualAudioUnlock = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      ctx.resume().then(() => {
+        console.log("🔓 使用者主動解鎖 AudioContext");
+        setIsAudioUnlocked(true);
+        
+        // 如果有最新的音频URL，尝试播放
+        if (lastAudioUrl) {
+          playAudio(lastAudioUrl);
+          // 播放后清除，确保只播放一次
+          setLastAudioUrl(null);
+        }
+      });
+    } catch (e) {
+      console.error("❌ Audio 解鎖失敗", e);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -1160,6 +1339,7 @@ function DialogueNewContent() {
               
               {/* 虛擬病人頭像區塊 - 添加点击功能并防止长按下载 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
+               
                 <div 
                   className="relative w-full max-w-md cursor-pointer select-none" 
                   onMouseDown={handleRecordButtonMouseDown}
@@ -1174,7 +1354,7 @@ function DialogueNewContent() {
                     handleRecordButtonTouchEnd(e);
                   }}
                   onContextMenu={(e) => e.preventDefault()} // 防止右键菜单
-                >
+                > 
                   {/* 語音識別狀態 */}
                   {isListening && (
                     <div className="mb-4 text-center">
@@ -1189,6 +1369,13 @@ function DialogueNewContent() {
                       )}
                     </div>
                   )}
+                  {overlayText && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                      <div className="bg-gray-800 bg-opacity-70 text-white p-4 rounded-lg max-w-[90%] text-center">
+                        {overlayText}
+                      </div>
+                    </div>
+                  )}
                   <Image
                     src="/image/virtualpatient.png"
                     alt="虛擬病人"
@@ -1200,9 +1387,10 @@ function DialogueNewContent() {
                     style={{ WebkitTouchCallout: 'none' }} // 禁止iOS长按呼出菜单
                   />
                   {isListening && (
-                    <div className="absolute bottom-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm animate-pulse">
-                      正在聆聽...
-                    </div>
+                    <div className="absolute top-14 left-0 right-0 mx-auto w-fit text-center bg-red-500 text-white px-3 py-1 rounded-b-lg text-sm animate-pulse">
+                    正在聆聽...
+                  </div>
+                  
                   )}
                   {/* 添加提示信息 */}
                   <div className="absolute bottom-2 left-0 right-0 text-center text-white bg-black bg-opacity-50 py-1 rounded-b-lg pointer-events-none">
@@ -1210,6 +1398,8 @@ function DialogueNewContent() {
                   </div>
                 </div>
               </div>
+              
+              
               
               {/* 對話區域 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
@@ -1276,6 +1466,27 @@ function DialogueNewContent() {
                         }`}
                       >
                         <p>{msg.content}</p>
+                        {msg.audioUrl && (
+                          <div className="mt-2">
+                            {showPlayButton ? (
+                              <button 
+                                onClick={() => audioRef.current?.play()} 
+                                className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm"
+                              >
+                                播放語音
+                              </button>
+                            ) : (
+                              <audio 
+                                ref={(el) => {
+                                  if (el) audioRef.current = el;
+                                }}
+                                src={msg.audioUrl}
+                                className="w-full"
+                                controls={false}
+                              />
+                            )}
+                          </div>
+                        )}
                         {msg.elapsedSeconds !== undefined && msg.role !== 'system' && (
                           <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300 text-right">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1322,3 +1533,4 @@ export default function DialogueNewPage() {
     </Suspense>
   );
 }
+
