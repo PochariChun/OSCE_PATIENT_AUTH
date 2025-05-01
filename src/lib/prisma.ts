@@ -1,12 +1,28 @@
 import { PrismaClient } from '@prisma/client'
 
+// 添加调试日志
+const prismaClientSingleton = () => {
+  const client = new PrismaClient({
+    log: ['query', 'error', 'warn'],
+  });
+  
+  // 测试连接
+  client.$connect()
+    .then(() => console.log('Prisma 連接成功'))
+    .catch(e => console.error('Prisma 連接失敗:', e));
+  
+  return client;
+};
+
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+
 // 防止開發環境中創建多個 PrismaClient 實例
-const globalForPrisma = global as unknown as { prisma: PrismaClient }
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientSingleton | undefined;
+};
 
 // 導出 Prisma 客戶端實例
-export const prisma = globalForPrisma.prisma || new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-})
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 // 在非生產環境中將 prisma 附加到 global 對象上
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

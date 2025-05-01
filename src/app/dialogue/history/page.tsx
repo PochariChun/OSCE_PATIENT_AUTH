@@ -7,12 +7,10 @@ import Link from 'next/link';
 
 interface User {
   id: number;
-  username: string;
-  nickname?: string;
+  name: string;
   email: string;
   role: string;
-  createdAt: string;
-  updatedAt: string;
+  nickname?: string;
 }
 
 interface DialogueHistory {
@@ -22,26 +20,21 @@ interface DialogueHistory {
   score: number | null;
   durationSec: number | null;
   overtime: boolean;
-  scenarioId?: number;
-  completedAt?: string;
 }
 
 export default function DialogueHistoryPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [dialogueHistory, setDialogueHistory] = useState<DialogueHistory[]>([]);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
-    
-    // 從 localStorage 獲取用戶資訊
+    // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
       try {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
-          console.error('未登入');
+          console.error('未登入，重定向到登入頁面');
           router.push('/login');
           return;
         }
@@ -52,43 +45,56 @@ export default function DialogueHistoryPage() {
         // 獲取對話歷史
         await fetchDialogueHistory(userData.id);
       } catch (error) {
-        console.error('獲取用戶資訊失敗', error);
+        console.error('獲取用戶信息失敗', error);
         router.push('/login');
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchUser();
   }, [router]);
 
   // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
     try {
+      console.log(`開始獲取用戶 ${userId} 的對話歷史`);
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
       
       if (!response.ok) {
         console.warn(`獲取對話歷史失敗: ${response.status} ${response.statusText}`);
+        // 如果獲取失敗，設置為空陣列
         setDialogueHistory([]);
         return;
       }
       
       const data = await response.json();
+      console.log(`獲取到 ${data.length} 條對話歷史記錄`);
       setDialogueHistory(data);
     } catch (error) {
       console.error('獲取對話歷史失敗', error);
+      // 如果獲取失敗，設置為空陣列
       setDialogueHistory([]);
     }
   };
 
-  const handleViewHistory = (id: number) => {
-    router.push(`/dialogue/history/${id}`);
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
-  // 避免服务器端和客户端渲染不匹配
-  if (!mounted) {
-    return null;
-  }
+  const formatDuration = (seconds: number | null) => {
+    if (seconds === null) return '未完成';
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   if (loading) {
     return (
@@ -109,74 +115,86 @@ export default function DialogueHistoryPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              對話歷史
+              對話歷史記錄
             </h1>
-            <Link 
-              href="/"
-              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-            >
+            <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline">
               返回首頁
             </Link>
           </div>
           
-          {dialogueHistory.length > 0 ? (
+          {dialogueHistory.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600 dark:text-gray-400">
+                您還沒有任何對話記錄。開始一個新的對話吧！
+              </p>
+              <button
+                onClick={() => router.push('/dialogue/new')}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                開始新對話
+              </button>
+            </div>
+          ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4 md:w-auto">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       標題
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      日期
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      開始時間
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      持續時間
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       分數
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      時長
-                    </th>
-                    <th scope="col" className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       操作
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {dialogueHistory.map((history) => (
-                    <tr key={history.id}>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white w-1/4 md:w-auto">
+                  {dialogueHistory.map((dialogue) => (
+                    <tr key={dialogue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                            <button
+                              onClick={() => router.push(`/dialogue/history/${dialogue.id}`)}
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
+                            >
+                              {dialogue.title}
+                            </button>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {formatDate(dialogue.startedAt)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {formatDuration(dialogue.durationSec)}
+                          {dialogue.overtime && (
+                            <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                              超時
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {dialogue.score !== null ? dialogue.score : '未評分'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
-                          onClick={() => handleViewHistory(history.id)}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 text-left font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-none block"
-                          title={history.title}
+                          onClick={() => router.push(`/dialogue/history/${dialogue.id}`)}
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
                         >
-                          {history.title}
-                        </button>
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                        {new Date(history.startedAt).toLocaleDateString('zh-TW')}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          history.score && history.score >= 90 ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
-                          history.score && history.score >= 80 ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' :
-                          history.score && history.score >= 70 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
-                          history.score ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100' :
-                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                        }`}>
-                          {history.score !== null ? history.score : '未評分'}
-                        </span>
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                        {history.durationSec ? `${Math.floor(history.durationSec / 60)}分${history.durationSec % 60}秒` : '未完成'}
-                        {history.overtime && <span className="ml-1 text-red-500">⚠️</span>}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => handleViewHistory(history.id)}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                        >
-                          查看
+                          查看詳情
                         </button>
                       </td>
                     </tr>
@@ -184,21 +202,11 @@ export default function DialogueHistoryPage() {
                 </tbody>
               </table>
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500 dark:text-gray-400">您還沒有任何對話記錄</p>
-              <Link 
-                href="/dialogue/new"
-                className="mt-4 inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
-              >
-                開始您的第一次對話
-              </Link>
-            </div>
           )}
         </div>
       </main>
 
-      <footer className="bg-white dark:bg-gray-800 py-6 mt-8">
+      <footer className="bg-white dark:bg-gray-800 py-6">
         <div className="container mx-auto px-4">
           <p className="text-center text-gray-600 dark:text-gray-400">
             © {new Date().getFullYear()} OSCE 虛擬病人對話系統 | 版權所有
