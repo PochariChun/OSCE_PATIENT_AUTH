@@ -17,7 +17,7 @@ CORS(app)  # 允許跨域請求
 
 # 加載索引
 script_dir = os.path.dirname(os.path.abspath(__file__))
-index_dir = os.path.join(script_dir, "../../../lib/faiss_index")
+index_dir = os.path.join(script_dir, "../../lib/faiss_index")
 
 print(f"正在加載索引：{index_dir}")
 try:
@@ -33,26 +33,61 @@ def query():
     data = request.json
     query_text = data.get('query', '')
     top_k = data.get('top_k', 3)
+    previous_tag = data.get('previous_tag', None)  # 獲取前一句對話的標籤
     
     if not query_text:
         return jsonify({"error": "查詢文本不能為空"}), 400
     
     results = query_index(index, doc_map, documents, query_text, top_k=top_k)
     
-    # 格式化結果
-    formatted_results = []
-    for result in results:
-        formatted_results.append({
-            "score": float(result['score']),
-            "question": result['metadata']['question'],
-            "answer": result['metadata']['answer'],
-            "tags": result['metadata'].get('tags', []),
-            "code": result['metadata'].get('code', None),
-            "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
-            # 可選字段
-            "imageToShow": result['metadata'].get('imageToShow', None),
-            "audioUrl": result['metadata'].get('audioUrl', None)
-        })
+    # 如果有前一句對話的標籤，進行加權調整
+    if previous_tag and previous_tag in ['A', 'B', 'C', 'D', 'F']:
+        # 格式化結果並進行加權
+        weighted_results = []
+        for result in results:
+            # 獲取當前結果的標籤
+            current_tag = result['metadata'].get('tag', '')
+            
+            # 計算加權分數：如果標籤匹配，增加權重
+            original_score = float(result['score'])
+            if current_tag == previous_tag:
+                # 使用0.9 + 0.1標籤的加權
+                weighted_score = original_score * 0.9 + 0.1
+            else:
+                weighted_score = original_score * 0.9
+            
+            weighted_results.append({
+                "score": weighted_score,
+                "question": result['metadata']['question'],
+                "answer": result['metadata']['answer'],
+                "tags": result['metadata'].get('tag', []),
+                "code": result['metadata'].get('code', None),
+                "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
+                # 可選字段
+                "imageToShow": result['metadata'].get('imageToShow', None),
+                "audioUrl": result['metadata'].get('audioUrl', None)
+            })
+        
+        # 根據加權後的分數重新排序
+        weighted_results.sort(key=lambda x: x['score'], reverse=True)
+        
+        # 只返回前top_k個結果
+        formatted_results = weighted_results[:top_k]
+    else:
+        # 如果沒有前一句對話的標籤，直接格式化結果
+        formatted_results = []
+        for result in results:
+            formatted_results.append({
+                "score": float(result['score']),
+                "question": result['metadata']['question'],
+                "answer": result['metadata']['answer'],
+                "tags": result['metadata'].get('tag', []),
+                "code": result['metadata'].get('code', None),
+                "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
+                # 可選字段
+                "imageToShow": result['metadata'].get('imageToShow', None),
+                "audioUrl": result['metadata'].get('audioUrl', None)
+            })
     
     return jsonify({"results": formatted_results})
 

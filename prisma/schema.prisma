@@ -9,17 +9,16 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  email        String         @unique
-  username     String         @unique
-  nickname     String?
-  password     String
-  name         String?        // 將 name 設為可選
-  role         String         @default("nurse")
-  isActive     Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  username      String         @unique
+  nickname      String?
+  password      String
+  name          String?
+  role          String         @default("nurse")
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   conversations Conversation[]
 
   @@index([username])
@@ -27,120 +26,99 @@ model User {
 }
 
 model Conversation {
-  id            Int            @id @default(autoincrement())
-  user          User           @relation(fields: [userId], references: [id])
-  userId        Int
-  startedAt     DateTime       @default(now())
-  endedAt       DateTime?
-  durationSec   Int?
-  overtime      Boolean        @default(false)   // 是否超過10分鐘
-  reflection    String?                          // GPT summary
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id           Int                 @id @default(autoincrement())
+  userId       Int
+  startedAt    DateTime            @default(now())
+  endedAt      DateTime?
+  durationSec  Int?
+  overtime     Boolean             @default(false)
+  reflection   String?
 
-  scenario      Scenario?      @relation(fields: [scenarioId], references: [id])
-  scenarioId    Int?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
-  messages      Message[]
-  reflections   ReflectionMessage[]
+  scenarioId   Int?
+  scenario     Scenario?           @relation(fields: [scenarioId], references: [id])
 
-  score         Int?            // 總得分
-  scoringItems  ScoringItem[]  // 新增关联到评分项目
-
-  role          String                 // 說話者角色，例如：考生、病人、媽媽、標準病人
-  prompt        String                 // 考生提問或系統觸發句，例如：「請問你叫什麼名字？」
-  response      String                 // 標準病人應答，例如：「張小威，2歲」
-  topic         String                 // 主題分類，例如：病人辨識、發燒、腹瀉
-  triggerType   String                 // 觸發方式，例如：問句、行為、觀察
-  expected      Boolean    @default(true)  // 是否為預期提問（如非預期則標記 false）
-  orderIndex    Int                     // 對話順序編號（方便排序展示）
+  score        Int? 
+  
+  user         User                @relation(fields: [userId], references: [id])
+  messages     Message[]
+  reflections  ReflectionMessage[]
+  scoringItems ScoringItem[]
 }
 
 model Message {
-  id              Int           @id @default(autoincrement())
-  conversation    Conversation  @relation(fields: [conversationId], references: [id])
-  conversationId  Int
-  sender          String        // 'user' | 'patient'
-  text            String
-  timestamp       DateTime      @default(now())
-
-  elapsedSeconds  Int           // 對話開始後第幾秒
-  delayFromPrev   Int?          // 與上一句相隔的秒數
-  isDelayed       Boolean?      // 是否超過反應時間門檻
-  isCorrect       Boolean?      // 語意比對正確
-  emotionLabel    String?       // 'neutral' | 'sad' | 'angry'...
-  emotionScore    Float?        // 強度 0–1
-
-  audioUrl        String?       // optional: 錄音檔連結
-
+  id               Int                  @id @default(autoincrement())
+  conversationId   Int
+  sender           String
+  text             String
+  timestamp        DateTime             @default(now())
+  elapsedSeconds   Int
+  delayFromPrev    Int?
+  isDelayed        Boolean?
+  isCorrect        Boolean?
+  emotionLabel     String?
+  emotionScore     Float?
+  audioUrl         String?
+  conversation     Conversation         @relation(fields: [conversationId], references: [id])
   scoringRelations ScoringItemMessage[]
 }
 
 model ReflectionMessage {
-  id              Int           @id @default(autoincrement())
-  conversation    Conversation  @relation(fields: [conversationId], references: [id])
-  conversationId  Int
-  sender          String        // 'user' | 'assistant'
-  text            String
-  timestamp       DateTime      @default(now())
-
-  sourceNodeId    String?       // RAG 來源節點 ID
-  strategyTag     String?       // 可標記使用的是 Gibbs 第幾步等
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  sender         String
+  text           String
+  timestamp      DateTime     @default(now())
+  sourceNodeId   String?
+  strategyTag    String?
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
 }
 
 model Scenario {
-  id            Int            @id @default(autoincrement())
-  title         String                             // 劇本標題，例如：腸胃炎入院評估
-  description   String                             // 詳細描述，例如：小兒腸胃炎評估
-  scenarioCode  String         @unique             // 劇本編碼
-  difficulty    Int            @default(1)         // 難度等級
-  category      String                             // 類別，例如：急診、病房、門診等
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  // ✅ 新增欄位以支援OSCE評估情境
-  patientName        String         @default("暫無")              // 病人姓名：張小威
-  patientAge         Int            @default(0)                  // 病人年齡：2
-  diagnosis          String         @default("未填寫")            // 診斷：Acute Gastroenteritis
-  accompaniedBy      String         @default("未知")              // 陪同者：母親
-  orderNPO           Boolean        @default(false)              // 是否NPO：true 表示禁食
-  triggerStatements  String[]       @default([])                 // 觸發語句，例如「請問你叫什麼名字？」
-  keyTopics          String[]       @default([])                 // 關鍵主題，如：發燒、腹瀉、嘔吐、尿量、食慾
-  estimatedDuration  Int            @default(8)                  // 建議演出分鐘數
-
-  // ✅ 對應標準化病人回應與考試互動紀錄
-  conversations Conversation[]
+  id                Int            @id @default(autoincrement())
+  title             String
+  description       String
+  scenarioCode      String         @unique
+  difficulty        Int            @default(1)
+  category          String
+  isActive          Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  patientName       String         @default("暫無")
+  patientAge        Int            @default(0)
+  diagnosis         String         @default("未填寫")
+  accompaniedBy     String         @default("未知")
+  orderNPO          Boolean        @default(false)
+  triggerStatements String[]       @default([])
+  keyTopics         String[]       @default([])
+  estimatedDuration Int            @default(8)
+  conversations     Conversation[]
 }
 
-// 新增评分项目模型
 model ScoringItem {
-  id              Int           @id @default(autoincrement())
-  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  id              Int                  @id @default(autoincrement())
   conversationId  Int
-  
-  category        String        // 类别，如"病人辨識"
-  subcategory     String        // 子类别，如"確認床號"
-  code            String        // 评分代码，如"A11"
-  score           Int           // 该项目的分值
-  achieved        Boolean       @default(false)  // 是否达成
-  
-  // 关联到多个消息
+  category        String
+  subcategory     String
+  code            String
+  score           Int
+  achieved        Boolean              @default(false)
+  conversation    Conversation         @relation(fields: [conversationId], references: [id])
   relatedMessages ScoringItemMessage[]
-
 
   @@index([conversationId])
   @@index([code])
   @@index([achieved])
 }
 
-// 新增评分项目与消息的关联模型
 model ScoringItemMessage {
-  id              Int           @id @default(autoincrement())
-  scoringItem     ScoringItem   @relation(fields: [scoringItemId], references: [id])
-  scoringItemId   Int
-  message         Message       @relation(fields: [messageId], references: [id])
-  messageId       Int
+  id            Int         @id @default(autoincrement())
+  scoringItemId Int
+  messageId     Int
+  message       Message     @relation(fields: [messageId], references: [id])
+  scoringItem   ScoringItem @relation(fields: [scoringItemId], references: [id])
 
   @@index([scoringItemId])
   @@index([messageId])

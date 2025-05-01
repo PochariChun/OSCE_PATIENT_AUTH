@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
 import Link from 'next/link';
@@ -21,6 +21,20 @@ interface DialogueHistory {
   durationSec: number | null;
   overtime: boolean;
 }
+
+// 创建一个开发环境标志
+const isDev = process.env.NODE_ENV === 'development';
+
+// 创建一个自定义日志函数
+const logInfo = (message: string, data?: any) => {
+  if (isDev) {
+    if (data) {
+      console.log(message, data);
+    } else {
+      console.log(message);
+    }
+  }
+};
 
 export default function DialogueHistoryPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -43,7 +57,10 @@ export default function DialogueHistoryPage() {
         setUser(userData);
         
         // 獲取對話歷史
-        await fetchDialogueHistory(userData.id);
+        if (userData.id) {
+          logInfo(`開始獲取用戶 ${userData.id} 的對話歷史`);
+          await fetchDialogueHistory(userData.id);
+        }
       } catch (error) {
         console.error('獲取用戶信息失敗', error);
         router.push('/login');
@@ -58,7 +75,6 @@ export default function DialogueHistoryPage() {
   // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
     try {
-      console.log(`開始獲取用戶 ${userId} 的對話歷史`);
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
       
       if (!response.ok) {
@@ -95,6 +111,26 @@ export default function DialogueHistoryPage() {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
+
+  // 使用 useCallback 优化函数
+  const fetchConversations = useCallback(async (userId: number) => {
+    try {
+      const response = await fetch(`/api/conversations/history?userId=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setDialogueHistory(data);
+      }
+    } catch (error) {
+      console.error('获取对话历史失败', error);
+    }
+  }, []);
+
+  // 使用 useMemo 优化计算
+  const sortedConversations = useMemo(() => {
+    return [...dialogueHistory].sort((a, b) => 
+      new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+    );
+  }, [dialogueHistory]);
 
   if (loading) {
     return (
@@ -157,7 +193,7 @@ export default function DialogueHistoryPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {dialogueHistory.map((dialogue) => (
+                  {sortedConversations.map((dialogue) => (
                     <tr key={dialogue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900 dark:text-white">

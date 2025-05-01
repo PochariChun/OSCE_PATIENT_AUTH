@@ -23,6 +23,8 @@ export function Navbar({ user: propUser }: NavbarProps) {
   const router = useRouter()
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [user, setUser] = useState<any>(propUser);
+  const [microphoneEnabled, setMicrophoneEnabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     // 如果通過 props 提供了用戶，使用它
@@ -137,6 +139,22 @@ export function Navbar({ user: propUser }: NavbarProps) {
 
   // 在顯示用戶信息時檢查電子郵件是否存在
   const userEmail = user?.email || '未設置電子郵件';
+
+  // 在处理麦克风访问的函数中添加错误处理
+  const handleMicrophoneAccess = async () => {
+    try {
+      // 请求麦克风访问权限
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      // 成功获取权限后的代码
+      setMicrophoneEnabled(true);
+    } catch (error) {
+      // 处理权限被拒绝的情况
+      console.log("麦克风访问被拒绝:", error);
+      setMicrophoneEnabled(false);
+      // 可以在这里显示友好的提示信息，而不是抛出错误
+      // 例如：setErrorMessage("请允许麦克风访问以使用语音功能");
+    }
+  };
 
   return (
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -315,24 +333,7 @@ export function Navbar({ user: propUser }: NavbarProps) {
       {isMenuOpen && (
         <div className="sm:hidden" id="mobile-menu">
           <div className="pt-2 pb-3 space-y-1">
-            <Link
-              href="/"
-              className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            >
-              首頁
-            </Link>
-            <Link
-              href="/dialogue/new"
-              className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            >
-              開始對話
-            </Link>
-            <Link
-              href="/dialogue/history"
-              className="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-            >
-              對話歷史
-            </Link>
+            
           </div>
           {user ? (
             <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
@@ -351,19 +352,7 @@ export function Navbar({ user: propUser }: NavbarProps) {
                   </div>
                 </div>
               </div>
-              <div className="mt-3 space-y-1">
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  個人資料
-                </Link>
-                <Link
-                  href="/settings"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  設置
-                </Link>
+              <div className="mt-3 space-y-1">                
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"

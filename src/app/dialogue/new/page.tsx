@@ -69,23 +69,24 @@ interface SpeechRecognition extends EventTarget {
   onend: (() => void) | null;
 }
 
-// 标准化名称变体
+// 標準化名稱變體
 const normalizeNames = (text: string): string => {
-  // 将所有"小威"的变体统一为"小威"
+  // 將所有"小威"的變體統一為"小威"
   return text.replace(/小葳|小薇|曉薇|曉威|筱威|小葳/g, '小威');
 };
 
-// 创建一个包装组件来使用 useSearchParams
+// 創建一個包裝組件來使用 useSearchParams
 function DialogueNewContent() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
   const [selectedScenario, setSelectedScenario] = useState<ScenarioInfo | null>(null);
   const [conversation, setConversation] = useState<{ 
-    role: 'user' | 'assistant' | 'system'; 
+    role: 'user' | 'patient' | 'system'; 
     content: string;
     elapsedSeconds?: number;
     timestamp?: Date;
+    tag?: string;
   }[]>([]);
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
@@ -111,6 +112,8 @@ function DialogueNewContent() {
   
   const [lastRecognizedText, setLastRecognizedText] = useState('');
   
+  const [startingDialogue, setStartingDialogue] = useState(false);
+  
   useEffect(() => {
     // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
@@ -118,7 +121,8 @@ function DialogueNewContent() {
         const userJson = localStorage.getItem('user');
         if (!userJson) {
           console.error('未登入，重定向到登入頁面');
-          throw new Error('未登入');
+          router.push('/login');
+          return;
         }
         
         const userData = JSON.parse(userJson);
@@ -168,7 +172,7 @@ function DialogueNewContent() {
           
           // 如果有新的最終結果
           if (final !== finalTranscript && final.trim() !== '') {
-            // 标准化名称
+            // 標準化名稱
             const normalizedText = normalizeNames(final);
             setFinalTranscript(normalizedText);
             
@@ -338,12 +342,7 @@ function DialogueNewContent() {
           body: JSON.stringify({
             userId: user.id,
             scenarioId: scenario.id,
-            role: '考生',
-            prompt: '開始對話',
-            response: '請開始與虛擬病人對話',
-            topic: scenario.title,
-            triggerType: '系統',
-            orderIndex: 0
+            role: user.role,
           }),
         });
         
@@ -375,7 +374,7 @@ function DialogueNewContent() {
   // 添加一个函数来获取AI回复
   const getAIResponse = async (userMessage: string, conversationHistory: any[]) => {
     try {
-      console.log('发送请求到 AI 回复服务...');
+      console.log('發送請求到 AI 回覆服務...');
       
       const response = await fetch('/api/ai-response', {
         method: 'POST',
@@ -389,30 +388,40 @@ function DialogueNewContent() {
         }),
       });
       
-      console.log('收到 AI 回复服务响应，状态码:', response.status);
+      console.log('收到 AI 回覆服務響應，狀態碼:', response.status);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('AI 回复服务返回错误:', {
+        console.error('AI 回覆服務返回錯誤:', {
           status: response.status,
           statusText: response.statusText,
           errorText
         });
-        throw new Error(`获取AI回复失败: ${response.status} ${response.statusText}`);
+        // 返回友好的错误消息，而不是抛出错误
+        return {
+          response: '抱歉，我現在無法回答您的問題。請稍後再試。',
+          tag: undefined
+        };
       }
       
       const data = await response.json();
-      console.log('成功解析 AI 回复:', data);
+      console.log('成功解析 AI 回覆:', data);
       
-      return data.response;
+      // 返回回复和标签
+      return {
+        response: data.response,
+        tag: data.tag
+      };
     } catch (error) {
-      console.error('获取AI回复时发生错误:', error);
-      // 返回一个友好的错误消息
-      return '抱歉，我现在无法回答您的问题。请稍后再试。';
+      console.error('獲取 AI 回覆失敗:', error);
+      return {
+        response: '抱歉，我暫時無法回應。請稍後再試。',
+        tag: undefined
+      };
     }
   };
   
-  // 修改handleSendVoiceMessage和sendMessageToServer函数
+  // 修改 handleSendVoiceMessage 函数
   const handleSendVoiceMessage = async (voiceMessage: string) => {
     if (!voiceMessage.trim() || !conversationId) return;
     
@@ -478,16 +487,17 @@ function DialogueNewContent() {
     }
     
     // 获取AI回复
-    const aiResponse = await getAIResponse(voiceMessage, conversation);
+    const { response: aiResponseText, tag } = await getAIResponse(voiceMessage, conversation);
     
     const replyTime = new Date();
     const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
     
     const assistantMessage = { 
-      role: 'assistant' as const, 
-      content: aiResponse,
+      role: 'patient' as const, 
+      content: aiResponseText,
       timestamp: replyTime,
-      elapsedSeconds: replySeconds
+      elapsedSeconds: replySeconds,
+      tag: tag
     };
     
     setConversation([...updatedConversation, assistantMessage]);
@@ -512,7 +522,8 @@ function DialogueNewContent() {
               timestamp: replyTime.toISOString(),
               elapsedSeconds: replySeconds,
               delayFromPrev: patientDelayFromPrev,
-              isDelayed: patientIsDelayed
+              isDelayed: patientIsDelayed,
+              tag: tag
             }
           ] 
         }),
@@ -535,138 +546,86 @@ function DialogueNewContent() {
   };
   
   const sendMessageToServer = async (messageText: string) => {
-    if (!messageText.trim() || !conversationId) return;
-    
-    const now = new Date();
-    const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
-    
-    // 計算與上一條消息的延遲
-    let delayFromPrev = 0;
-    let isDelayed = false;
-    const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
-    
-    if (lastMessage && lastMessage.timestamp) {
-      delayFromPrev = Math.floor((now.getTime() - lastMessage.timestamp.getTime()) / 1000);
-      isDelayed = delayFromPrev > 10;
-    }
-    
-    // 添加用戶訊息到對話
-    const userMessage = {
-      role: 'user' as const,
-      content: messageText,
-      timestamp: now,
-      elapsedSeconds: seconds
-    };
-    
-    const updatedConversation = [...conversation, userMessage];
-    setConversation(updatedConversation);
-    
-    // 保存用戶消息到數據庫
     try {
-      const apiUrl = `/api/conversations/${conversationId}/messages`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: [
-            {
-              sender: 'user',
-              text: messageText,
-              timestamp: now.toISOString(),
-              elapsedSeconds: seconds,
-              delayFromPrev,
-              isDelayed
-            }
-          ] 
-        }),
-      });
+      // 添加用户消息到对话
+      const userMessage = {
+        role: 'user' as const,
+        content: messageText,
+        elapsedSeconds: elapsedTime,
+        timestamp: new Date()
+      };
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('保存用戶訊息失敗', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
+      setConversation(prev => [...prev, userMessage]);
+      
+      // 保存消息到服务器
+      if (conversationId) {
+        const saveResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: 'user',
+            content: messageText,
+            elapsedSeconds: elapsedTime
+          }),
         });
-      } else {
-        const data = await response.json();
-        console.log('用戶訊息保存成功', data);
+        
+        if (!saveResponse.ok) {
+          console.error('保存用戶消息失敗:', saveResponse.statusText);
+          // 继续处理，但记录错误，不抛出异常
+        }
+      }
+      
+      // 获取AI回复
+      const { response: aiResponseText, tag } = await getAIResponse(
+        messageText, 
+        conversation.filter(msg => msg.role !== 'system')
+      );
+      
+      // 添加AI回复到对话
+      const aiMessage = {
+        role: 'patient' as const,
+        content: aiResponseText,
+        elapsedSeconds: elapsedTime,
+        timestamp: new Date(),
+        tag: tag
+      };
+      
+      setConversation(prev => [...prev, aiMessage]);
+      
+      // 保存AI回复到服务器
+      if (conversationId) {
+        const saveAiResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: 'patient',
+            content: aiResponseText,
+            elapsedSeconds: elapsedTime,
+            tag: tag
+          }),
+        });
+        
+        if (!saveAiResponse.ok) {
+          console.error('保存AI回覆失敗:', saveAiResponse.statusText);
+          // 继续处理，但记录错误，不抛出异常
+        }
       }
     } catch (error) {
-      console.error('保存用戶訊息時發生錯誤', error);
+      console.error('處理消息時出錯:', error);
+      // 添加一个系统消息，告知用户发送失败
+      setConversation(prev => [
+        ...prev, 
+        {
+          role: 'system' as const,
+          content: '處理消息時出錯，請稍後再試。',
+          timestamp: new Date()
+        }
+      ]);
     }
-    
-    // 获取AI回复
-    const aiResponse = await getAIResponse(messageText, conversation);
-    
-    const replyTime = new Date();
-    const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
-    
-    const assistantMessage = { 
-      role: 'assistant' as const, 
-      content: aiResponse,
-      timestamp: replyTime,
-      elapsedSeconds: replySeconds
-    };
-    
-    setConversation([...updatedConversation, assistantMessage]);
-    
-    // 計算虛擬病人回覆的延遲
-    const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
-    const patientIsDelayed = patientDelayFromPrev > 3;
-    
-    // 保存虛擬病人消息到數據庫
-    try {
-      const apiUrl = `/api/conversations/${conversationId}/messages`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: [
-            {
-              sender: 'patient',
-              text: assistantMessage.content,
-              timestamp: replyTime.toISOString(),
-              elapsedSeconds: replySeconds,
-              delayFromPrev: patientDelayFromPrev,
-              isDelayed: patientIsDelayed
-            }
-          ] 
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('保存虛擬病人訊息失敗', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-      } else {
-        const data = await response.json();
-        console.log('虛擬病人訊息保存成功', data);
-      }
-    } catch (error) {
-      console.error('保存虛擬病人訊息時發生錯誤', error);
-    }
-  };
-  
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
-    
-    // 标准化名称
-    const normalizedMessage = normalizeNames(message.trim());
-    
-    // 发送消息到服务器
-    sendMessageToServer(normalizedMessage);
-    
-    // 清空输入框
-    setMessage('');
-    setInterimTranscript('');
   };
   
   const handleEndDialogue = async () => {
@@ -699,13 +658,19 @@ function DialogueNewContent() {
       console.log(`結束對話請求回應狀態: ${response.status}`);
       
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('結束對話失敗:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorText
-        });
-        alert(`結束對話失敗: ${response.statusText}`);
+        let errorMessage = `結束對話失敗: ${response.statusText}`;
+        try {
+          const errorText = await response.text();
+          console.error('結束對話失敗:', {
+            status: response.status,
+            statusText: response.statusText,
+            errorText
+          });
+          errorMessage += ` - ${errorText}`;
+        } catch (e) {
+          console.error('無法解析錯誤響應', e);
+        }
+        alert(errorMessage);
         return;
       }
       
@@ -831,7 +796,7 @@ function DialogueNewContent() {
         
         if (finalText) {
           console.log('識別到最終文本:', finalText);
-          // 标准化名称
+          // 標準化名稱
           const normalizedText = normalizeNames(finalText);
           console.log('標準化後的文本:', normalizedText);
           
@@ -1007,6 +972,90 @@ function DialogueNewContent() {
     }
   }, [selectedScenario, isListening, isInitializingSpeech, speechRecognition]);
 
+  const handleStartDialogue = async () => {
+    if (!selectedScenario) {
+      alert('請先選擇一個場景');
+      return;
+    }
+    
+    setStartingDialogue(true);
+    
+    try {
+      console.log('開始創建對話，場景ID:', selectedScenario.id);
+      
+      // 確保用戶已登入
+      if (!user) {
+        console.error('用戶未登入');
+        router.push('/login');
+        return;
+      }
+      
+      // 創建新對話，使用用戶的角色
+      const response = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          scenarioId: selectedScenario.id,
+          role: user.role?.toUpperCase() || 'NURSE', // 使用用戶的角色，轉為大寫，如果沒有則使用預設值
+        }),
+      });
+      
+      console.log('創建對話請求響應狀態:', response.status);
+      
+      if (!response.ok) {
+        let errorMessage = `創建對話失敗: ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          console.error('創建對話失敗', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+          if (errorData.details) {
+            errorMessage += ` - ${errorData.details}`;
+          }
+        } catch (e) {
+          console.error('無法解析錯誤響應', e);
+        }
+        alert(errorMessage);
+        return;
+      }
+      
+      const data = await response.json();
+      console.log('對話創建成功，返回數據:', data);
+      
+      // 保存對話ID
+      setConversationId(data.id);
+      
+      // 添加系統消息
+      const systemMessage = {
+        role: 'system' as const,
+        content: `場景：${selectedScenario.title}\n\n${selectedScenario.description}`,
+      };
+      
+      setConversation([systemMessage]);
+      
+      // 開始計時
+      setStartTime(new Date());
+      setElapsedTime(0);
+      const interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+      setTimerInterval(interval);
+      
+      // 切換到對話界面
+      setStartingDialogue(false);
+    } catch (error) {
+      console.error('創建對話時發生錯誤:', error);
+      alert(`創建對話失敗: ${(error as Error).message}`);
+    } finally {
+      setStartingDialogue(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -1103,7 +1152,7 @@ function DialogueNewContent() {
                       onClick={handleEndDialogue}
                       className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none"
                     >
-                      結束對話
+                      完成對話
                     </button>
                   </div>
                 </div>
@@ -1126,6 +1175,20 @@ function DialogueNewContent() {
                   }}
                   onContextMenu={(e) => e.preventDefault()} // 防止右键菜单
                 >
+                  {/* 語音識別狀態 */}
+                  {isListening && (
+                    <div className="mb-4 text-center">
+                      <span className="inline-flex items-center text-sm text-red-500">
+                        <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                        正在錄音...
+                      </span>
+                      {interimTranscript && (
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
+                          {interimTranscript}...
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <Image
                     src="/image/virtualpatient.png"
                     alt="虛擬病人"
@@ -1157,7 +1220,7 @@ function DialogueNewContent() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="輸入訊息或按住麥克風說話..."
+                    placeholder="按住麥克風或圖片說話..."
                     className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                   />
                   
@@ -1196,20 +1259,7 @@ function DialogueNewContent() {
                   </button>
                 </div>
                 
-                {/* 語音識別狀態 */}
-                {isListening && (
-                  <div className="mb-4 text-center">
-                    <span className="inline-flex items-center text-sm text-red-500">
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
-                      正在錄音...
-                    </span>
-                    {interimTranscript && (
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
-                        {interimTranscript}...
-                      </p>
-                    )}
-                  </div>
-                )}
+                
                 
                 {/* 对话显示区域 - 移到输入区域下方 */}
                 <div className="space-y-4 max-h-96 overflow-y-auto">

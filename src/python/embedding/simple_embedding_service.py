@@ -475,7 +475,7 @@ if __name__ == "__main__":
     
     # 設置數據路徑
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../../lib/rag_lookup_data.jsonl")
+    data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../../lib/rag_lookup_data_cleaned.jsonl")
     index_dir = os.path.join(script_dir, "../../../lib/faiss_index")
     
     # 檢查數據文件是否存在
@@ -483,6 +483,10 @@ if __name__ == "__main__":
         print(f"錯誤：找不到數據文件 {data_path}")
         # 嘗試查找可能的位置
         possible_locations = [
+            os.path.join(script_dir, "../../../lib/rag_lookup_data_cleaned.jsonl"),
+            os.path.join(script_dir, "../../lib/rag_lookup_data_cleaned.jsonl"),
+            os.path.join(os.getcwd(), "lib/rag_lookup_data_cleaned.jsonl"),
+            os.path.join(os.getcwd(), "src/lib/rag_lookup_data_cleaned.jsonl"),
             os.path.join(script_dir, "../../../lib/rag_lookup_data.jsonl"),
             os.path.join(script_dir, "../../lib/rag_lookup_data.jsonl"),
             os.path.join(os.getcwd(), "lib/rag_lookup_data.jsonl"),

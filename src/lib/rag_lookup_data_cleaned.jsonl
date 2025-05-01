@@ -1,286 +1,235 @@
-{"question": "你好，我是照顧你的護生，要為你做入院護理評估哦", "answer": "病童安靜地看著護生", "code": "A14,F13", "answerType": "narration", "tag": "A"}
-{"question": "你好，我是照顧弟弟的護理師，要做入院評估", "answer": "病童眼神看向護理師", "code": "A14,F13", "answerType": "narration", "tag": "A"}
-{"question": "你好小威，我是你的護生，要幫你做入院評估", "answer": "病童安靜地看著護生", "code": "A14,F13", "answerType": "narration", "tag": "A"}
-{"question": "你好，我是負責照顧你的護理師，現在要做入院評估", "answer": "病童眼神專注看著護理師", "code": "A14,F13", "answerType": "narration", "tag": "A"}
-
-{"question": "請問弟弟叫什麼名字？", "answer": "張小威", "code": "A12,F11", "tag": "A"}
-{"question": "請問小朋友幾歲？", "answer": "2歲", "code": "000,F11", "tag": ""}
-{"question": "請問弟弟叫什麼名字？他幾歲？", "answer": "他叫張小威 2歲", "code": "A12,F11", "tag": "A"}
-{"question": "請問你叫什麼名字，幾歲？", "answer": "他叫張小威2 歲", "code": "A12,F11", "tag": "A"}
-{"question": "你是張小威嗎？", "answer": "對", "code": "A12,F11", "tag": "A"}
-{"question": "你今年2歲對嗎？", "answer": "對", "code": "A12,F11", "tag": "A"}
-
-{"question": "可以借我看你的手圈嗎？", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A"}
-{"question": "可以讓我確認一下手圈上的資料嗎？", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A"}
-{"question": "我需要看一下手圈確認身份", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A"}
-{"question": "讓我看一下你的手圈", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A"}
-{"question": "張小威2歲 對嘛？", "answer": "對", "code": "A13,F11", "tag": "A"}
-
-{"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,F11", "tag": "B"}
-{"question": "請問媽媽，弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-{"question": "弟弟是從何時開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-{"question": "症狀是什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-{"question": "不舒服是從什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-{"question": "弟弟從什麼時候開始有症狀的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-
-{"question": "腹瀉和發燒是什麼時候開始的？", "answer": "昨天晚上", "code": "B10,B61,F11", "tag": "B"}
-{"question": "這些症狀持續多久了？", "answer": "從昨天晚上開始到現在", "code": "B10,F11", "tag": "B"}
-{"question": "弟弟是從昨天開始不舒服的嗎？", "answer": "是的，昨天晚上開始", "code": "B10,F11", "tag": "B"}
-{"question": "腹瀉是什麼時候開始的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B"}
-
-{"question": "媽媽，弟弟的腹瀉情況可以詳細說明一下嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B"}
-{"question": "可以描述一下弟弟的大便情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B"}
-{"question": "弟弟的腹瀉情況如何？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B"}
-{"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B"}
-
-{"question": "發燒是從什麼時候開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B"}
-{"question": "昨天晚上幾點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B"}
-{"question": "弟弟是什麼時候開始覺得肚子不舒服的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B"}
-{"question": "這個情況持續多久了？", "answer": "從昨天晚上到現在", "code": "B10,F11", "tag": "B"}
-{"question": "弟弟從何時開始有這些症狀？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B"}
-
-{"question": "弟弟總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "從昨天到現在拉了幾次肚子？", "answer": "到今天中午總共拉五次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "腹瀉的頻率如何？", "answer": "昨晚兩次，今天早上三次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "一天大概拉幾次肚子？", "answer": "昨晚兩次，今天早上三次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "媽媽，您能完整描述一下弟弟大便的情況嗎？包括次數、性狀、顏色和有無血絲", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，最後兩次有一點血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B"}
-{"question": "請問媽媽，弟弟的大便從開始到現在有什麼變化？", "answer": "一開始是糊狀，後來變成水狀，顏色一直是黃色，但最近兩次出現血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B"}
-
-{"question": "大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B"}
-{"question": "便便是什麼樣子的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B"}
-{"question": "大便是水狀還是糊狀？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B"}
-{"question": "大便的性質如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B"}
-{"question": "大便的質地如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B"}
-{"question": "大便是什麼顏色的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "便便的顏色如何？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "腹瀉的顏色是怎樣的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，弟弟的大便是什麼顏色的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "請問媽媽，您觀察到弟弟的便便顏色有什麼變化嗎？", "answer": "一直都是黃色，但最近兩次有血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，弟弟的大便顏色是正常的嗎？", "answer": "顏色是黃色，但有血絲讓我很擔心", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，您能描述一下弟弟大便的顏色嗎？", "answer": "黃色，最近兩次有血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，您有注意到弟弟的大便顏色嗎？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B"}
-
-{"question": "每次大便的量大概多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "大便的量如何？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "每次腹瀉的量多嗎？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "大便量是多還是少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "腹瀉時排出的量大概有多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "媽媽，您觀察到弟弟每次大便的量大概是多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B"}
-
-{"question": "大便中有沒有血絲？", "answer": "黃色，有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "有沒有在便便中看到血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "大便有沒有帶血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "有沒有發現便便中有紅色的東西？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "請問媽媽，您有發現弟弟的便便中有血絲嗎？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "媽媽，您是什麼時候發現弟弟的便便有血絲的？", "answer": "今天早上最後兩次大便時發現的", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "請問媽媽，弟弟便便中的血絲量多嗎？", "answer": "不多，只有一點點紅色的絲狀物", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "媽媽，弟弟的便便中除了血絲還有其他異常嗎？", "answer": "沒有其他異常，就是有點黏液和血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "媽媽，您確定看到的是血絲而不是食物殘渣嗎？", "answer": "確定是血絲，不是食物，我看得很清楚", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-{"question": "媽媽，弟弟的便便中有血絲讓您擔心嗎？", "answer": "很擔心，所以趕緊帶他來醫院", "code": "B24", "scoringSubItem": "Blood", "tag": "B"}
-
-{"question": "有嘔吐嗎？", "answer": "有", "code": "B30", "tag": "B"}
-{"question": "弟弟有沒有吐過？", "answer": "有", "code": "B30", "tag": "B"}
-{"question": "媽媽，弟弟嘔吐後有什麼不適反應嗎？", "answer": "吐完後看起來很疲倦，不想吃東西也不想喝水", "code": "B30", "scoringSubItem": "Comprehensive", "tag": "B"}
-
-{"question": "什麼時候吐？", "answer": "早上8點和11點", "code": "B30", "scoringSubItem": "Time", "tag": "B"}
-{"question": "是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B"}
-{"question": "媽媽，弟弟是什麼時候吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B"}
-{"question": "請問媽媽，您記得弟弟嘔吐的具體時間嗎？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B"}
-{"question": "媽媽，弟弟嘔吐是在什麼時間發生的？", "answer": "早上8點和11點各吐了一次", "code": "B31", "scoringSubItem": "Time", "tag": "B"}
-
-{"question": "吐了幾次？", "answer": "吐2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "總共吐了幾次？", "answer": "吐2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "媽媽，弟弟總共吐了幾次？", "answer": "吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "請問媽媽，弟弟從昨天到現在吐過幾次？", "answer": "今天早上吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "媽媽，您觀察到弟弟嘔吐的次數是多少？", "answer": "總共吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B"}
-{"question": "媽媽，弟弟吐了幾次？吐了什麼東西？", "answer": "吐了2次，第一次是稀飯，第二次是藥跟水", "code": "B31,B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "請問媽媽，弟弟是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B"}
-
-{"question": "吐了什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "吐出來的東西是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "媽媽，弟弟吐出來的是什麼東西？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "請問媽媽，弟弟嘔吐物的內容是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "媽媽，您能描述一下弟弟吐出來的東西嗎？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-{"question": "媽媽，弟弟吐出來的食物是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B"}
-
-{"question": "嘔吐物顏色？", "answer": "稀飯跟水", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-{"question": "吐出來的東西是什麼顏色？", "answer": "稀飯跟水", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，弟弟吐出來的東西是什麼顏色的？", "answer": "稀飯是白色的，藥水是粉紅色的", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-{"question": "請問媽媽，您注意到弟弟嘔吐物的顏色嗎？", "answer": "稀飯是白色的，藥水是粉紅色的", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，弟弟嘔吐物的顏色有什麼特別的嗎？", "answer": "沒有特別的，就是食物原本的顏色", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-{"question": "媽媽，弟弟吐出來的東西有沒有異常的顏色？", "answer": "沒有，就是食物原本的顏色", "code": "B33", "scoringSubItem": "Color", "tag": "B"}
-
-{"question": "吐的量多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "媽媽，弟弟每次吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "請問媽媽，弟弟嘔吐的量多嗎？", "answer": "第一次比較多，吃的都吐出來，第二次比較少", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "媽媽，您能估計一下弟弟吐出來的量嗎？", "answer": "第一次大概有半碗飯的量，第二次只有一點點", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "媽媽，弟弟吐的量是多還是少？", "answer": "第一次比較多，第二次比較少", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "媽媽，弟弟吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B"}
-
-{"question": "媽媽，您能完整描述一下弟弟嘔吐的情況嗎？包括次數、時間、內容和量", "answer": "今天早上總共吐了2次，分別在8點和11點。第一次吐出稀飯，量比較多；第二次吐出藥水，量比較少", "code": "B31,B32,B33,B34", "scoringSubItem": "Comprehensive", "tag": "B"}
-{"question": "請問媽媽，弟弟嘔吐的整體情況如何？", "answer": "今天早上8點吐了一次稀飯，量比較多；11點又吐了一次藥水，量比較少", "code": "B31,B32,B33,B34", "scoringSubItem": "Comprehensive", "tag": "B"}
-
-{"question": "弟弟的食慾怎麼樣？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B"}
-{"question": "媽媽，弟弟的食慾怎麼樣？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B"}
-{"question": "弟弟最近胃口好嗎？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B"}
-{"question": "小朋友有沒有想吃東西？", "answer": "沒有", "code": "B41", "scoringSubItem": "Decrease", "tag": "B"}
-{"question": "弟弟現在願意吃東西嗎？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B"}
-
-{"question": "請問媽媽，弟弟今天吃了什麼？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type,Amount", "tag": "B"}
-{"question": "弟弟今天進食了哪些食物？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B"}
-{"question": "小朋友今天吃了什麼東西？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B"}
-{"question": "弟弟最近都吃些什麼？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B"}
-{"question": "能告訴我弟弟今天的飲食內容嗎？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B"}
-{"question": "媽媽，弟弟喝水的情況如何？", "answer": "喝一點就吐，現在不太敢給他喝", "code": "B42", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B"}
-
-{"question": "弟弟吃了多少東西？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "小朋友的進食量大概有多少？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "弟弟能吃下多少食物？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "弟弟每餐的進食量如何？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "食慾如何？吃了什麼？量多少？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B"}
-{"question": "弟弟吃了什麼東西？吃了多少？", "answer": "吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Food Type,Amount", "tag": "B"}
-{"question": "能詳細說明一下弟弟的飲食情況嗎？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B"}
-{"question": "弟弟的進食狀況如何？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B"}
-
-{"question": "不吃東西之後有比較好嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B"}
-{"question": "停止進食後症狀有改善嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B"}
-{"question": "吃東西後症狀會變得更嚴重嗎？", "answer": "會，吃完就吐", "code": "B50", "tag": "B"}
-{"question": "進食與嘔吐之間有什麼關聯嗎？", "answer": "吃完就吐，不吃就沒事", "code": "B50", "tag": "B"}
-{"question": "弟弟吃東西後會有什麼反應？", "answer": "吃完就吐", "code": "B50", "tag": "B"}
-{"question": "空腹時弟弟的症狀會比較輕嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B"}
-
-{"question": "弟弟是什麼時候開始發燒的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B"}
-{"question": "發燒是從何時開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B"}
-{"question": "弟弟發燒持續多久了？", "answer": "從昨天晚上8點到現在", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B"}
-{"question": "發燒大概是什麼時間點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B"}
-
-{"question": "發燒最高到幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B"}
-{"question": "體溫最高測到多少？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B"}
-{"question": "弟弟發燒的溫度有多高？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B"}
-{"question": "量體溫時最高是幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B"}
-{"question": "發燒後怎麼處理的？", "answer": "塞屁股的藥後降到38.5度", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B"}
-{"question": "有沒有採取什麼方法來退燒？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B"}
-{"question": "弟弟發燒時，您採取了什麼措施？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B"}
-{"question": "有給弟弟吃退燒藥嗎？", "answer": "有，塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B"}
-
-{"question": "退燒藥吃了之後體溫有降低嗎？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-{"question": "用藥後體溫變化如何？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-{"question": "處理後發燒情況有改善嗎？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-{"question": "退燒藥的效果如何？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-{"question": "有退燒嘛？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-{"question": "後來有退燒嘛？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B"}
-
-
-{"question": "弟弟有尿尿嗎？", "answer": "有尿但量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "小朋友的尿量如何？", "answer": "量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "弟弟排尿的量多嗎？", "answer": "量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B"}
-{"question": "弟弟今天尿了幾次？尿量如何？", "answer": "只有兩次，量都很少", "code": "B71", "scoringSubItem": "Amount", "tag": "B"}
-
-{"question": "弟弟的尿液顏色是怎樣的？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B"}
-{"question": "小朋友的尿液是什麼顏色？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B"}
-{"question": "尿液看起來是什麼顏色？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B"}
-{"question": "尿尿的顏色如何？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B"}
-
-{"question": "之前有帶弟弟去看醫生嗎？", "answer": "早上去診所，診斷感冒", "code": "B81,B82", "scoringSubItem": "Clinic Visit", "tag": "B"}
-{"question": "弟弟之前有就醫嗎？", "answer": "早上去診所", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B"}
-{"question": "生病後有帶去哪裡看診？", "answer": "早上去診所", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B"}
-{"question": "弟弟是在哪裡就醫的？", "answer": "早上去診所，後來來急診", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B"}
-
-{"question": "醫師怎麼說？", "answer": "診斷感冒，後來急診醫師診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B"}
-{"question": "醫生診斷是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B"}
-{"question": "醫師的診斷結果是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B"}
-{"question": "弟弟被診斷出什麼疾病？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B"}
-
-{"question": "醫生有開什麼藥嗎？", "answer": "有開退燒藥和止瀉藥，但吃了就吐出來", "code": "B83", "scoringSubItem": "Treatment", "tag": "B"}
-{"question": "醫師有給什麼治療建議嗎？", "answer": "診斷急性腸胃炎建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B"}
-{"question": "醫生怎麼處理弟弟的症狀？", "answer": "開退燒藥和止瀉藥，建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B"}
-{"question": "醫師有提供什麼治療方案嗎？", "answer": "開退燒藥和止瀉藥，建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B"}
-
-
-{"question": "接下來我要收集小威的一般護理資料", "answer": "好", "code": "C11", "tag": "C"}
-{"question": "我利用護理評估表收集一般健康資料", "answer": "好", "code": "C11", "tag": "C"}
-{"question": "我現在要幫你做一般的護理評估，好嗎？", "answer": "病童點頭", "code": "C11", "answerType": "narration", "tag": "C"}
-{"question": "我需要檢查一下你的身體狀況", "answer": "病童安靜配合", "code": "C11", "answerType": "narration", "tag": "C"}
-
-{"question": "我要看看你哪裡不舒服", "answer": "病童指著肚子", "code": "B00", "answerType": "narration", "tag": "C"}
-
-{"question": "我幫你量體溫、脈博、呼吸、血壓哦", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C"}
-{"question": "我要幫你量一下心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C"}
-{"question": "我現在要聽一下你的心跳聲音", "answer": "病童點頭", "code": "C12", "answerType": "narration", "tag": "C"}
-{"question": "我要用聽診器聽一下你的心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C"}
-{"question": "脈博測心尖脈", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C"}
-
-{"question": "我為小威進行腹部視、聽、扣、觸評估", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C"}
-{"question": "讓我看看聽聽你的肚肚好嗎?", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C"}
-{"question": "我要檢查一下你的肚子", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C"}
-{"question": "我先看一下你的肚子", "answer": "病童露出肚子", "code": "C13", "answerType": "narration", "scoringSubItem": "Inspection", "tag": "C"}
-{"question": "現在我要聽一下你肚子的聲音", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Auscultation", "tag": "C"}
-{"question": "我要輕輕敲一下你的肚子", "answer": "病童表情緊張但配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Percussion", "tag": "C"}
-{"question": "我要摸一下你的肚子，如果痛要告訴我", "answer": "病童點頭", "code": "C13", "answerType": "narration", "scoringSubItem": "Palpation", "tag": "C"}
-
-{"question": "肚子痛痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C"}
-{"question": "小威，你看這些臉，哪一個最像你現在肚子痛的感覺？", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C"}
-{"question": "你的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C"}
-{"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "code": "C14", "answerType": "narration", "tag": "C"}
-
-{"question": "使用FLACC行為量表", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C"}
-{"question": "小威2歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C"}
-
-{"question": "觀察小威的臉部表情", "answer": "病童臉部緊繃，偶爾顫抖", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Face", "tag": "C"}
-{"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Legs", "tag": "C"}
-{"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Activity", "tag": "C"}
-{"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Cry", "tag": "C"}
-{"question": "根據FLACC量表評估小威的疼痛程度", "answer": "總分7分，表示中度疼痛", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Total", "tag": "C"}
-
-
-// 護理指導
-{"question": "媽媽，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "D11", "scoringSubItem": "Record Color", "tag": "D"}
-{"question": "每次大便後，請記下大便的顏色變化", "answer": "我會記錄的", "code": "D11", "scoringSubItem": "Record Color", "tag": "D"}
-
-{"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好的，我會觀察", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D"}
-{"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "我會注意這些細節", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D"}
-
-{"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "了解，那要禁食多久？", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D"}
-{"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我會遵醫囑", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D"}
-
-{"question": "每次大便後，請用溫水清洗臀部並擦乾", "answer": "好的，我會這樣做", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D"}
-{"question": "頻繁腹瀉可能造成臀部皮膚紅腫，可塗抹護膚霜保護", "answer": "了解，我會注意保護皮膚", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D"}
-
-{"question": "弟弟可以進食時，建議從香蕉、蘋果泥、白飯和吐司開始", "answer": "好的，這些食物比較容易消化是嗎？", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D"}
-{"question": "恢復進食時，請遵循BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D"}
-
-{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "D11,D12,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D"}
-{"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "我明白了，這些都很重要", "code": "D11,D12,D13,D14,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet", "tag": "D"}
-
-{"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好的，我會按照這些建議做", "code": "D11,D13,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet", "tag": "D"}
-{"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "code": "D11,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D"}
-
-{"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "code": "A00,F13", "answerType": "dialogue", "tag": "A"}
-{"question": "您好，我是護理師", "answer": "您好，謝謝您來照顧小威", "code": "F13", "answerType": "dialogue", "tag": "F"}
-{"question": "小威媽媽您好", "answer": "您好，請問有什麼事嗎？", "code": "F13", "answerType": "dialogue", "tag": "F"}
-{"question": "我是今天負責照顧小威的護理師", "answer": "謝謝您，小威現在很不舒服", "code": "F13", "answerType": "dialogue", "tag": "F"}
-{"question": "您還好嗎？看起來很疲倦", "answer": "是有點累，昨晚小威一直哭鬧，沒怎麼睡", "code": "F12", "answerType": "dialogue", "tag": "F"}
-
-
-// 綜合性表現
-{"question": "您看起來很擔心", "answer": "是的，小威從來沒這麼不舒服過，我很擔心", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您需要休息一下嗎？", "answer": "不用了，我想陪著小威", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您吃過飯了嗎？", "answer": "還沒有，但我現在沒什麼胃口", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "不用太擔心，我們會好好照顧小威的", "answer": "謝謝您，這讓我安心不少", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您有什麼需要幫忙的嗎？", "answer": "現在沒有，謝謝您的關心", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "如果您有任何問題，隨時可以問我", "answer": "好的，謝謝您", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "我理解您的擔憂，這是很正常的", "answer": "謝謝您的理解，我確實很擔心小威", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "小威平時的健康狀況如何？", "answer": "平時很健康，很少生病，這次是突然發燒腹瀉", "code": "B10,F11", "answerType": "dialogue", "tag": "A"}
-{"question": "小威有沒有兄弟姐妹？", "answer": "沒有，他是獨生子", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "小威平時喜歡吃什麼？", "answer": "他很喜歡吃水果和麵條，不太喜歡蔬菜", "code": "B42,F11", "answerType": "dialogue", "tag": "A"}
-{"question": "小威在家都和誰玩？", "answer": "主要是和我和他爸爸，有時候和鄰居家的小朋友", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您家住在附近嗎？", "answer": "是的，就住在醫院附近的社區", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您先生呢？他會來嗎？", "answer": "他在趕來的路上，應該很快就到了", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您之前有帶小威來過這家醫院嗎？", "answer": "沒有，這是第一次", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "您有其他家人可以幫忙照顧小威嗎？", "answer": "有我的母親，但她住得有點遠", "code": "F12", "answerType": "dialogue", "tag": "F"}
-{"question": "弟弟今天的精神狀況如何？", "answer": "他很不舒服，一直哭鬧", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F"}
-{"question": "小朋友現在感覺好一些了嗎？", "answer": "還是很不舒服，剛才又哭了一陣子", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F"}
-{"question": "弟弟看起來很不舒服，我能做什麼幫助他？", "answer": "謝謝您的關心，希望能快點退燒", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F"}
-{"question": "小威今天的情緒怎麼樣？", "answer": "還是很不舒服，但沒有剛來時那麼嚴重了", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F"}
-{"question": "弟弟今天有沒有比較舒服一點？", "answer": "還是很不舒服，但至少不像昨天那麼嚴重", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F"}
+{"question": "你好，我是照顧你的護生，要為你做入院護理評估哦", "answer": "病童安靜地看著護生", "code": "A14,F13", "answerType": "narration", "tag": "A", "audioUrl": "/audio/e061242a0e9156e2b358ca63db50849b.mp3"}
+{"question": "你好，我是照顧弟弟的護理師，要做入院評估", "answer": "病童眼神看向護理師", "code": "A14,F13", "answerType": "narration", "tag": "A", "audioUrl": "/audio/b83bc06dd644040587eeb4f475abd6e3.mp3"}
+{"question": "你好小威，我是你的護生，要幫你做入院評估", "answer": "病童安靜地看著護生", "code": "A14,F13", "answerType": "narration", "tag": "A", "audioUrl": "/audio/e061242a0e9156e2b358ca63db50849b.mp3"}
+{"question": "你好，我是負責照顧你的護理師，現在要做入院評估", "answer": "病童眼神專注看著護理師", "code": "A14,F13", "answerType": "narration", "tag": "A", "audioUrl": "/audio/c2a6f9d67290f84eddb3c7e351b8f9f0.mp3"}
+{"question": "請問弟弟叫什麼名字？", "answer": "張小威", "code": "A12,F11", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
+{"question": "請問小朋友幾歲？", "answer": "2歲", "code": "000,F11", "tag": "", "audioUrl": "/audio/d101b19f99f858749be3e28edfbccf01.mp3"}
+{"question": "請問弟弟叫什麼名字？他幾歲？", "answer": "他叫張小威 2歲", "code": "A12,F11", "tag": "A", "audioUrl": "/audio/e2e075bf97b8add0bed3d6e2b1b83aa6.mp3"}
+{"question": "請問你叫什麼名字，幾歲？", "answer": "他叫張小威2 歲", "code": "A12,F11", "tag": "A", "audioUrl": "/audio/a4c711f19869980cab5570809c7b6a11.mp3"}
+{"question": "你是張小威嗎？", "answer": "對", "code": "A12,F11", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "你今年2歲對嗎？", "answer": "對", "code": "A12,F11", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "可以借我看你的手圈嗎？", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "可以讓我確認一下手圈上的資料嗎？", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "我需要看一下手圈確認身份", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "讓我看一下你的手圈", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "張小威2歲 對嘛？", "answer": "對", "code": "A13,F11", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/19004dfead40af89ace04f246dc995b2.mp3"}
+{"question": "請問媽媽，弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "弟弟是從何時開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "症狀是什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "不舒服是從什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "弟弟從什麼時候開始有症狀的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "腹瀉和發燒是什麼時候開始的？", "answer": "昨天晚上", "code": "B10,B61,F11", "tag": "B", "audioUrl": "/audio/06ee1705fdec6d8d1eea9553602c02bc.mp3"}
+{"question": "這些症狀持續多久了？", "answer": "從昨天晚上開始到現在", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/3d0092f33b1e96e4e087ccb2122d1d05.mp3"}
+{"question": "弟弟是從昨天開始不舒服的嗎？", "answer": "是的，昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/085b8b79f058f0e529453d5d35ec1dc1.mp3"}
+{"question": "腹瀉是什麼時候開始的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "媽媽，弟弟的腹瀉情況可以詳細說明一下嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "可以描述一下弟弟的大便情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "弟弟的腹瀉情況如何？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "發燒是從什麼時候開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "昨天晚上幾點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "弟弟是什麼時候開始覺得肚子不舒服的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "這個情況持續多久了？", "answer": "從昨天晚上到現在", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/d72bfe50434f3fa3aaf8fa84214b18a8.mp3"}
+{"question": "弟弟從何時開始有這些症狀？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "弟弟總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "從昨天到現在拉了幾次肚子？", "answer": "到今天中午總共拉五次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "腹瀉的頻率如何？", "answer": "昨晚兩次，今天早上三次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
+{"question": "一天大概拉幾次肚子？", "answer": "昨晚兩次，今天早上三次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
+{"question": "媽媽，您能完整描述一下弟弟大便的情況嗎？包括次數、性狀、顏色和有無血絲", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，最後兩次有一點血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/e73bb69085c0ca0671eefe54e003d5b2.mp3"}
+{"question": "請問媽媽，弟弟的大便從開始到現在有什麼變化？", "answer": "一開始是糊狀，後來變成水狀，顏色一直是黃色，但最近兩次出現血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/7403d4e3ad8e4894670584d7bc46b191.mp3"}
+{"question": "大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "便便是什麼樣子的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "大便是水狀還是糊狀？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "大便的性質如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "大便的質地如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "大便是什麼顏色的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "便便的顏色如何？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "腹瀉的顏色是怎樣的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "媽媽，弟弟的大便是什麼顏色的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "請問媽媽，您觀察到弟弟的便便顏色有什麼變化嗎？", "answer": "一直都是黃色，但最近兩次有血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/f71ec80d52bccbc60777294483ef9ba3.mp3"}
+{"question": "媽媽，弟弟的大便顏色是正常的嗎？", "answer": "顏色是黃色，但有血絲讓我很擔心", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/6fc2ce76112c986b78fc6145a67b5173.mp3"}
+{"question": "媽媽，您能描述一下弟弟大便的顏色嗎？", "answer": "黃色，最近兩次有血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/2da9c119752ac5ee1e8ea037dbf2ed3d.mp3"}
+{"question": "媽媽，您有注意到弟弟的大便顏色嗎？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "每次大便的量大概多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "大便的量如何？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "每次腹瀉的量多嗎？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "大便量是多還是少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "腹瀉時排出的量大概有多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "媽媽，您觀察到弟弟每次大便的量大概是多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
+{"question": "大便中有沒有血絲？", "answer": "黃色，有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+{"question": "有沒有在便便中看到血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "大便有沒有帶血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "有沒有發現便便中有紅色的東西？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "請問媽媽，您有發現弟弟的便便中有血絲嗎？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "媽媽，您是什麼時候發現弟弟的便便有血絲的？", "answer": "今天早上最後兩次大便時發現的", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/d635c59c803c116817a5271cf317b580.mp3"}
+{"question": "請問媽媽，弟弟便便中的血絲量多嗎？", "answer": "不多，只有一點點紅色的絲狀物", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/71a741434fc1d30e70876f04ed23f6de.mp3"}
+{"question": "媽媽，弟弟的便便中除了血絲還有其他異常嗎？", "answer": "沒有其他異常，就是有點黏液和血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5f30ef253820fe0a964f7876dca89864.mp3"}
+{"question": "媽媽，您確定看到的是血絲而不是食物殘渣嗎？", "answer": "確定是血絲，不是食物，我看得很清楚", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/9606ce600007f152a76acde927007d35.mp3"}
+{"question": "媽媽，弟弟的便便中有血絲讓您擔心嗎？", "answer": "很擔心，所以趕緊帶他來醫院", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/7544e1c439da908c19007d9dbf8c573a.mp3"}
+{"question": "有嘔吐嗎？", "answer": "有", "code": "B30", "tag": "B", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
+{"question": "弟弟有沒有吐過？", "answer": "有", "code": "B30", "tag": "B", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
+{"question": "媽媽，弟弟嘔吐後有什麼不適反應嗎？", "answer": "吐完後看起來很疲倦，不想吃東西也不想喝水", "code": "B30", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/136f8c5d9fbcedd276b470b1122df1d3.mp3"}
+{"question": "什麼時候吐？", "answer": "早上8點和11點", "code": "B30", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "媽媽，弟弟是什麼時候吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "請問媽媽，您記得弟弟嘔吐的具體時間嗎？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "媽媽，弟弟嘔吐是在什麼時間發生的？", "answer": "早上8點和11點各吐了一次", "code": "B31", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/92b33f96ef0227e861d7b8192643f59f.mp3"}
+{"question": "吐了幾次？", "answer": "吐2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/df891406fe9cb98866a9359034abb8d0.mp3"}
+{"question": "總共吐了幾次？", "answer": "吐2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/df891406fe9cb98866a9359034abb8d0.mp3"}
+{"question": "媽媽，弟弟總共吐了幾次？", "answer": "吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/2f1316f220d1bd4070259881f22b6e41.mp3"}
+{"question": "請問媽媽，弟弟從昨天到現在吐過幾次？", "answer": "今天早上吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/6070cbef490e7686ba950106b9f1f52d.mp3"}
+{"question": "媽媽，您觀察到弟弟嘔吐的次數是多少？", "answer": "總共吐了2次", "code": "B31", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/9f17c50226050bce08ccbc79ebedb7ca.mp3"}
+{"question": "媽媽，弟弟吐了幾次？吐了什麼東西？", "answer": "吐了2次，第一次是稀飯，第二次是藥跟水", "code": "B31,B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/f5c94ba8dadc10d8293f4f8b1388185b.mp3"}
+{"question": "請問媽媽，弟弟是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "B31", "scoringSubItem": "Time", "tag": "B", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "吐了什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "吐出來的東西是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "媽媽，弟弟吐出來的是什麼東西？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "請問媽媽，弟弟嘔吐物的內容是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "媽媽，您能描述一下弟弟吐出來的東西嗎？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "媽媽，弟弟吐出來的食物是什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "B32", "scoringSubItem": "Content", "tag": "B", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
+{"question": "嘔吐物顏色？", "answer": "稀飯跟水", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/fda783d1e1b97d0996cadb66eeb0cc36.mp3"}
+{"question": "吐出來的東西是什麼顏色？", "answer": "稀飯跟水", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/fda783d1e1b97d0996cadb66eeb0cc36.mp3"}
+{"question": "媽媽，弟弟吐出來的東西是什麼顏色的？", "answer": "稀飯是白色的，藥水是粉紅色的", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/2dc960cd00d30edb9944481c2ee80f21.mp3"}
+{"question": "請問媽媽，您注意到弟弟嘔吐物的顏色嗎？", "answer": "稀飯是白色的，藥水是粉紅色的", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/2dc960cd00d30edb9944481c2ee80f21.mp3"}
+{"question": "媽媽，弟弟嘔吐物的顏色有什麼特別的嗎？", "answer": "沒有特別的，就是食物原本的顏色", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/a0eba34692a05b25080a94cd47c184fc.mp3"}
+{"question": "媽媽，弟弟吐出來的東西有沒有異常的顏色？", "answer": "沒有，就是食物原本的顏色", "code": "B33", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/056b0c1626735d4ae76636d32023bfe5.mp3"}
+{"question": "吐的量多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2225b7c1bfea20a3375cd942eda7d4ec.mp3"}
+{"question": "吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2225b7c1bfea20a3375cd942eda7d4ec.mp3"}
+{"question": "媽媽，弟弟每次吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2225b7c1bfea20a3375cd942eda7d4ec.mp3"}
+{"question": "請問媽媽，弟弟嘔吐的量多嗎？", "answer": "第一次比較多，吃的都吐出來，第二次比較少", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/93417f6e9639d09f310cb7344ef5dfb6.mp3"}
+{"question": "媽媽，您能估計一下弟弟吐出來的量嗎？", "answer": "第一次大概有半碗飯的量，第二次只有一點點", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/03307aae29d5a5a385c67d693447e430.mp3"}
+{"question": "媽媽，弟弟吐的量是多還是少？", "answer": "第一次比較多，第二次比較少", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/040d4fecfb5d1847d4d4350c69eada74.mp3"}
+{"question": "媽媽，弟弟吐出來的量大概有多少？", "answer": "第一次比較多，吃的都吐出來", "code": "B34", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2225b7c1bfea20a3375cd942eda7d4ec.mp3"}
+{"question": "媽媽，您能完整描述一下弟弟嘔吐的情況嗎？包括次數、時間、內容和量", "answer": "今天早上總共吐了2次，分別在8點和11點。第一次吐出稀飯，量比較多；第二次吐出藥水，量比較少", "code": "B31,B32,B33,B34", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/6617d97da44d8f8e6a614875abcaf964.mp3"}
+{"question": "請問媽媽，弟弟嘔吐的整體情況如何？", "answer": "今天早上8點吐了一次稀飯，量比較多；11點又吐了一次藥水，量比較少", "code": "B31,B32,B33,B34", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f345bfbb14cd3d5e2a55565044a8b367.mp3"}
+{"question": "弟弟的食慾怎麼樣？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B", "audioUrl": "/audio/392724dc889374da1535ba867bd61018.mp3"}
+{"question": "媽媽，弟弟的食慾怎麼樣？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B", "audioUrl": "/audio/392724dc889374da1535ba867bd61018.mp3"}
+{"question": "弟弟最近胃口好嗎？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B", "audioUrl": "/audio/392724dc889374da1535ba867bd61018.mp3"}
+{"question": "小朋友有沒有想吃東西？", "answer": "沒有", "code": "B41", "scoringSubItem": "Decrease", "tag": "B", "audioUrl": "/audio/ffeb3033f6ad04ed85477c75b363606f.mp3"}
+{"question": "弟弟現在願意吃東西嗎？", "answer": "沒有食慾", "code": "B41", "scoringSubItem": "Decrease", "tag": "B", "audioUrl": "/audio/392724dc889374da1535ba867bd61018.mp3"}
+{"question": "請問媽媽，弟弟今天吃了什麼？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type,Amount", "tag": "B", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "弟弟今天進食了哪些食物？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "小朋友今天吃了什麼東西？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "弟弟最近都吃些什麼？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "能告訴我弟弟今天的飲食內容嗎？", "answer": "吃碗稀飯", "code": "B42", "scoringSubItem": "Food Type", "tag": "B", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "媽媽，弟弟喝水的情況如何？", "answer": "喝一點就吐，現在不太敢給他喝", "code": "B42", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B", "audioUrl": "/audio/fb507db868f3af001d1e4e0c26f69ae7.mp3"}
+{"question": "弟弟吃了多少東西？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/964077b6c49ed3b9d5b4d826be7dcaca.mp3"}
+{"question": "小朋友的進食量大概有多少？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/964077b6c49ed3b9d5b4d826be7dcaca.mp3"}
+{"question": "弟弟能吃下多少食物？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/964077b6c49ed3b9d5b4d826be7dcaca.mp3"}
+{"question": "弟弟每餐的進食量如何？", "answer": "吃了3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/964077b6c49ed3b9d5b4d826be7dcaca.mp3"}
+{"question": "食慾如何？吃了什麼？量多少？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B", "audioUrl": "/audio/7b7c561d6c9a13afbced03b8267a095d.mp3"}
+{"question": "弟弟吃了什麼東西？吃了多少？", "answer": "吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Food Type,Amount", "tag": "B", "audioUrl": "/audio/1223c149298e45e295651b294de1b4bf.mp3"}
+{"question": "能詳細說明一下弟弟的飲食情況嗎？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B", "audioUrl": "/audio/7b7c561d6c9a13afbced03b8267a095d.mp3"}
+{"question": "弟弟的進食狀況如何？", "answer": "沒有食慾，吃3/4碗稀飯後吐了", "code": "B43", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "B", "audioUrl": "/audio/7b7c561d6c9a13afbced03b8267a095d.mp3"}
+{"question": "不吃東西之後有比較好嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B", "audioUrl": "/audio/8e7f09f7011978308e2c6e9d4c640332.mp3"}
+{"question": "停止進食後症狀有改善嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B", "audioUrl": "/audio/8e7f09f7011978308e2c6e9d4c640332.mp3"}
+{"question": "吃東西後症狀會變得更嚴重嗎？", "answer": "會，吃完就吐", "code": "B50", "tag": "B", "audioUrl": "/audio/39eb13886fd6fcbc6a123082d59393a4.mp3"}
+{"question": "進食與嘔吐之間有什麼關聯嗎？", "answer": "吃完就吐，不吃就沒事", "code": "B50", "tag": "B", "audioUrl": "/audio/5237b109817f3562d3f3d9fe0729e93d.mp3"}
+{"question": "弟弟吃東西後會有什麼反應？", "answer": "吃完就吐", "code": "B50", "tag": "B", "audioUrl": "/audio/a218fbaa47076308f02393db252818aa.mp3"}
+{"question": "空腹時弟弟的症狀會比較輕嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B", "audioUrl": "/audio/8e7f09f7011978308e2c6e9d4c640332.mp3"}
+{"question": "弟弟是什麼時候開始發燒的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "發燒是從何時開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "弟弟發燒持續多久了？", "answer": "從昨天晚上8點到現在", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/a882806597a0c2bd83d0873c90f0d5c5.mp3"}
+{"question": "發燒大概是什麼時間點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "發燒最高到幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "體溫最高測到多少？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "弟弟發燒的溫度有多高？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "量體溫時最高是幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "發燒後怎麼處理的？", "answer": "塞屁股的藥後降到38.5度", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/7658bb10021300ebb78b2504ded5540e.mp3"}
+{"question": "有沒有採取什麼方法來退燒？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+{"question": "弟弟發燒時，您採取了什麼措施？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+{"question": "有給弟弟吃退燒藥嗎？", "answer": "有，塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/92722b9badc6dfc50b3789eb62c7a177.mp3"}
+{"question": "退燒藥吃了之後體溫有降低嗎？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "用藥後體溫變化如何？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "處理後發燒情況有改善嗎？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "退燒藥的效果如何？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "有退燒嘛？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "後來有退燒嘛？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
+{"question": "弟弟有尿尿嗎？", "answer": "有尿但量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/cbc333afce4a081e222827e6154798a1.mp3"}
+{"question": "小朋友的尿量如何？", "answer": "量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2cff08d26ba266b57da5db5f935f42d3.mp3"}
+{"question": "弟弟排尿的量多嗎？", "answer": "量少", "code": "B71", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/2cff08d26ba266b57da5db5f935f42d3.mp3"}
+{"question": "弟弟今天尿了幾次？尿量如何？", "answer": "只有兩次，量都很少", "code": "B71", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/710db3bafaebdcd4c55ecf30fae24e8a.mp3"}
+{"question": "弟弟的尿液顏色是怎樣的？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
+{"question": "小朋友的尿液是什麼顏色？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
+{"question": "尿液看起來是什麼顏色？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
+{"question": "尿尿的顏色如何？", "answer": "深黃色", "code": "B72", "scoringSubItem": "Concentration", "tag": "B", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
+{"question": "之前有帶弟弟去看醫生嗎？", "answer": "早上去診所，診斷感冒", "code": "B81,B82", "scoringSubItem": "Clinic Visit", "tag": "B", "audioUrl": "/audio/496e004f81204101b008d180b2c87a11.mp3"}
+{"question": "弟弟之前有就醫嗎？", "answer": "早上去診所", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B", "audioUrl": "/audio/6d3364ab2f384543816fe0c338071211.mp3"}
+{"question": "生病後有帶去哪裡看診？", "answer": "早上去診所", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B", "audioUrl": "/audio/6d3364ab2f384543816fe0c338071211.mp3"}
+{"question": "弟弟是在哪裡就醫的？", "answer": "早上去診所，後來來急診", "code": "B81", "scoringSubItem": "Clinic Visit", "tag": "B", "audioUrl": "/audio/b634c1a1af82111b2d817e0cde1765ed.mp3"}
+{"question": "醫師怎麼說？", "answer": "診斷感冒，後來急診醫師診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B", "audioUrl": "/audio/6d4d3dfe5f8ee536b97c8ec0402ccfa1.mp3"}
+{"question": "醫生診斷是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B", "audioUrl": "/audio/b559875734031c8c2f45f1861776e5e6.mp3"}
+{"question": "醫師的診斷結果是什麼？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B", "audioUrl": "/audio/b559875734031c8c2f45f1861776e5e6.mp3"}
+{"question": "弟弟被診斷出什麼疾病？", "answer": "診所診斷感冒，急診診斷急性腸胃炎", "code": "B82", "scoringSubItem": "Diagnosis", "tag": "B", "audioUrl": "/audio/b559875734031c8c2f45f1861776e5e6.mp3"}
+{"question": "醫生有開什麼藥嗎？", "answer": "有開退燒藥和止瀉藥，但吃了就吐出來", "code": "B83", "scoringSubItem": "Treatment", "tag": "B", "audioUrl": "/audio/d5094a67ba92e113c7fab9cdeafaa9d0.mp3"}
+{"question": "醫師有給什麼治療建議嗎？", "answer": "診斷急性腸胃炎建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B", "audioUrl": "/audio/6061179bc1c94fc3d3d69ae888b855dd.mp3"}
+{"question": "醫生怎麼處理弟弟的症狀？", "answer": "開退燒藥和止瀉藥，建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B", "audioUrl": "/audio/d07f353aed7a535671693d3bc1c58aae.mp3"}
+{"question": "醫師有提供什麼治療方案嗎？", "answer": "開退燒藥和止瀉藥，建議住院", "code": "B83", "scoringSubItem": "Treatment", "tag": "B", "audioUrl": "/audio/d07f353aed7a535671693d3bc1c58aae.mp3"}
+{"question": "接下來我要收集小威的一般護理資料", "answer": "好", "code": "C11", "tag": "C", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "我利用護理評估表收集一般健康資料", "answer": "好", "code": "C11", "tag": "C", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "我現在要幫你做一般的護理評估，好嗎？", "answer": "病童點頭", "code": "C11", "answerType": "narration", "tag": "C", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
+{"question": "我需要檢查一下你的身體狀況", "answer": "病童安靜配合", "code": "C11", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我要看看你哪裡不舒服", "answer": "病童指著肚子", "code": "B00", "answerType": "narration", "tag": "C", "audioUrl": "/audio/7ec7fb08c8fc01bab88048d9a5df2fff.mp3"}
+{"question": "我幫你量體溫、脈博、呼吸、血壓哦", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我要幫你量一下心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我現在要聽一下你的心跳聲音", "answer": "病童點頭", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
+{"question": "我要用聽診器聽一下你的心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "脈博測心尖脈", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我為小威進行腹部視、聽、扣、觸評估", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "讓我看看聽聽你的肚肚好嗎?", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我要檢查一下你的肚子", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我先看一下你的肚子", "answer": "病童露出肚子", "code": "C13", "answerType": "narration", "scoringSubItem": "Inspection", "tag": "C", "audioUrl": "/audio/d7123d9bcef1f0c86a09cfe515fb3538.mp3"}
+{"question": "現在我要聽一下你肚子的聲音", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Auscultation", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我要輕輕敲一下你的肚子", "answer": "病童表情緊張但配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Percussion", "tag": "C", "audioUrl": "/audio/37a9748ede131821b994023b44a39fad.mp3"}
+{"question": "我要摸一下你的肚子，如果痛要告訴我", "answer": "病童點頭", "code": "C13", "answerType": "narration", "scoringSubItem": "Palpation", "tag": "C", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
+{"question": "肚子痛痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
+{"question": "小威，你看這些臉，哪一個最像你現在肚子痛的感覺？", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
+{"question": "你的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
+{"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/e7b3932316f295da71a3c427a81a5e7c.mp3"}
+{"question": "使用FLACC行為量表", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
+{"question": "小威2歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
+{"question": "觀察小威的臉部表情", "answer": "病童臉部緊繃，偶爾顫抖", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Face", "tag": "C", "audioUrl": "/audio/1efa3fab97848753e7ad107773bd0de7.mp3"}
+{"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Legs", "tag": "C", "audioUrl": "/audio/05b06c27be80ef7e4bb86a0a120d2e2f.mp3"}
+{"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Activity", "tag": "C", "audioUrl": "/audio/e144d065e6ddcd59bf0216f806041769.mp3"}
+{"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Cry", "tag": "C", "audioUrl": "/audio/82008307f6a3b2f9c9b36b85b300f556.mp3"}
+{"question": "根據FLACC量表評估小威的疼痛程度", "answer": "總分7分，表示中度疼痛", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Total", "tag": "C", "audioUrl": "/audio/0997cfa14d61b21281da583d28a538bc.mp3"}
+{"question": "媽媽，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "D11", "scoringSubItem": "Record Color", "tag": "D", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
+{"question": "每次大便後，請記下大便的顏色變化", "answer": "我會記錄的", "code": "D11", "scoringSubItem": "Record Color", "tag": "D", "audioUrl": "/audio/edb059bdf0c7a89b7efdee6de090ace4.mp3"}
+{"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好的，我會觀察", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D", "audioUrl": "/audio/8a8927801ceecd3736d06bd5da50b659.mp3"}
+{"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "我會注意這些細節", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D", "audioUrl": "/audio/4fa74a1ba8b1b6024d25dd125b85b53f.mp3"}
+{"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "了解，那要禁食多久？", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D", "audioUrl": "/audio/da5fec328054fdcd498894aab71675f8.mp3"}
+{"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我會遵醫囑", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D", "audioUrl": "/audio/dc4cdc3d06a16a9a2bcded3801bd21f0.mp3"}
+{"question": "每次大便後，請用溫水清洗臀部並擦乾", "answer": "好的，我會這樣做", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D", "audioUrl": "/audio/0d1060cbb4a4b1866dcb37eaadfe3a69.mp3"}
+{"question": "頻繁腹瀉可能造成臀部皮膚紅腫，可塗抹護膚霜保護", "answer": "了解，我會注意保護皮膚", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D", "audioUrl": "/audio/aea91990e39ff6c25f8dba7ba62d666b.mp3"}
+{"question": "弟弟可以進食時，建議從香蕉、蘋果泥、白飯和吐司開始", "answer": "好的，這些食物比較容易消化是嗎？", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/4e4aa207860a4842777e499507177674.mp3"}
+{"question": "恢復進食時，請遵循BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
+{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "D11,D12,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "我明白了，這些都很重要", "code": "D11,D12,D13,D14,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet", "tag": "D", "audioUrl": "/audio/421a4776d2b7ca10d41ce1309b51afe3.mp3"}
+{"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好的，我會按照這些建議做", "code": "D11,D13,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet", "tag": "D", "audioUrl": "/audio/fb6865ada0c26b2624ab5b61c91be948.mp3"}
+{"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "code": "D11,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D", "audioUrl": "/audio/572011c897e7ae6ccd34a5e97f994015.mp3"}
+{"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "code": "A00,F13", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/db844808341a6644c4751a8221dac0b2.mp3"}
+{"question": "您好，我是護理師", "answer": "您好，謝謝您來照顧小威", "code": "F13", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/c94f2823ca5604cf975d18dfad2201f7.mp3"}
+{"question": "小威媽媽您好", "answer": "您好，請問有什麼事嗎？", "code": "F13", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/1df8bbacf09f64ad04daa7721b5766a7.mp3"}
+{"question": "我是今天負責照顧小威的護理師", "answer": "您好", "code": "F13", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "您還好嗎？看起來很疲倦", "answer": "是有點累，昨晚小威一直哭鬧，沒怎麼睡", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/840bacb86e0d942f6a799ba33db22fa5.mp3"}
+{"question": "您看起來很擔心", "answer": "是的，小威從來沒這麼不舒服過，我很擔心", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/17b35d91d2808ef80dd2da2e5542c414.mp3"}
+{"question": "您需要休息一下嗎？", "answer": "不用了，我想陪著小威", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/552cfb25a0428db59130f3dc03622a1c.mp3"}
+{"question": "您吃過飯了嗎？", "answer": "還沒有，但我現在沒什麼胃口", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/a1de913879a37d0b27c5b9a35997bdfc.mp3"}
+{"question": "不用太擔心，我們會好好照顧小威的", "answer": "謝謝您，這讓我安心不少", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/db5cd01a64838faccda4dab0e14815fa.mp3"}
+{"question": "您有什麼需要幫忙的嗎？", "answer": "現在沒有，謝謝您的關心", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/f4ebc6c4e0b09a9f16150a2738727e08.mp3"}
+{"question": "如果您有任何問題，隨時可以問我", "answer": "好的，謝謝您", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/5f556f7cc048a8860458b8915d326d66.mp3"}
+{"question": "我理解您的擔憂，這是很正常的", "answer": "謝謝您的理解，我確實很擔心小威", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/008db234041d9526cac98eee7581417c.mp3"}
+{"question": "小威平時的健康狀況如何？", "answer": "平時很健康，很少生病，這次是突然發燒腹瀉", "code": "B10,F11", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/4b8b511fe0d03399c436af041de5e54a.mp3"}
+{"question": "小威有沒有兄弟姐妹？", "answer": "沒有，他是獨生子", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/18fb88cec8eeb6775713960cfbf9e682.mp3"}
+{"question": "小威平時喜歡吃什麼？", "answer": "他很喜歡吃水果和麵條，不太喜歡蔬菜", "code": "B42,F11", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/034b1204840b625e2078b7256f1452f1.mp3"}
+{"question": "小威在家都和誰玩？", "answer": "主要是和我和他爸爸，有時候和鄰居家的小朋友", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/06cf0e1619ba80f7a144b6b2ee2c5616.mp3"}
+{"question": "您家住在附近嗎？", "answer": "是的，就住在醫院附近的社區", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/8fc20baca784c908ee682147300ef1ab.mp3"}
+{"question": "您先生呢？他會來嗎？", "answer": "他在趕來的路上，應該很快就到了", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/8a0a2770a6e6fa82b5909f00b571e041.mp3"}
+{"question": "您之前有帶小威來過這家醫院嗎？", "answer": "沒有，這是第一次", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/aaf3b96dce3ece1502022fb6fb149dde.mp3"}
+{"question": "您有其他家人可以幫忙照顧小威嗎？", "answer": "有我的母親，但她住得有點遠", "code": "F12", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/4f6b6a141a33947eafd7804a8d2ffd86.mp3"}
+{"question": "弟弟今天的精神狀況如何？", "answer": "他很不舒服，一直哭鬧", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/7c95e935e32c87b363e795a4fa354bb4.mp3"}
+{"question": "小朋友現在感覺好一些了嗎？", "answer": "還是很不舒服，剛才又哭了一陣子", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/ce56fc8a701176451be7c3850a4d8dc5.mp3"}
+{"question": "弟弟看起來很不舒服，我能做什麼幫助他？", "answer": "謝謝您的關心，希望能快點退燒", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/38eb87ebbb78626d75a7cebf9b8c10b3.mp3"}
+{"question": "小威今天的情緒怎麼樣？", "answer": "還是很不舒服，但沒有剛來時那麼嚴重了", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/cd42e19c2e99ecc6f806b91dd6bb7229.mp3"}
+{"question": "弟弟今天有沒有比較舒服一點？", "answer": "還是很不舒服，但至少不像昨天那麼嚴重", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}

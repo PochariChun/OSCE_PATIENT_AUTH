@@ -37,7 +37,7 @@ export async function POST(request: Request) {
           username: user.username,
           nickname: user.username, // 使用學號作為暱稱
           email: `${user.username}@stu.ypu.edu.tw`, // 生成臨時郵箱
-          role: 'NURSE',
+          role: user.role,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt
         },

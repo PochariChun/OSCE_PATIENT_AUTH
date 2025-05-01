@@ -2,7 +2,9 @@ import asyncio
 import os
 import json
 import argparse
+import hashlib
 from generate_edge_tts_audio import generate_speech
+import jsonlines
 # zh-CN-XiaoyiNeural, zh-CN-XiaoxiaoNeural
 async def generate_audio_for_answer(answer, question, output_dir, voice="zh-TW-HsiaoChenNeural"):
     """
@@ -136,16 +138,88 @@ async def process_custom_text(text, output_dir, filename="custom_audio", voice="
     print(f"已生成自定義音頻: {output_file}")
     return output_file
 
+async def process_jsonl_answers(input_file, output_dir, voice="zh-TW-HsiaoChenNeural"):
+    """
+    為JSONL文件中的所有回答生成音頻
+    
+    參數:
+        input_file (str): 輸入JSONL文件路徑
+        output_dir (str): 輸出音頻文件目錄
+        voice (str): 要使用的語音名稱
+    """
+    # 確保輸出目錄存在
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # 創建一個字典來跟踪已處理的回答，避免重複生成
+    processed_answers = {}
+    
+    # 讀取JSONL文件 - 使用更健壯的方法
+    data = []
+    with open(input_file, 'r', encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:  # 跳過空行
+                print(f"警告: 第 {line_num} 行為空，已跳過")
+                continue
+            
+            try:
+                item = json.loads(line)
+                data.append(item)
+            except json.JSONDecodeError as e:
+                print(f"警告: 第 {line_num} 行包含無效的JSON: {e}")
+                print(f"問題行內容: {line[:100]}...")
+                continue
+    
+    print(f"成功讀取了 {len(data)} 條記錄")
+    
+    # 處理每個回答
+    for i, item in enumerate(data):
+        if "answer" in item and item["answer"]:
+            answer = item["answer"]
+            
+            # 使用回答的哈希值作為文件名，確保相同回答使用相同文件
+            answer_hash = hashlib.md5(answer.encode('utf-8')).hexdigest()
+            
+            # 檢查是否已經處理過這個回答
+            if answer_hash in processed_answers:
+                # 重用已有的音頻文件
+                item["audioUrl"] = processed_answers[answer_hash]
+                print(f"重用音頻 ({i+1}/{len(data)}): {processed_answers[answer_hash]}")
+            else:
+                # 生成新的音頻文件
+                output_file = f"{answer_hash}.mp3"
+                full_path = os.path.join(output_dir, output_file)
+                
+                print(f"處理回答 ({i+1}/{len(data)}): {answer[:30]}...")
+                await generate_speech(answer, voice, full_path)
+                
+                # 記錄音頻URL（相對路徑）
+                audio_url = f"/audio/{output_file}"
+                item["audioUrl"] = audio_url
+                processed_answers[answer_hash] = audio_url
+                
+                print(f"已生成音頻: {full_path}")
+    
+    # 保存更新後的數據
+    output_jsonl = os.path.join(output_dir, "rag_lookup_data_with_audio.jsonl")
+    with open(output_jsonl, 'w', encoding='utf-8') as f:
+        for item in data:
+            f.write(json.dumps(item, ensure_ascii=False) + '\n')
+    
+    print(f"已更新JSONL數據: {output_jsonl}")
+    print(f"總共處理了 {len(data)} 條記錄，生成了 {len(processed_answers)} 個唯一音頻文件")
+
 async def main():
-    parser = argparse.ArgumentParser(description="為對話答案生成音頻")
-    parser.add_argument("--input", help="輸入JSON文件路徑")
+    parser = argparse.ArgumentParser(description="為對話回答生成音頻")
+    parser.add_argument("--input", help="輸入文件路徑 (JSON或JSONL)")
     parser.add_argument("--output_dir", default="audio", help="輸出音頻文件目錄")
-    parser.add_argument("--voice", default="zh-TW-HsiaoYuNeural", help="要使用的語音名稱")
+    parser.add_argument("--voice", default="zh-TW-HsiaoChenNeural", help="要使用的語音名稱")
     parser.add_argument("--question", help="要處理的特定問題文本（部分匹配）")
     parser.add_argument("--index", type=int, help="要處理的問題索引")
     parser.add_argument("--all", action="store_true", help="處理所有問題")
     parser.add_argument("--text", help="直接將指定文本轉換為語音")
     parser.add_argument("--filename", default="custom_audio", help="自定義文本的輸出文件名")
+    parser.add_argument("--jsonl", action="store_true", help="處理JSONL格式文件")
     
     args = parser.parse_args()
     
@@ -158,8 +232,11 @@ async def main():
     if not args.input:
         parser.error("必須提供 --input 參數，除非使用 --text 參數")
     
+    # 處理JSONL文件
+    if args.jsonl:
+        await process_jsonl_answers(args.input, args.output_dir, args.voice)
     # 處理單個問題或所有問題
-    if args.question or args.index is not None:
+    elif args.question or args.index is not None:
         await process_single_answer(args.input, args.output_dir, args.question, args.index, args.voice)
     elif args.all or (not args.question and args.index is None):
         await process_dialogue_answers(args.input, args.output_dir, args.voice)

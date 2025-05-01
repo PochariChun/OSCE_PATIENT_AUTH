@@ -1,11 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
 import { signJWT } from '@/lib/jwt';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { username } = await request.json();
     
+    // 只檢查用戶名是否提供
     if (!username) {
       return NextResponse.json(
         { error: '請提供學號' },
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
       );
     }
     
-    // 檢查用戶是否已存在
+    // 檢查用戶名是否已存在
     const existingUser = await prisma.user.findUnique({
       where: { username },
     });
@@ -25,10 +26,13 @@ export async function POST(request: Request) {
       );
     }
     
-    // 創建新用戶
+    // 創建新用戶 - 使用默認值
     const newUser = await prisma.user.create({
       data: {
         username,
+        email: `${username}@stu.ypu.edu.tw`, // 生成臨時郵箱
+        password: '', // 空密碼，因為不需要密碼登錄
+        nickname: username, // 使用學號作為名稱
         isActive: true,
       },
     });
@@ -43,9 +47,9 @@ export async function POST(request: Request) {
         user: {
           id: newUser.id,
           username: newUser.username,
-          nickname: newUser.username, // 使用學號作為暱稱
-          email: `${newUser.username}@stu.ypu.edu.tw`, // 生成臨時郵箱
-          role: 'NURSE',
+          nickname: newUser.nickname, // 使用學號作為暱稱
+          email: newUser.email,
+          role: newUser.role,
           createdAt: newUser.createdAt,
           updatedAt: newUser.updatedAt
         },

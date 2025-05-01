@@ -4,58 +4,104 @@ import { prisma } from '@/lib/prisma';
 // 添加动态配置
 export const dynamic = 'force-dynamic';
 
+// 生成反思報告
 export async function POST(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    // 从 URL 直接获取 ID
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
-    const idFromPath = pathParts[pathParts.length - 3]; // 获取倒数第三个部分 (conversations/[id]/reflection)
-    const conversationId = parseInt(idFromPath);
+    const id = params.id;
+    const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
-      return NextResponse.json({ error: '無效的對話ID' }, { status: 400 });
+      return NextResponse.json(
+        { error: '無效的對話 ID' },
+        { status: 400 }
+      );
     }
     
-    const body = await request.json();
-    const { conversation } = body;
+    const data = await request.json();
     
-    // 简单的报告生成逻辑
-    const report = {
-      conversationId,
-      summary: '反思報告摘要',
-      content: '這是一份自動生成的反思報告，基於學生的反思內容。',
-      timestamp: new Date(),
-      reflectionMessages: conversation.filter((msg: any) => msg.role !== 'system').length,
-    };
+    // 檢查對話是否存在
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+    });
     
-    // 保存报告到数据库
-    // 注意：如果您的数据库中没有相应的表，您需要先在 schema.prisma 中定义
-    // 这里我们假设已经有了 ReflectionReport 模型
-    try {
-      const savedReport = await prisma.reflectionReport.create({
-        data: {
-          conversationId,
-          summary: report.summary,
-          content: report.content,
-          timestamp: report.timestamp,
-        },
-      });
-      
-      return NextResponse.json(savedReport);
-    } catch (error) {
-      // 如果数据库操作失败，仍然返回成功，但带有警告
-      console.warn('無法保存反思報告到數據庫，但將繼續處理:', error);
-      return NextResponse.json(report);
+    if (!conversation) {
+      return NextResponse.json(
+        { error: '找不到指定的對話' },
+        { status: 404 }
+      );
     }
+    
+    // 檢查用戶權限
+    if (data.userId && conversation.userId !== parseInt(data.userId)) {
+      return NextResponse.json(
+        { error: '您無權為此對話生成報告' },
+        { status: 403 }
+      );
+    }
+    
+    // 獲取所有反思訊息
+    const reflectionMessages = await prisma.reflectionMessage.findMany({
+      where: { conversationId },
+      orderBy: { timestamp: 'asc' },
+    });
+    
+    if (reflectionMessages.length === 0) {
+      return NextResponse.json(
+        { error: '此對話尚未有反思記錄，無法生成報告' },
+        { status: 400 }
+      );
+    }
+    
+    // 生成反思報告
+    // 這裡可以添加調用 AI 服務生成報告的邏輯
+    const report = generateReflectionReport(reflectionMessages);
+    
+    return NextResponse.json({
+      report
+    });
   } catch (error) {
     console.error('生成反思報告失敗:', error);
-    // 即使失败也返回 200，以便前端可以继续
-    return NextResponse.json({ 
-      warning: '生成報告時出現問題，但您可以繼續',
-      error: String(error)
-    });
+    return NextResponse.json(
+      { error: '生成反思報告失敗', details: (error as Error).message },
+      { status: 500 }
+    );
   }
+}
+
+// 生成反思報告的輔助函數
+function generateReflectionReport(messages: any[]): string {
+  // 這裡是一個簡單的示例，實際應用中可能需要更複雜的邏輯
+  const userMessages = messages.filter(msg => msg.sender === 'user').map(msg => msg.text);
+  
+  if (userMessages.length === 0) {
+    return '未提供足夠的反思內容。';
+  }
+  
+  // 簡單地將用戶的反思訊息組合成報告
+  const report = `
+# 反思報告
+
+## 描述
+${userMessages.filter((_, i) => i % 6 === 0).join('\n\n')}
+
+## 感受
+${userMessages.filter((_, i) => i % 6 === 1).join('\n\n')}
+
+## 評估
+${userMessages.filter((_, i) => i % 6 === 2).join('\n\n')}
+
+## 分析
+${userMessages.filter((_, i) => i % 6 === 3).join('\n\n')}
+
+## 結論
+${userMessages.filter((_, i) => i % 6 === 4).join('\n\n')}
+
+## 行動計劃
+${userMessages.filter((_, i) => i % 6 === 5).join('\n\n')}
+`;
+  
+  return report;
 } 

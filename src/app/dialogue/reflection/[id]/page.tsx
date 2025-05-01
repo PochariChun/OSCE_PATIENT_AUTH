@@ -18,6 +18,7 @@ interface ReflectionCard {
   isCorrect: boolean;
   isDelayed: boolean;
   emotionLabel: string;
+  emotionScore: number;
   notes?: string;
 }
 
@@ -25,7 +26,7 @@ interface ReflectionMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: Date;
-  gibbsStage?: 'description' | 'feelings' | 'evaluation' | 'analysis' | 'conclusion' | 'action';
+  gibbsStage?: 'description' | 'feelings' | 'evaluation' | 'analysis' | 'conclusion' | 'action' | string;
 }
 
 export default function ReflectionPage() {
@@ -37,7 +38,7 @@ export default function ReflectionPage() {
   const [conversationTitle, setConversationTitle] = useState('');
   const [currentStage, setCurrentStage] = useState<string>('');
   const [reflection, setReflection] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   
   const router = useRouter();
   const params = useParams();
@@ -51,12 +52,14 @@ export default function ReflectionPage() {
   };
   
   useEffect(() => {
-    // 改進的 fetchUser 函數
-    const fetchUser = async () => {
+    const initializeReflection = async () => {
       try {
-        console.log('ReflectionPage: 開始獲取用戶資訊');
+        setLoading(true);
+        
+        // 從 localStorage 獲取用戶信息
         const userJson = localStorage.getItem('user');
         if (!userJson) {
+          console.error('未登入，請先登入後再訪問此頁面');
           setError('未登入，請先登入後再訪問此頁面');
           router.push('/login');
           return;
@@ -65,7 +68,7 @@ export default function ReflectionPage() {
         const userData = JSON.parse(userJson);
         setUser(userData);
         
-        // 獲取對話資訊
+        // 獲取對話數據
         await fetchConversationData(userData.id);
       } catch (reflectionError) {
         console.error('ReflectionPage: 獲取反思數據失敗', reflectionError);
@@ -75,8 +78,8 @@ export default function ReflectionPage() {
       }
     };
     
-    fetchUser();
-  }, [router, conversationId]);
+    initializeReflection();
+  }, [conversationId, router]);
   
   useEffect(() => {
     scrollToBottom();
@@ -84,104 +87,132 @@ export default function ReflectionPage() {
   
   const fetchConversationData = async (userId: number) => {
     try {
-      if (!conversationId) {
-        console.error('對話ID不存在');
-        return;
+      // 获取对话信息
+      const conversationResponse = await fetch(`/api/conversations/${conversationId}?userId=${userId}`);
+      
+      if (!conversationResponse.ok) {
+        console.error('無法獲取對話資訊:', conversationResponse.statusText);
+        setError('無法獲取對話資訊，請稍後再試');
+        return; // 温和处理，不抛出错误
       }
       
-      // 獲取對話詳情
-      const response = await fetch(`/api/conversations/${conversationId}?userId=${userId}`);
+      const conversationData = await conversationResponse.json();
       
-      if (!response.ok) {
-        console.error('獲取對話詳情失敗:', response.status, response.statusText);
-        return;
+      // 放宽权限检查，允许用户访问反思页面
+      // 只记录可能的权限问题，但不阻止用户
+      if (conversationData.userId && conversationData.userId !== userId) {
+        console.warn(`可能的权限问题: 对话用户ID=${conversationData.userId}, 当前用户ID=${userId}`);
       }
       
-      const data = await response.json();
-      console.log('獲取對話詳情成功:', data);
+      // 设置对话标题
+      setConversationTitle(conversationData.title || `對話 #${conversationId}`);
       
-      setConversationTitle(data.title || `對話 #${conversationId}`);
+      // 获取对话消息
+      const messagesResponse = await fetch(`/api/conversations/${conversationId}/messages`);
       
-      // 將對話訊息轉換為反思卡片
-      const cards = transformMessagesToCards(data.messages);
-      setReflectionCards(cards);
+      if (!messagesResponse.ok) {
+        console.error('無法獲取對話消息:', messagesResponse.statusText);
+        setError('無法獲取對話消息，請稍後再試');
+        return; // 温和处理，不抛出错误
+      }
       
-      // 初始化反思對話
-      initializeReflectionConversation(cards);
+      const messagesData = await messagesResponse.json();
       
-    } catch (error) {
-      console.error('獲取對話資料失敗', error);
-    }
-  };
-  
-  // 將對話訊息轉換為反思卡片
-  const transformMessagesToCards = (messages: any[]): ReflectionCard[] => {
-    const cards: ReflectionCard[] = [];
-    
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
+      // 处理消息数据，创建反思卡片
+      const cards: ReflectionCard[] = [];
       
-      if (msg.role === 'user') {
-        // 尋找下一條病人回覆
-        const patientResponse = messages[i + 1]?.role === 'assistant' ? messages[i + 1].content : '';
-        
-        cards.push({
-          timestamp: formatTimestamp(msg.elapsedSeconds),
-          userSpeech: msg.content,
-          patientResponse: patientResponse,
-          isCorrect: true, // 這裡需要根據實際情況判斷
-          isDelayed: msg.delayFromPrev > 5, // 假設超過5秒視為延遲
-          emotionLabel: 'neutral', // 這裡需要根據實際情況判斷
-          notes: ''
-        });
-        
-        // 如果有找到病人回覆，跳過下一條訊息
-        if (patientResponse) {
-          i++;
+      for (let i = 0; i < messagesData.length; i += 2) {
+        if (i + 1 < messagesData.length) {
+          const userMessage = messagesData[i];
+          const aiResponse = messagesData[i + 1];
+          
+          if (userMessage.sender === 'user' && aiResponse.sender === 'assistant') {
+            cards.push({
+              timestamp: new Date(userMessage.timestamp).toLocaleTimeString(),
+              userSpeech: userMessage.text,
+              patientResponse: aiResponse.text,
+              isCorrect: userMessage.isCorrect || false,
+              isDelayed: userMessage.isDelayed || false,
+              emotionLabel: aiResponse.emotionLabel || '中性',
+              emotionScore: aiResponse.emotionScore || 0,
+              notes: userMessage.notes || ''
+            });
+          }
         }
       }
+      
+      setReflectionCards(cards);
+      
+      // 尝试获取反思对话
+      try {
+        const reflectionResponse = await fetch(`/api/conversations/${conversationId}/reflection`);
+        
+        if (reflectionResponse.ok) {
+          const reflectionData = await reflectionResponse.json();
+          
+          // 设置反思对话
+          setConversation(reflectionData.messages.map((msg: any) => ({
+            role: msg.sender,
+            content: msg.text,
+            timestamp: new Date(msg.timestamp),
+            gibbsStage: msg.sourceNodeId || msg.strategyTag
+          })));
+          
+          // 设置当前阶段
+          if (reflectionData.messages.length > 0) {
+            const lastMessage = reflectionData.messages[reflectionData.messages.length - 1];
+            if (lastMessage.gibbsStage) {
+              setCurrentStage(lastMessage.gibbsStage);
+            }
+          }
+        } else {
+          if (reflectionResponse.status !== 404) {
+            console.error('無法獲取反思數據:', reflectionResponse.statusText);
+            setError('無法獲取反思數據，請稍後再試');
+          }
+          
+          // 初始化反思对话
+          setConversation([
+            {
+              role: 'system',
+              content: `歡迎進行對話反思。請思考您在與病人的對話中的表現。`,
+              timestamp: new Date()
+            },
+            {
+              role: 'assistant',
+              content: '讓我們開始反思這次對話。首先，請描述一下發生了什麼？請盡可能詳細地描述整個對話過程。',
+              timestamp: new Date(),
+              gibbsStage: 'description'
+            }
+          ]);
+          
+          setCurrentStage('description');
+        }
+      } catch (reflectionError) {
+        console.error('獲取反思數據時出錯:', reflectionError);
+        // 温和处理，不抛出错误
+        
+        // 初始化反思对话
+        setConversation([
+          {
+            role: 'system',
+            content: `歡迎進行對話反思。請思考您在與病人的對話中的表現。`,
+            timestamp: new Date()
+          },
+          {
+            role: 'assistant',
+            content: '讓我們開始反思這次對話。首先，請描述一下發生了什麼？請盡可能詳細地描述整個對話過程。',
+            timestamp: new Date(),
+            gibbsStage: 'description'
+          }
+        ]);
+        
+        setCurrentStage('description');
+      }
+    } catch (error) {
+      console.error('獲取對話數據時出錯:', error);
+      setError('無法加載對話數據，請稍後再試');
     }
-    
-    return cards;
-  };
-  
-  // 格式化時間戳
-  const formatTimestamp = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-  
-  // 初始化反思對話
-  const initializeReflectionConversation = (cards: ReflectionCard[]) => {
-    // 系統提示
-    const systemPrompt: ReflectionMessage = {
-      role: 'system',
-      content: `你是一位護理教育反思教練。你的任務是使用 Gibbs（1988）六階段模型，引導學生針對自己的護理對話練習進行深度反思。`,
-      timestamp: new Date()
-    };
-    
-    // 將卡片資訊摘要給 AI
-    const cardsSummary = cards.map(card => 
-      `[${card.timestamp}] 學生: "${card.userSpeech}" -> 病人: "${card.patientResponse}"`
-    ).join('\n');
-    
-    const dataPrompt: ReflectionMessage = {
-      role: 'system',
-      content: `以下是學生的對話記錄摘要:\n${cardsSummary}\n\n請開始引導學生進行反思。`,
-      timestamp: new Date()
-    };
-    
-    // AI 的第一個回應
-    const initialResponse: ReflectionMessage = {
-      role: 'assistant',
-      content: `您好！我是您的反思教練。我看到您剛完成了一場醫病對話練習，現在讓我們一起來反思這次的經驗。\n\n首先，請您簡單描述一下這次對話的情境和您的整體感受。`,
-      timestamp: new Date(),
-      gibbsStage: 'description'
-    };
-    
-    setConversation([systemPrompt, dataPrompt, initialResponse]);
-    setCurrentStage('description');
   };
   
   const handleSendMessage = async () => {
@@ -189,128 +220,96 @@ export default function ReflectionPage() {
     
     const userMessage: ReflectionMessage = {
       role: 'user',
-      content: message,
-      timestamp: new Date()
+      content: message.trim(),
+      timestamp: new Date(),
+      gibbsStage: currentStage
     };
     
     setConversation(prev => [...prev, userMessage]);
     setMessage('');
     
     try {
-      // 準備發送給 AI 的完整對話歷史
-      const conversationHistory = conversation
-        .filter(msg => msg.role !== 'system') // 排除系統訊息
-        .map(msg => ({
-          role: msg.role,
-          content: msg.content
-        }));
-      
-      // 添加用戶最新訊息
-      conversationHistory.push({
-        role: 'user',
-        content: message
-      });
-      
-      // 添加當前階段資訊
-      const prompt = `當前反思階段: ${currentStage}。請根據學生回應，判斷是否需要提供對話片段輔助，並引導進入適當的下一階段。`;
-      
-      // 發送請求到 AI API
-      const response = await fetch('/api/reflection', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          conversationId,
-          messages: conversationHistory,
-          reflectionCards,
-          currentStage,
-          systemPrompt: prompt
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('AI 回應失敗');
-      }
-      
-      const data = await response.json();
-      
-      // 更新對話和當前階段
-      const assistantMessage: ReflectionMessage = {
-        role: 'assistant',
-        content: data.content,
-        timestamp: new Date(),
-        gibbsStage: data.nextStage
-      };
-      
-      setConversation(prev => [...prev, assistantMessage]);
-      setCurrentStage(data.nextStage);
-      
-      // 保存反思訊息到資料庫
-      await saveReflectionMessage(userMessage.content, data.content, data.nextStage);
-      
-    } catch (error) {
-      console.error('獲取 AI 回應失敗', error);
-      
-      // 錯誤處理
-      const errorMessage: ReflectionMessage = {
-        role: 'assistant',
-        content: '抱歉，我在處理您的回應時遇到了問題。請再試一次。',
-        timestamp: new Date()
-      };
-      
-      setConversation(prev => [...prev, errorMessage]);
-    }
-  };
-  
-  // 保存反思訊息到資料庫
-  const saveReflectionMessage = async (userMessage: string, aiResponse: string, stage: string) => {
-    try {
+      // 发送消息到服务器
       const response = await fetch(`/api/conversations/${conversationId}/reflection`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userMessage,
-          aiResponse,
-          stage,
-          timestamp: new Date().toISOString()
+          userId: user?.id,
+          message: message.trim(),
+          currentStage
         }),
       });
       
       if (!response.ok) {
-        console.error('保存反思訊息失敗:', response.status, response.statusText);
+        console.error('發送反思消息失敗:', response.statusText);
+        // 添加一个系统消息，告知用户发送失败
+        setConversation(prev => [
+          ...prev, 
+          {
+            role: 'system' as const,
+            content: '發送消息失敗，請稍後再試。',
+            timestamp: new Date()
+          }
+        ]);
+        return; // 温和处理，不抛出错误
+      }
+      
+      const data = await response.json();
+      
+      // 添加AI回复
+      const aiMessage = {
+        role: 'assistant' as const,
+        content: data.response,
+        timestamp: new Date(),
+        gibbsStage: data.gibbsStage
+      };
+      
+      setConversation(prev => [...prev, aiMessage]);
+      
+      // 更新当前阶段
+      if (data.gibbsStage) {
+        setCurrentStage(data.gibbsStage);
       }
     } catch (error) {
-      console.error('保存反思訊息失敗', error);
+      console.error('處理反思消息時出錯:', error);
+      // 添加一个系统消息，告知用户发送失败
+      setConversation(prev => [
+        ...prev, 
+        {
+          role: 'system' as const,
+          content: '處理消息時出錯，請稍後再試。',
+          timestamp: new Date()
+        }
+      ]);
     }
   };
   
   const handleFinishReflection = async () => {
     try {
-      // 生成反思報告
-      const response = await fetch(`/api/conversations/${conversationId}/reflection/report`, {
+      // 发送完成反思请求
+      const response = await fetch(`/api/conversations/${conversationId}/reflection/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          conversation: conversation.filter(msg => msg.role !== 'system')
+          userId: user?.id
         }),
       });
       
       if (!response.ok) {
-        throw new Error('生成反思報告失敗');
+        console.error('完成反思失敗:', response.statusText);
+        alert('完成反思失敗，請稍後再試');
+        return; // 温和处理，不抛出错误
       }
       
-      // 導向到歷史頁面
-      router.push(`/dialogue/history/${conversationId}`);
-      
+      // 重定向到历史页面
+      router.push('/dialogue/history');
     } catch (error) {
-      console.error('完成反思失敗', error);
-      // 錯誤處理，仍然導向到歷史頁面
-      router.push(`/dialogue/history/${conversationId}`);
+      console.error('完成反思時出錯:', error);
+      alert('完成反思時出錯，請稍後再試');
     }
   };
   

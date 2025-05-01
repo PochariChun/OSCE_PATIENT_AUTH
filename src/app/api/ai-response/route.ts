@@ -1,12 +1,28 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import fetch from 'node-fetch';
 import { normalizeNames } from '@/lib/textUtils';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 // 調用嵌入式查詢API服務
 async function queryEmbeddingService(query: string, history: any[] = []): Promise<any> {
   try {
     // 使用環境變量獲取API地址，預設為本地地址
     const apiUrl = process.env.EMBEDDING_API_URL || 'http://localhost:5000/query';
+    
+    // 获取前一句对话的标签（如果存在）
+    let previousTag = null;
+    if (history.length > 0) {
+      const lastMessage = history[history.length - 1];
+      // 假设消息对象中有code字段，从中提取标签
+      if (lastMessage && lastMessage.tag) {
+        const codeMatch = lastMessage.tag.match(/^([A-F]\d+)/);
+        if (codeMatch) {
+          previousTag = codeMatch[1].charAt(0); // 提取第一个字符作为标签
+        }
+      }
+    }
     
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -16,13 +32,15 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
       body: JSON.stringify({ 
         query, 
         top_k: 3,
-        // // 可以選擇性地傳遞歷史記錄
-        history: history.slice(-5)  // 只傳遞最近的5條訊息
+        previous_tag: previousTag, // 传递前一句对话的标签
+        // 可以选择性地传递历史记录
+        // history: history.slice(-5)  // 只传递最近的5条讯息
       }),
     });
     
     if (!response.ok) {
-      throw new Error(`API 請求失敗: ${response.status} ${response.statusText}`);
+      console.error(`API 請求失敗: ${response.status} ${response.statusText}`);
+      return []; // 返回空数组，而不是抛出错误
     }
     
     const data = await response.json();
@@ -34,19 +52,11 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
   }
 }
 
-
-// 修改 POST 處理函數，確保即使語音生成失敗也能返回文本回覆
-export async function POST(request: Request) {
+// 添加 getAIResponse 函数，使用温和的错误处理
+async function getAIResponse(message: string, history: any[], scenario: any): Promise<{ response: string, tag?: string }> {
   try {
-    console.log('收到 AI 回覆請求');
-    
-    const { message, history, scenarioId } = await request.json();
-    console.log('原始用戶訊息:', message);
-    console.log('場景ID:', scenarioId);
-    
     // 標準化名稱
     const normalizedMessage = normalizeNames(message);
-    console.log('標準化後的用戶訊息:', normalizedMessage);
     
     // 檢查是否是重複的問題
     const isRepeatedQuestion = history && history.length >= 4 && 
@@ -54,15 +64,7 @@ export async function POST(request: Request) {
     
     if (isRepeatedQuestion) {
       // 如果是重複的問題，表示媽媽可能已經聽清楚了
-      const responseText = '我現在聽清楚了。讓我想想...';
-      
-      // 嘗試生成語音，但不阻止回覆
-      const audioUrl = await generateVoiceWithBark(responseText).catch(() => null);
-      
-      return NextResponse.json({ 
-        response: responseText,
-        audioUrl: audioUrl
-      });
+      return { response: '我現在聽清楚了。讓我想想...' };
     }
     
     // 調用嵌入式查詢服務
@@ -71,42 +73,11 @@ export async function POST(request: Request) {
     // 檢查是否有匹配結果
     if (results && results.length > 0) {
       const bestMatch = results[0];
-      
-      console.log(`最佳匹配分數: ${bestMatch.score}`);
-      
-      // 檢查是否有 answerType 為 narration
-      const isNarration = bestMatch.answerType === 'narration';
-      
-      // 嘗試生成語音，但不阻止回覆
-      const audioUrl = await generateVoiceWithBark(bestMatch.answer).catch(() => null);
-      
-      const response = {
+      // 返回回复和标签
+      return { 
         response: bestMatch.answer,
-        answerType: bestMatch.answerType || 'dialogue', // 預設為 dialogue
-        // imageToShow: bestMatch.imageToShow || null, // 如果有圖片要顯示
-        audioUrl: audioUrl // 添加語音 URL，可能為 null
+        tag: bestMatch.code // 从匹配结果中提取标签
       };
-      
-      // 定义 isDevelopment 变量
-      const isDevelopment = process.env.NODE_ENV === 'development';
-      
-      if (isDevelopment) {
-        // 在開發環境中，在回覆中包含匹配信息
-        return NextResponse.json({ 
-          ...response,
-          debug: {
-            matchedQuestion: bestMatch.question,
-            score: bestMatch.score,
-            tags: bestMatch.tags,
-            scoringCategory: bestMatch.scoringCategory,
-            scoringItem: bestMatch.scoringItem,
-            scoringSubItem: bestMatch.scoringSubItem
-          }
-        });
-      } else {
-        // 在生產環境中，只返回回答、類型和語音 URL
-        return NextResponse.json(response);
-      }
     }
     
     // 如果沒有找到匹配，返回預設回覆
@@ -118,21 +89,46 @@ export async function POST(request: Request) {
       '對不起，我剛才沒聽清楚，請您再說一次好嗎？'
     ];
     
-    const randomResponse = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    return { response: defaultResponses[Math.floor(Math.random() * defaultResponses.length)] };
+  } catch (error) {
+    console.error('生成 AI 回覆時出錯:', error);
+    return { response: '抱歉，我現在無法回答您的問題。請稍後再試。' };
+  }
+}
+
+// 修改 POST 處理函數，確保即使語音生成失敗也能返回文本回覆
+export async function POST(request: NextRequest) {
+  try {
+    const { message, history, scenarioId } = await request.json();
     
-    // 嘗試生成語音，但不阻止回覆
-    const audioUrl = await generateVoiceWithBark(randomResponse).catch(() => null);
+    if (!message) {
+      return NextResponse.json(
+        { error: '缺少訊息內容' },
+        { status: 400 }
+      );
+    }
     
-    return NextResponse.json({ 
-      response: randomResponse,
-      answerType: 'dialogue',
-      audioUrl: audioUrl
+    // 獲取場景信息
+    const scenario = await prisma.scenario.findUnique({
+      where: { id: Number(scenarioId) },
     });
     
+    if (!scenario) {
+      return NextResponse.json(
+        { error: '找不到指定的場景' },
+        { status: 404 }
+      );
+    }
+    
+    // 調用 AI 服務獲取回覆
+    const { response: aiResponse, tag } = await getAIResponse(message, history, scenario);
+    
+    // 返回回复和标签
+    return NextResponse.json({ response: aiResponse, tag: tag });
   } catch (error) {
-    console.error('AI回覆處理錯誤:', error);
+    console.error('AI 回覆服務錯誤:', error);
     return NextResponse.json(
-      { error: '處理請求時出錯' },
+      { error: '獲取 AI 回覆失敗', details: (error as Error).message },
       { status: 500 }
     );
   }
