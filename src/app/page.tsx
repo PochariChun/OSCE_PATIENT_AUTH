@@ -13,6 +13,7 @@ interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  nickname?: string;
 }
 
 interface DialogueHistory {
@@ -39,9 +40,19 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
+    // 確保代碼在客戶端執行
+    if (typeof window === 'undefined') {
+      console.log('代碼在伺服器端執行，跳過localStorage操作');
+      setLoading(false);
+      return;
+    }
+    
     const fetchUser = async () => {
+      console.log('開始獲取用戶資訊');
       try {
         const userJson = localStorage.getItem('user');
+        console.log('localStorage中的user資料:', userJson ? '存在' : '不存在');
+        
         if (!userJson) {
           console.log('未登入，但首頁可以訪問');
           setUser(null);
@@ -50,17 +61,31 @@ export default function HomePage() {
         }
         
         try {
+          console.log('嘗試解析用戶資料');
           const userData = JSON.parse(userJson);
+          console.log('用戶資料解析成功:', userData);
           setUser(userData);
+          
+          try {
+            console.log('開始獲取對話歷史和推薦場景');
+            // 獲取對話歷史
+            await fetchDialogueHistory(userData.id);
+            // 獲取推薦場景
+            await fetchRecommendedScenarios(userData.id);
+            console.log('對話歷史和推薦場景獲取完成');
+          } catch (apiError) {
+            console.error('API 調用失敗:', apiError);
+          }
         } catch (parseError) {
-          console.error('解析用戶數據失敗:', parseError);
-          localStorage.removeItem('user'); // 清除無效數據
+          console.error('解析用戶資料失敗:', parseError);
+          localStorage.removeItem('user');
           setUser(null);
         }
       } catch (error) {
-        console.error('獲取用戶信息失敗:', error);
+        console.error('獲取用戶資訊失敗:', error);
         setUser(null);
       } finally {
+        console.log('設置loading為false');
         setLoading(false);
       }
     };
@@ -71,7 +96,10 @@ export default function HomePage() {
   // 從 API 獲取對話歷史資料
   const fetchDialogueHistory = async (userId: number) => {
     try {
+      console.log(`開始獲取用戶 ${userId} 的對話歷史`);
       const response = await fetch(`/api/conversations/history?userId=${userId}`);
+      
+      console.log(`對話歷史 API 回應狀態: ${response.status}`);
       
       if (!response.ok) {
         console.warn(`獲取對話歷史失敗: ${response.status} ${response.statusText}`);
@@ -81,6 +109,7 @@ export default function HomePage() {
       }
       
       const data = await response.json();
+      console.log(`獲取到 ${data.length} 條對話歷史記錄:`, data);
       setDialogueHistory(data);
     } catch (error) {
       console.error('獲取對話歷史失敗', error);
@@ -97,8 +126,24 @@ export default function HomePage() {
       
       if (!response.ok) {
         console.warn(`獲取推薦場景失敗: ${response.status} ${response.statusText}`);
-        // 如果獲取失敗，設置為空陣列，不使用假資料
-        setRecommendedScenarios([]);
+        
+        // 如果 API 尚未實現，使用模擬數據進行測試
+        const mockData: RecommendedScenario[] = [
+          {
+            id: 1,
+            title: "糖尿病患者護理對話",
+            description: "練習與糖尿病患者的溝通技巧，包括飲食指導和胰島素使用說明。",
+            scenarioCode: "diabetes_care"
+          },
+          {
+            id: 2,
+            title: "術後疼痛評估",
+            description: "學習如何評估和管理患者的術後疼痛，提供適當的護理和支持。",
+            scenarioCode: "postop_pain"
+          }
+        ];
+        
+        setRecommendedScenarios(mockData);
         return;
       }
       
@@ -106,7 +151,7 @@ export default function HomePage() {
       setRecommendedScenarios(data);
     } catch (error) {
       console.error('獲取推薦場景失敗', error);
-      // 如果獲取失敗，設置為空陣列，不使用假資料
+      // 如果獲取失敗，設置為空陣列
       setRecommendedScenarios([]);
     }
   };
@@ -131,7 +176,14 @@ export default function HomePage() {
   }
 
   if (!user) {
-    return null; // 將由 useEffect 中的 router.push 處理重定向
+    router.push('/login');
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="mt-4 text-gray-600 dark:text-gray-400">未登入，正在跳轉到登入頁面...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

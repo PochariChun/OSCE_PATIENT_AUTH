@@ -10,13 +10,13 @@ export async function POST() {
   
   // 清除 cookie
   response.cookies.set({
-    name: 'auth-token',
+    name: 'auth_token',
     value: '',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 0, // 立即過期
     path: '/',
+    maxAge: 0, // 立即過期
   });
   
   return response;

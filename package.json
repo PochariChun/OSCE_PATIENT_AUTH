@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
     "postinstall": "prisma generate",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "prod": "next build && next start"
   },
   "dependencies": {
     "@prisma/client": "6.6.0",

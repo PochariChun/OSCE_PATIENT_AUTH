@@ -4,19 +4,21 @@ import { prisma } from '@/lib/prisma';
 // 添加动态配置
 export const dynamic = 'force-dynamic';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// 定义 Props 类型
+type Props = {
+  params: {
+    id: string
+  }
+};
+
+// 使用 Props 类型
+export async function POST(request: NextRequest, props: Props) {
   try {
-    // 从 URL 直接获取 ID
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
-    const idFromPath = pathParts[pathParts.length - 2]; // 获取倒数第二个部分，因为最后一个是 "messages"
-    const conversationId = parseInt(idFromPath);
+    const id = props.params.id;
+    const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
-      return NextResponse.json({ error: '無效的對話ID' }, { status: 400 });
+      return NextResponse.json({ error: '无效的对话ID' }, { status: 400 });
     }
     
     const data = await request.json();

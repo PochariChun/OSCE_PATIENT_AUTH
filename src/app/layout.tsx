@@ -5,7 +5,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'OSCE 虛擬病人對話系統',
-  description: 'OSCE 護理模擬對話訓練平台',
+  description: '練習和提高護理對話技能，為 OSCE 考試做好準備',
+
 }
 
 export default function RootLayout({

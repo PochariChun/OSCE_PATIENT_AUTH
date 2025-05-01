@@ -7,9 +7,12 @@ import Link from 'next/link';
 
 interface User {
   id: number;
-  name: string;
+  username: string;
+  nickname?: string;
   email: string;
   role: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface DialogueHistory {
@@ -19,6 +22,8 @@ interface DialogueHistory {
   score: number | null;
   durationSec: number | null;
   overtime: boolean;
+  scenarioId?: number;
+  completedAt?: string;
 }
 
 export default function DialogueHistoryPage() {

@@ -47,10 +47,8 @@ def query():
             "question": result['metadata']['question'],
             "answer": result['metadata']['answer'],
             "tags": result['metadata'].get('tags', []),
+            "code": result['metadata'].get('code', None),
             "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
-            "scoringCategory": result['metadata'].get('scoringCategory', ''),
-            "scoringItem": result['metadata'].get('scoringItem', ''),
-            "scoringSubItem": result['metadata'].get('scoringSubItem', ''),
             # 可選字段
             "imageToShow": result['metadata'].get('imageToShow', None),
             "audioUrl": result['metadata'].get('audioUrl', None)

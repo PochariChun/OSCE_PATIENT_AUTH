@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,11 +8,34 @@ import { Input } from '@/components/ui/input';
 import { Navbar } from '@/components/navbar';
 import { ErrorBoundary } from '@/components/error-boundary';
 
+// 创建一个日志工具函数，只在开发环境中输出日志
+const logger = {
+  log: (message: string, data?: any) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(message, data);
+    }
+  },
+  error: (message: string, error?: any) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(message, error);
+    }
+  }
+};
+
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div>加载中...</div>;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +43,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      console.log('開始登入流程，提交數據:', { username });
+      logger.log('開始登入流程，提交數據:', { username });
       
       // 檢查輸入數據
       if (!username) {
@@ -38,14 +61,14 @@ export default function LoginPage() {
       });
       
       const responseText = await response.text();
-      console.log('登入 API 響應原始文本:', responseText);
+      logger.log('登入 API 響應原始文本:', responseText);
       
       let data;
       try {
         data = responseText ? JSON.parse(responseText) : {};
-        console.log('登入 API 響應解析後數據:', data);
+        logger.log('登入 API 響應解析後數據:', data);
       } catch (parseError) {
-        console.error('解析 JSON 失敗:', parseError);
+        logger.error('解析 JSON 失敗:', parseError);
         setError('伺服器返回無效的 JSON 數據');
         return;
       }
@@ -66,25 +89,30 @@ export default function LoginPage() {
         return;
       }
       
-      console.log('登入成功，保存用戶資料');
+      logger.log('登入成功，保存用戶資料');
       
-      // 保存用戶資料到 localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // 如果有令牌，也保存
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+      // 保存用戶資料到 localStorage - 確保只在客戶端執行
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // 如果有令牌，也保存
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
       }
       
-      console.log('重定向到首頁');
+      logger.log('重定向到首頁');
       
       // 重定向到首頁
       router.push('/');
       
     } catch (error: any) {
-      console.error('登入過程中發生錯誤:', error);
-      console.error('錯誤堆疊:', error.stack);
-      setError(error.message || '登入過程中發生錯誤，請稍後再試');
+      logger.error('登入過程中發生錯誤:', error);
+      // 安全地訪問 stack 屬性
+      if (error instanceof Error) {
+        logger.error('錯誤堆疊:', error.stack);
+      }
+      setError(typeof error.message === 'string' ? error.message : '登入過程中發生錯誤，請稍後再試');
     } finally {
       setLoading(false);
     }

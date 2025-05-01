@@ -10,52 +10,90 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   try {
-    const { id } = context.params;
-    const conversationId = parseInt(id as string);
+    // 正確使用動態參數
+    const id = context.params.id;
+    const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
-      return NextResponse.json({ error: '無效的對話 ID' }, { status: 400 });
+      return NextResponse.json(
+        { error: '無效的對話 ID' },
+        { status: 400 }
+      );
     }
     
-    // 獲取 URL 參數中的用戶 ID
-    const { searchParams } = new URL(request.url);
-    const userIdParam = searchParams.get('userId');
+    // 獲取用戶 ID 參數
+    const searchParams = request.nextUrl.searchParams;
+    const userId = searchParams.get('userId');
     
-    if (!userIdParam) {
-      return NextResponse.json({ error: '缺少用戶 ID 參數' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json(
+        { error: '缺少用戶 ID 參數' },
+        { status: 400 }
+      );
     }
     
-    const userId = parseInt(userIdParam);
-    
-    if (isNaN(userId)) {
-      return NextResponse.json({ error: '無效的用戶 ID' }, { status: 400 });
-    }
+    console.log(`獲取對話詳情: ID=${conversationId}, 用戶ID=${userId}`);
     
     // 查詢對話詳情
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
       include: {
-        messages: {
-          orderBy: { orderIndex: 'asc' }
+        messages: { 
+          orderBy: {
+            // 使用正確的欄位名稱進行排序，例如 timestamp 或 id
+            timestamp: 'asc'
+          }
         },
         scenario: true
       }
     });
     
     if (!conversation) {
-      return NextResponse.json({ error: '找不到指定的對話' }, { status: 404 });
+      return NextResponse.json(
+        { error: '找不到對話記錄' },
+        { status: 404 }
+      );
     }
     
-    // 檢查對話是否屬於請求的用戶
-    if (conversation.userId !== userId) {
-      return NextResponse.json({ error: '無權訪問此對話' }, { status: 403 });
+    // 檢查用戶是否有權限訪問此對話
+    if (conversation.userId !== parseInt(userId)) {
+      return NextResponse.json(
+        { error: '無權訪問此對話記錄' },
+        { status: 403 }
+      );
     }
     
-    // 返回對話詳情
-    return NextResponse.json(conversation);
+    // 格式化返回數據
+    const formattedConversation = {
+      id: conversation.id,
+      title: conversation.scenario ? conversation.scenario.title : '未命名對話',
+      startedAt: conversation.startedAt.toISOString(),
+      endedAt: conversation.endedAt ? conversation.endedAt.toISOString() : null,
+      score: conversation.score,
+      durationSec: conversation.durationSec,
+      overtime: conversation.overtime,
+      scenarioTitle: conversation.scenario ? conversation.scenario.title : '',
+      scenarioDescription: conversation.scenario ? conversation.scenario.description : '',
+      messages: conversation.messages.map(msg => ({
+        id: msg.id,
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text,
+        timestamp: msg.timestamp.toISOString(),
+        elapsedSeconds: msg.elapsedSeconds,
+        delayFromPrev: msg.delayFromPrev
+      })),
+      reflection: conversation.reflection,
+      reflections: [], // 如果有反思對話，可以在這裡添加
+      feedback: conversation.feedback
+    };
+    
+    return NextResponse.json(formattedConversation);
   } catch (error) {
     console.error('獲取對話詳情時發生錯誤:', error);
-    return NextResponse.json({ error: '獲取對話詳情失敗' }, { status: 500 });
+    return NextResponse.json(
+      { error: '獲取對話詳情失敗', details: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 

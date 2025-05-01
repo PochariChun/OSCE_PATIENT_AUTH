@@ -34,51 +34,6 @@ async function queryEmbeddingService(query: string, history: any[] = []): Promis
   }
 }
 
-// 修改 generateVoiceWithBark 函數以更好地處理連接錯誤
-async function generateVoiceWithBark(text: string): Promise<string | null> {
-  try {
-    // 使用環境變量獲取 Bark API 地址
-    const barkApiUrl = process.env.BARK_API_URL || 'http://localhost:7860/api/generate';
-    
-    // 添加超時設置，避免長時間等待
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超時
-    
-    // const response = await fetch(barkApiUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     text,
-    //     voice_preset: 'mother', // 使用媽媽的聲音預設
-    //     // 可以添加其他 Bark 參數，如語速、音調等
-    //   }),
-    //   signal: controller.signal
-    // }).finally(() => clearTimeout(timeoutId));
-    
-    // if (!response.ok) {
-    //   throw new Error(`Bark API 請求失敗: ${response.status} ${response.statusText}`);
-    // }
-    
-    const data = await response.json();
-    return data.audio_url || null; // 假設 API 返回音頻 URL
-  } catch (error) {
-    // 更詳細的錯誤日誌
-    if (error instanceof Error) {
-      console.error(`生成語音時出錯: ${error.name}: ${error.message}`);
-      // 如果是 AbortError，提供更具體的錯誤信息
-      if (error.name === 'AbortError') {
-        console.error('Bark API 請求超時');
-      }
-    } else {
-      console.error('生成語音時出現未知錯誤:', error);
-    }
-    
-    // 返回 null，表示無法生成語音
-    return null;
-  }
-}
 
 // 修改 POST 處理函數，確保即使語音生成失敗也能返回文本回覆
 export async function POST(request: Request) {
