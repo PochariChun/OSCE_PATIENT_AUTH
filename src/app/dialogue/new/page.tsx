@@ -83,16 +83,19 @@ function DialogueNewContent() {
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
   const [selectedScenario, setSelectedScenario] = useState<ScenarioInfo | null>(null);
   const [conversation, setConversation] = useState<{ 
-    role: 'user' | 'patient' | 'system'; 
+    role: 'nurse' | 'patient' | 'system'; 
     content: string;
     elapsedSeconds?: number;
     timestamp?: Date;
     tag?: string;
     audioUrl?: string;
+    code?: string;
+    answerType?: string;
   }[]>([]);
   const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
-  
+  const [scoredCodes, setScoredCodes] = useState<Set<string>>(new Set());
+
   const [isListening, setIsListening] = useState(false);
   const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null);
   const [interimTranscript, setInterimTranscript] = useState('');
@@ -100,6 +103,8 @@ function DialogueNewContent() {
   const [lastSentenceEnd, setLastSentenceEnd] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [lastpatientmsgTime, setLastpatientmsgTime] = useState(0);
+  const [lastTag, setLastTag] = useState('');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   
   const [conversationId, setConversationId] = useState<number | null>(null);
@@ -128,6 +133,11 @@ function DialogueNewContent() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const [lastAudioUrl, setLastAudioUrl] = useState<string | null>(null);
 
+  const finalTranscriptRef = useRef('');
+  const interimTranscriptRef = useRef('');
+  const lastRecognizedTextRef = useRef('');
+
+
   useEffect(() => {
     const unlockAudioContext = () => {
       try {
@@ -150,9 +160,6 @@ function DialogueNewContent() {
     };
   }, []);
   
-
-
-
   useEffect(() => {
     // 從 localStorage 獲取用戶信息
     const fetchUser = async () => {
@@ -213,7 +220,12 @@ function DialogueNewContent() {
           if (final !== finalTranscript && final.trim() !== '') {
             // 標準化名稱
             const normalizedText = normalizeNames(final);
-            setFinalTranscript(normalizedText);
+            setFinalTranscript(prev => {
+              const newText = prev + normalizedText;
+              finalTranscriptRef.current = newText; // ✅ 同步更新 ref
+              return newText;
+            });
+            
             
             // 檢測句子結束（句號、問號、驚嘆號等）
             const sentenceEndRegex = /[。！？\.!?]/g;
@@ -224,7 +236,7 @@ function DialogueNewContent() {
                 const sentence = final.substring(lastSentenceEnd, match.index + 1).trim();
                 if (sentence) {
                   // 自動發送句子
-                  handleSendVoiceMessage(sentence);
+                  sendMessageToServer(sentence);
                   setLastSentenceEnd(match.index + 1);
                 }
               }
@@ -254,34 +266,50 @@ function DialogueNewContent() {
     }
   }, [micCheckCompleted, speechRecognition]);
   
-  useEffect(() => {
-    // 移除這裡的啟動邏輯，只保留停止邏輯
-    if (speechRecognition && !isListening) {
-      try {
-        speechRecognition.stop();
-        console.log('通過 useEffect 停止語音識別');
-        // 重置語音識別相關狀態
-        setInterimTranscript('');
-        setLastSentenceEnd(0);
-        setMessage('');
-      } catch (error) {
-        console.log('停止語音識別時發生錯誤', error);
-      }
-    }
+
+
+  // useEffect(() => {
+  //   // 移除這裡的啟動邏輯，只保留停止邏輯
+  //   if (speechRecognition && !isListening) {
+  //     try {
+  //       speechRecognition.stop();
+  //       console.log('通過 useEffect 停止語音識別');
+  //       // 重置語音識別相關狀態
+  //       setInterimTranscript('');
+  //       setLastSentenceEnd(0);
+  //       setMessage('');
+  //     } catch (error) {
+  //       console.log('停止語音識別時發生錯誤', error);
+  //     }
+  //   }
     
+  //   return () => {
+  //     // 組件卸載時停止語音識別
+  //     if (speechRecognition) {
+  //       try {
+  //         speechRecognition.stop();
+  //         console.log('組件卸載時停止語音識別');
+  //       } catch (e) {
+  //         // 忽略錯誤
+  //       }
+  //     }
+  //   };
+  // }, [isListening, speechRecognition]);
+  // 安全清理語音識別，僅當 component 卸載時用
+  useEffect(() => {
     return () => {
-      // 組件卸載時停止語音識別
       if (speechRecognition) {
         try {
           speechRecognition.stop();
-          console.log('組件卸載時停止語音識別');
+          console.log('[unmount] 組件卸載時停止語音識別');
         } catch (e) {
-          // 忽略錯誤
+          console.warn('[unmount] 停止失敗:', e);
         }
       }
     };
-  }, [isListening, speechRecognition]);
-  
+  }, []); // 👈 這裡不要有 speechRecognition 當依賴，否則會重新執行
+
+
   // 从 API 获取场景数据
   const fetchScenarios = async () => {
     try {
@@ -411,7 +439,10 @@ function DialogueNewContent() {
   };
   
   // 添加一个函数来获取AI回覆
-  const getAIResponse = async (message: string, conversation: any[]) => {
+  const getAIResponse = async (
+    message: string,
+    previousTag?: string | null // 加上這個參數
+  ) => {
     try {
       const response = await fetch('/api/ai-response', {
         method: 'POST',
@@ -420,243 +451,77 @@ function DialogueNewContent() {
         },
         body: JSON.stringify({
           message,
-          history: conversation,
           scenarioId: selectedScenario?.id,
           previousTag: previousTag,
         }),
       });
-      
+
+      // 錯誤獲取AI回覆
       if (!response.ok) {
-        throw new Error('AI 回覆請求失敗');
+        console.warn('AI 回覆失敗', await response.text());
+        return {
+          response: '抱歉，我暫時無法回答，請稍後再試。',
+          tag: undefined,
+          audioUrl: undefined,
+          code: undefined,
+          answerType: null,
+        };
       }
-      
-      const data = await response.json();
-      
-      // 更新 previousTag 為當前回覆的 tag
-      if (data.tag) {
-        setPreviousTag(data.tag.charAt(0)); // 只取第一個字符作為標籤
-      }
-      
-      // 保存最新的音频URL
-      if (data.audioUrl) {
-        setLastAudioUrl(data.audioUrl);
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('獲取 AI 回覆時出錯:', error);
-      return { response: '抱歉，無法獲取回覆。請稍後再試。', tag: null, audioUrl: null };
+
+      // 正常獲取AI回覆
+      return await response.json();
+
+    } catch (err) {
+      console.error('呼叫 AI 回覆出錯:', err);
+
+      // 錯誤獲取AI回覆
+      return {
+        response: '抱歉，出現錯誤，請稍後再試。',
+        tag: undefined,
+        audioUrl: undefined,
+        code: undefined,
+        answerType: null,
+      };
     }
   };
   
-  // 修改 handleSendVoiceMessage 函数
-  const handleSendVoiceMessage = async (voiceMessage: string) => {
-    if (!voiceMessage.trim() || !conversationId) return;
-    
-    const now = new Date();
-    const seconds = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
-    
-    // 計算與上一條消息的延遲
-    let delayFromPrev = 0;
-    let isDelayed = false;
-    const lastMessage = conversation.filter(msg => msg.role !== 'system').pop();
-    
-    if (lastMessage && lastMessage.timestamp) {
-      delayFromPrev = Math.floor((now.getTime() - lastMessage.timestamp.getTime()) / 1000);
-      isDelayed = delayFromPrev > 10;
-    }
-    
-    // 添加用戶訊息到對話
-    const userMessage = { 
-      role: 'user' as const, 
-      content: voiceMessage,
-      timestamp: now,
-      elapsedSeconds: seconds
-    };
-    
-    const updatedConversation = [...conversation, userMessage];
-    setConversation(updatedConversation);
-    
-    // 保存用戶消息到數據庫
-    try {
-      const apiUrl = `/api/conversations/${conversationId}/messages`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: [
-            {
-              sender: 'user',
-              text: voiceMessage,
-              timestamp: now.toISOString(),
-              elapsedSeconds: seconds,
-              delayFromPrev,
-              isDelayed
-            }
-          ] 
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('保存用戶訊息失敗', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-      } else {
-        const data = await response.json();
-        console.log('用戶訊息保存成功', data);
-      }
-    } catch (error) {
-      console.error('保存用戶訊息時發生錯誤', error);
-    }
-    
-    // 获取AI回复
-    const { response: aiResponseText, tag, audioUrl } = await getAIResponse(voiceMessage, conversation);
-    
-    // 保存最新的音频URL
-    if (audioUrl) {
-      setLastAudioUrl(audioUrl);
-    }
-    
-    // 在头像上显示回复文本
-    setOverlayText(aiResponseText);
-    
-    // 創建臨時消息，稍後會更新時間戳
-    const tempAssistantMessage = { 
-      role: 'patient' as const, 
-      content: aiResponseText,
-      timestamp: new Date(), // 臨時時間戳，稍後會更新
-      elapsedSeconds: 0, // 臨時值，稍後會更新
-      tag: tag,
-      audioUrl: audioUrl
-    };
-    
-    // 先添加消息到對話，但時間戳和延遲稍後會更新
-    setConversation([...updatedConversation, tempAssistantMessage]);
-    
-    // 如果有音頻URL，播放音頻
-    if (audioUrl) {
-      try {
-        await playAudio(audioUrl);
-      } catch (error) {
-        console.error('播放音频失败:', error);
-      }
-    }
-    
-    // 設置一個定時器，在一段時間後清除頭像上的文本
-    setTimeout(() => {
-      setOverlayText(null);
-    }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
-    
-    // 音頻播放完成後，更新時間戳和計算延遲
-    const replyTime = new Date();
-    const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
-    
-    // 計算虛擬病人回覆的延遲
-    const patientDelayFromPrev = Math.floor((replyTime.getTime() - now.getTime()) / 1000);
-    
-    // 根據使用者輸入字數調整延遲閾值
-    // 每10個字符增加1秒閾值，基礎閾值為3秒
-    const delayThreshold = 3 + Math.floor(voiceMessage.length / 10);
-    const patientIsDelayed = patientDelayFromPrev > delayThreshold;
-    
-    // 更新助理消息的時間戳和延遲
-    const assistantMessage = { 
-      ...tempAssistantMessage,
-      timestamp: replyTime,
-      elapsedSeconds: replySeconds
-    };
-    
-    // 更新對話
-    setConversation(prev => {
-      const newConv = [...prev];
-      newConv[newConv.length - 1] = assistantMessage;
-      return newConv;
-    });
-    
-    // 保存虛擬病人消息到數據庫
-    try {
-      const apiUrl = `/api/conversations/${conversationId}/messages`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: [
-            {
-              sender: 'patient',
-              text: assistantMessage.content,
-              timestamp: replyTime.toISOString(),
-              elapsedSeconds: replySeconds,
-              delayFromPrev: patientDelayFromPrev,
-              isDelayed: patientIsDelayed,
-              tag: tag,
-              audioUrl: audioUrl
-            }
-          ] 
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('保存虛擬病人訊息失敗', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-      } else {
-        const data = await response.json();
-        console.log('虛擬病人訊息保存成功', data);
-      }
-    } catch (error) {
-      console.error('保存虛擬病人訊息時發生錯誤', error);
-    }
-  };
   
   const sendMessageToServer = async (messageText: string) => {
     try {
       // 添加用户消息到对话
+      let elapsedTimeNurse = elapsedTime;
+      console.log('elapsedTimeNurse= ', elapsedTimeNurse);
       const userMessage = {
-        role: 'user' as const,
+        role: 'nurse' as const,
         content: messageText,
         elapsedSeconds: elapsedTime,
         timestamp: new Date()
       };
-      
+      // const updatedConversation = [...conversation, userMessage];
+      // setConversation(updatedConversation);
+      // 先添加消息到對話，但時間戳和延遲稍後會更新
       setConversation(prev => [...prev, userMessage]);
-      
-      // 保存消息到服务器
-      if (conversationId) {
-        const saveResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sender: 'user',
-            content: messageText,
-            elapsedSeconds: elapsedTime
-          }),
-        });
-        
-        if (!saveResponse.ok) {
-          console.error('保存用戶消息失敗:', saveResponse.statusText);
-        }
-      }
-      
+
+      // 計算與上一條消息的延遲
+      const now = new Date();
+      const nowSec = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
+
+      // 計算用户回覆的延遲
+      const DelayFromPrev = nowSec - lastpatientmsgTime
+      const delayThreshold = 10 + Math.floor(messageText.length / 3);
+      const IsDelayed = DelayFromPrev > delayThreshold;
+      const Delay = DelayFromPrev - delayThreshold;
+
       // 获取AI回复
-      const { response: aiResponseText, tag, audioUrl } = await getAIResponse(
-        messageText, 
-        conversation.filter(msg => msg.role !== 'system')
+      const { response: aiResponseText, tag, audioUrl, code, answerType } = await getAIResponse(
+      messageText, 
+      lastTag // 這是 clientPreviousTag 對應的第三個參數
       );
       
+
+      setLastTag(tag);
       // 保存最新的音频URL
-      if (audioUrl) {
+      if (audioUrl && answerType === 'dialogue') {
         setLastAudioUrl(audioUrl);
       }
       
@@ -669,9 +534,8 @@ function DialogueNewContent() {
         content: aiResponseText,
         elapsedSeconds: elapsedTime,
         timestamp: new Date(),
-        tag: tag,
-        audioUrl: audioUrl
       };
+      setLastpatientmsgTime(elapsedTime);
       
       // 先添加消息到對話
       setConversation(prev => [...prev, tempAiMessage]);
@@ -694,11 +558,53 @@ function DialogueNewContent() {
       const replyTime = new Date();
       const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
       
-      // 根據使用者輸入字數調整延遲閾值
-      const delayThreshold = 3 + Math.floor(messageText.length / 10);
-      const patientDelayFromPrev = Math.floor((replyTime.getTime() - userMessage.timestamp.getTime()) / 1000);
-      const patientIsDelayed = patientDelayFromPrev > delayThreshold;
+      // // 根據使用者輸入字數調整延遲閾值
+      // const delayThreshold = 3 + Math.floor(messageText.length / 10);
+      // const patientDelayFromPrev = Math.floor((replyTime.getTime() - userMessage.timestamp.getTime()) / 1000);
+      // const patientIsDelayed = patientDelayFromPrev > delayThreshold;
+      console.log('elapsedTimeNurse= ', elapsedTimeNurse);
+      console.log('DelayFromPrev', DelayFromPrev);
+      console.log('IsDelayed', IsDelayed);
       
+      // let scoringItems: string[] = [];
+      // if (code) {
+      //   scoringItems = code.split(',').map((c: string) => c.trim());
+      // }
+      let scoringItems: string[] = [];
+      if (code) {
+        const codes: string[] = code.split(',').map((c: string) => c.trim());
+        const newCodes = codes.filter((c: string) => !scoredCodes.has(c)); // ✅ 沒有紅線
+
+        scoringItems = newCodes;
+
+        if (newCodes.length > 0) {
+          setScoredCodes(prev => new Set([...prev, ...newCodes]));
+        }
+      }
+
+      // 保存用户消息到服务器
+      if (conversationId) {
+        const saveResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: 'nurse',
+            content: messageText,
+            elapsedSeconds: elapsedTimeNurse,
+            delayFromPrev: Delay,
+            isDelayed: IsDelayed,
+            tag: lastTag,
+            scoringItems: scoringItems,  // <-- 用複數形式傳陣列
+          }),
+        });
+        
+        if (!saveResponse.ok) {
+          console.error('保存用戶消息失敗:', saveResponse.statusText);
+        }
+      }
+
       // 更新助理消息
       const aiMessage = {
         ...tempAiMessage,
@@ -725,10 +631,12 @@ function DialogueNewContent() {
             content: aiResponseText,
             elapsedSeconds: replySeconds,
             timestamp: replyTime.toISOString(),
-            delayFromPrev: patientDelayFromPrev,
-            isDelayed: patientIsDelayed,
+            delayFromPrev: 0,
+            isDelayed: false,
             tag: tag,
-            audioUrl: audioUrl
+            audioUrl: audioUrl,
+            scoringItems: scoringItems,  // <-- 用複數形式傳陣列
+
           }),
         });
         
@@ -831,6 +739,11 @@ function DialogueNewContent() {
       const originalFetch = window.fetch;
       window.fetch = async function(...args) {
         const [url, options] = args;
+        // 跳過 HMR 請求
+        if (typeof url === 'string' && url.includes('hot-update')) {
+          return originalFetch.apply(this, args);
+        }
+        // 打印請求詳細信息 
         console.log(`🌐 發送請求: ${options?.method || 'GET'} ${url}`, options?.body ? JSON.parse(options.body as string) : '');
         
         try {
@@ -858,9 +771,132 @@ function DialogueNewContent() {
       }
     };
   }, []);
+
+  const createNewRecognition = () => {
+    // 創建新的識別實例
+    const RecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new RecognitionClass();
+
+    recognition.lang = 'zh-TW'; // 設置為繁體中文
+    recognition.interimResults = true; // 獲取臨時結果
+    recognition.continuous = true; // 改為連續識別模式
+      // 處理結果
+    recognition.onresult = (event) => {
+        let interimText = '';
+        let finalText = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += transcript;
+          } else {
+            interimText += transcript;
+          }
+        }
+        
+        if (interimText) {
+          console.log('識別到臨時文本:', interimText);
+          setInterimTranscript(interimText);
+          interimTranscriptRef.current = interimText; // ✅ 加這行
+        }
+        
+        
+        if (finalText) {
+          console.log('識別到最終文本:', finalText);
+          // 標準化名稱
+          const normalizedText = normalizeNames(finalText);
+          console.log('標準化後的文本:', normalizedText);
+          
+          // 將最終文本添加到 finalTranscript 中，而不是替換它
+          // React 的 setXxx() 是非同步的，所以需要使用 prev 來更新
+          setInterimTranscript('');
+          interimTranscriptRef.current = '';
+          
+
+          setFinalTranscript(prev => {
+            const newText = prev + normalizedText;
+            finalTranscriptRef.current = newText; // ✅ 更新 ref
+            console.log('更新最終文本為:', newText);
+            return newText;
+          });
+        }
+    };
+      
+      // 處理錯誤
+    recognition.onerror = (event) => {
+        console.log(`語音識別錯誤: ${event.error || '未知錯誤'}`);
+        setIsListening(false);
+        setIsRecordButtonPressed(false);
+        setIsInitializingSpeech(false);
+    };
+      
+    //   // 處理結束
+    //  recognition.onend= () => {
+    //     console.log('語音識別會話結束');
+        
+    //     // 如果用戶仍在按住按鈕，自動重啟識別
+    //     if (isRecordButtonPressed) {
+    //       try {
+    //         recognition.start();
+    //         console.log('自動重啟語音識別');
+    //       } catch (e) {
+    //         console.error('重啟語音識別失敗:', e);
+    //         setIsListening(false);
+    //       }
+    //     } else {
+    //       setIsListening(false);
+    //     }
+        
+    //     setIsInitializingSpeech(false);
+    // };
+    recognition.onend = () => {
+      console.log('語音識別會話結束');
+    
+      const textToSend =
+      finalTranscriptRef.current ||
+      interimTranscriptRef.current ||
+      lastRecognizedTextRef.current;
+        
+      if (textToSend) {
+        console.log('[onend] 發送識別文本:', textToSend);
+        sendMessageToServer(textToSend);
+      } else {
+        console.log('[onend] 沒有識別到文本，不發送');
+      }
+    
+      // 清空所有暫存
+      setFinalTranscript('');
+      finalTranscriptRef.current = '';
+      setInterimTranscript('');
+      interimTranscriptRef.current = '';
+      setLastRecognizedText('');
+      lastRecognizedTextRef.current = '';
+
+      
+      if (isRecordButtonPressed) {
+        try {
+          recognition.start();
+          console.log('自動重啟語音識別');
+        } catch (e) {
+          console.error('重啟語音識別失敗:', e);
+          setIsListening(false);
+        }
+      } else {
+        setIsListening(false);
+      }
+    
+      setIsInitializingSpeech(false);
+    };
+    
+  
+    recognition.start();
+    setSpeechRecognition(recognition);
+    setIsListening(true);
+    setIsInitializingSpeech(false);
+    console.log('[createNewRecognition] 語音識別已啟動');
+  };
   
   const startRecording = () => {
-    console.log('開始錄音...');
     
     // 如果已經在錄音，不做任何事
     if (isListening || isInitializingSpeech) {
@@ -869,10 +905,8 @@ function DialogueNewContent() {
     }
     
     setIsInitializingSpeech(true); // 標記正在初始化
-    
-    // 清空臨時文本，但不清空最終文本
-    setInterimTranscript('');
-    
+    setInterimTranscript('');    // 清空臨時文本，但不清空最終文本
+
     // 檢查瀏覽器支持
     if (typeof window === 'undefined') {
       setIsInitializingSpeech(false);
@@ -890,91 +924,18 @@ function DialogueNewContent() {
     }
     
     try {
-      // 如果已經有一個語音識別實例在運行，先停止它
-      if (speechRecognition) {
-        try {
-          speechRecognition.stop();
-          console.log('停止現有語音識別實例');
-        } catch (e) {
-          console.error('停止現有語音識別實例失敗:', e);
-        }
-      }
-      
-      // 創建新的識別實例
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'zh-TW'; // 設置為繁體中文
-      recognition.interimResults = true; // 獲取臨時結果
-      recognition.continuous = true; // 改為連續識別模式
-      
-      // 處理結果
-      recognition.onresult = (event) => {
-        let interimText = '';
-        let finalText = '';
-        
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalText += transcript;
-          } else {
-            interimText += transcript;
-          }
-        }
-        
-        if (interimText) {
-          console.log('識別到臨時文本:', interimText);
-          setInterimTranscript(interimText);
-        }
-        
-        if (finalText) {
-          console.log('識別到最終文本:', finalText);
-          // 標準化名稱
-          const normalizedText = normalizeNames(finalText);
-          console.log('標準化後的文本:', normalizedText);
-          
-          // 將最終文本添加到 finalTranscript 中，而不是替換它
-          setInterimTranscript('');
-          setFinalTranscript(prev => {
-            const newText = prev + normalizedText;
-            console.log('更新最終文本為:', newText);
-            return newText;
-          });
-        }
-      };
-      
-      // 處理錯誤
-      recognition.onerror = (event) => {
-        console.log(`語音識別錯誤: ${event.error || '未知錯誤'}`);
-        setIsListening(false);
-        setIsRecordButtonPressed(false);
-        setIsInitializingSpeech(false);
-      };
-      
-      // 處理結束
-      recognition.onend = () => {
-        console.log('語音識別會話結束');
-        
-        // 如果用戶仍在按住按鈕，自動重啟識別
-        if (isRecordButtonPressed) {
-          try {
-            recognition.start();
-            console.log('自動重啟語音識別');
-          } catch (e) {
-            console.error('重啟語音識別失敗:', e);
-            setIsListening(false);
-          }
-        } else {
-          setIsListening(false);
-        }
-        
-        setIsInitializingSpeech(false);
-      };
-      
-      // 啟動識別
-      recognition.start();
-      setSpeechRecognition(recognition);
-      setIsListening(true);
-      console.log('語音識別已啟動');
-      setIsInitializingSpeech(false);
+
+      if (speechRecognition && isListening) {
+        console.log('正在錄音中，先停止舊的實例');
+        speechRecognition.onend = () => {
+          console.log('舊實例已停止，開始新的語音識別');
+          createNewRecognition(); // 自己抽出一個新函式來創建
+        };
+        speechRecognition.stop();
+      } else {      
+        console.log('開始錄音...');
+        createNewRecognition();
+      }     
     } catch (error) {
       console.error('啟動語音識別失敗:', error);
       setIsListening(false);
@@ -987,14 +948,14 @@ function DialogueNewContent() {
   const stopRecording = () => {
     console.log('停止錄音...');
     
-    // 保存當前的臨時文本和最終文本，以防在停止過程中丟失
-    const currentInterimTranscript = interimTranscript;
-    const currentFinalTranscript = finalTranscript;
-    const currentLastRecognizedText = lastRecognizedText;
+    // // 保存當前的臨時文本和最終文本，以防在停止過程中丟失
+    // const currentInterimTranscript = interimTranscript;
+    // const currentFinalTranscript = finalTranscript;
+    // const currentLastRecognizedText = lastRecognizedText;
     
-    console.log('停止錄音時的最終文本:', currentFinalTranscript);
-    console.log('停止錄音時的臨時文本:', currentInterimTranscript);
-    console.log('停止錄音時的最後識別文本:', currentLastRecognizedText);
+    // console.log('停止錄音時的最終文本:', currentFinalTranscript);
+    // console.log('停止錄音時的臨時文本:', currentInterimTranscript);
+    // console.log('停止錄音時的最後識別文本:', currentLastRecognizedText);
     
     // 如果沒有在錄音，不做任何事
     if (!isListening && !speechRecognition) {
@@ -1014,25 +975,25 @@ function DialogueNewContent() {
     }
     
     setIsListening(false);
-    
-    // 增加更長的延遲，確保最終文本已更新
-    setTimeout(() => {
-      // 檢查是否有文本可以發送
-      const textToSend = currentFinalTranscript || currentInterimTranscript || currentLastRecognizedText;
+  };    
+  //   // 增加更長的延遲，確保最終文本已更新
+  //   setTimeout(() => {
+  //     // 檢查是否有文本可以發送
+  //     const textToSend = currentFinalTranscript || currentInterimTranscript || currentLastRecognizedText;
       
-      if (textToSend) {
-        console.log('發送識別文本:', textToSend);
-        sendMessageToServer(textToSend);
+  //     if (textToSend) {
+  //       console.log('發送識別文本:', textToSend);
+  //       sendMessageToServer(textToSend);
         
-        // 清空所有文本
-        setFinalTranscript('');
-        setInterimTranscript('');
-        setLastRecognizedText('');
-      } else {
-        console.log('沒有識別到文本，不發送消息');
-      }
-    }, 300);
-  };
+  //       // 清空所有文本
+  //       setFinalTranscript('');
+  //       setInterimTranscript('');
+  //       setLastRecognizedText('');
+  //     } else {
+  //       console.log('沒有識別到文本，不發送消息');
+  //     }
+  //   }, 300);
+  // };
 
   // 修改按鈕事件處理函數
   const handleRecordButtonMouseDown = (e: React.MouseEvent) => {
@@ -1336,10 +1297,25 @@ function DialogueNewContent() {
                   </div>
                 </div>
               </div>
-              
+              {Array.from(scoredCodes).length > 0 && (
+                <div className="mt-4 mb-6 text-center text-sm text-green-700 dark:text-green-200">
+                  <strong>🎯 已得分：</strong>
+                  <div className="mt-2 inline-flex flex-wrap justify-center gap-2">
+                    {Array.from(scoredCodes).map(code => (
+                      <span 
+                        key={code}
+                        className="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 px-2 py-1 rounded text-xs"
+                      >
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* 虛擬病人頭像區塊 - 添加点击功能并防止长按下载 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
-               
+                
                 <div 
                   className="relative w-full max-w-md cursor-pointer select-none" 
                   onMouseDown={handleRecordButtonMouseDown}
@@ -1456,11 +1432,11 @@ function DialogueNewContent() {
                   {conversation.map((msg, index) => (
                     <div 
                       key={index} 
-                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex ${msg.role === 'nurse' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div 
                         className={`max-w-[80%] rounded-lg p-3 ${
-                          msg.role === 'user' 
+                          msg.role === 'nurse'
                             ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' 
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                         }`}
