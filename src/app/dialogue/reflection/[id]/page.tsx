@@ -377,6 +377,14 @@ export default function ReflectionPage() {
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                     }`}
                   >
+                    {/* what. so whta , 
+                    1.描述：場景中發生了什麼事？
+                    2. 感受：在經歷過程中有什麼感受？
+                    3.4.分析：為什麼事情會這樣發生？
+                    5. 結論：你可以做些什麼不同的事？
+                    6. 行動計畫：你將來將如何改進？
+                    7. NAI 如何在培訓中融入反思性實踐*/}
+                    {/* 1.你做了什麼,你沒做什麼, 2.特別會忘記,如何改進, */}
                     <p className="whitespace-pre-line">{msg.content}</p>
                     {msg.gibbsStage && msg.role === 'assistant' && (
                       <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300">

@@ -13,7 +13,7 @@ model User {
   email         String         @unique
   username      String         @unique
   nickname      String?
-  password      String
+  password      String?
   name          String?
   role          String         @default("nurse")
   isActive      Boolean        @default(true)
@@ -65,8 +65,7 @@ model Message {
   audioUrl         String?
   conversation     Conversation         @relation(fields: [conversationId], references: [id])
 
-  ScoringId      Int?
-  scoringItem    ScoringItem? @relation(fields: [ScoringId], references: [id])
+  scoringItems     ScoringItem[]        @relation("MessageToScoringItem")
 }
 
 model ReflectionMessage {
@@ -110,6 +109,6 @@ model ScoringItem {
   subcategory String
   score      Int
 
-  messages   Message[]  // ✅ 被哪些訊息觸發了（間接屬於對話）
+  messages  Message[] @relation("MessageToScoringItem") // ✅ 被哪些訊息觸發了（間接屬於對話）
 }
 

@@ -21,7 +21,7 @@ export async function GET(
 ) {
   try {
     // 终极解决方案：使用 await 直接获取 id
-    const id = (await context).params.id;
+    const id = context.params.id;
     const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
@@ -47,6 +47,17 @@ export async function GET(
     const messages = await prisma.message.findMany({
       where: { conversationId },
       orderBy: { timestamp: 'asc' },
+      select: {
+        id: true,
+        sender: true,
+        text: true,
+        timestamp: true,
+        elapsedSeconds: true,
+        delayFromPrev: true,
+        isDelayed: true,
+        tag: true,
+        audioUrl: true,
+      }
     });
     
     return NextResponse.json(messages);
@@ -60,12 +71,12 @@ export async function GET(
 }
 
 // 為特定對話添加新訊息
+// 規避警告
 export async function POST(
   req: NextRequest,
-  context: any
+  context: { params: { id: string } }
 ) {
-  // 终极解决方案：使用 await 直接获取 id
-  const id = (await context).params.id;
+  const { id } = context.params;
   const conversationId = parseInt(id);
   
   if (isNaN(conversationId)) {
@@ -88,22 +99,47 @@ export async function POST(
       { status: 404 }
     );
   }
+  try {
+    // 🔍 解析 scoring codes，如 'A15,F10'
+    let scoringItemRecords: { id: number }[] = [];
+    if (data.scoringItem) {
+      const scoringCodes = data.scoringItem.split(',').map((s: string) => s.trim());
+      scoringItemRecords = await prisma.scoringItem.findMany({
+        where: {
+          code: {
+            in: scoringCodes,
+          },
+        },
+      });
+    }
   
-  // 創建新訊息
-  const message = await prisma.message.create({
-    data: {
-      conversationId,
-      sender: data.sender,
-      text: data.content,
-      timestamp: new Date(),
-      elapsedSeconds: data.elapsedSeconds || 0,
-      emotionLabel: data.emotionLabel,
-      emotionScore: data.emotionScore,
-      isCorrect: data.isCorrect,
-      isDelayed: data.isDelayed,
-      audioUrl: data.audioUrl,
-    },
-  });
+    // 建立新訊息 + 關聯 scoringItems
+    const message = await prisma.message.create({
+      data: {
+        conversationId,
+        sender: data.sender,
+        text: data.content,
+        timestamp: new Date(data.timestamp || Date.now()),
+        elapsedSeconds: data.elapsedSeconds || 0,
+        delayFromPrev: data.delayFromPrev || 0,
+        isDelayed: data.isDelayed || false,
+        tag: data.tag,
+        audioUrl: data.audioUrl,
+        scoringItems: {
+          connect: scoringItemRecords.map(item => ({ id: item.id })),
+        },
+      },
+      include: {
+        scoringItems: true,
+      },
+    });
   
-  return NextResponse.json(message);
-} 
+  return NextResponse.json({ success: true });
+} catch (error) {
+  console.error('新增訊息失敗:', error);
+  return NextResponse.json(
+    { error: '新增訊息失敗', details: (error as Error).message },
+    { status: 500 }
+  );
+}
+}

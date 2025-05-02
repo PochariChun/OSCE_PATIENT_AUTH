@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';  // ✅ 專門用來補型別
 
 // 添加動態配置
 export const dynamic = 'force-dynamic';
@@ -30,7 +31,46 @@ export async function GET(
     console.log(`獲取對話詳情: ID=${conversationId}, 用户ID=${userId}`);
     
     // 查詢對話資訊，包括關聯的場景
-    const conversation = await prisma.conversation.findUnique({
+    // const conversation = await prisma.conversation.findUnique({
+    //   where: {
+    //     id: conversationId,
+    //   },
+    //   include: {
+    //     scenario: {
+    //       select: {
+    //         title: true,
+    //         description: true,
+    //       },
+    //     },
+    //     messages: {
+    //       orderBy: {
+    //         timestamp: 'asc',
+    //       },
+    //     },
+    //     reflections: {
+    //       orderBy: {
+    //         timestamp: 'asc',
+    //       },
+    //     },
+    //   },
+    // });
+    // ✅ 正確的型別指定
+    const conversation: Prisma.ConversationGetPayload<{
+      include: {
+        scenario: {
+          select: {
+            title: true;
+            description: true;
+          };
+        };
+        messages: {
+          include: {
+            scoringItems: true;
+          };
+        };
+        reflections: true;
+      };
+    }> = await prisma.conversation.findUnique({
       where: {
         id: conversationId,
       },
@@ -45,6 +85,9 @@ export async function GET(
           orderBy: {
             timestamp: 'asc',
           },
+          include: {
+            scoringItems: true,
+          },
         },
         reflections: {
           orderBy: {
@@ -53,6 +96,7 @@ export async function GET(
         },
       },
     });
+
 
     if (!conversation) {
       return NextResponse.json(
@@ -73,11 +117,11 @@ export async function GET(
     // 格式化消息数据
     const formattedMessages = conversation.messages.map((msg, index, arr) => {
       // 计算与前一条消息的延迟时间
-      let delayFromPrev = null;
-      if (index > 0) {
-        const prevMsg = arr[index - 1];
-        delayFromPrev = Math.round((new Date(msg.timestamp).getTime() - new Date(prevMsg.timestamp).getTime()) / 1000);
-      }
+      // let delayFromPrev = null;
+      // if (index > 0) {
+      //   const prevMsg = arr[index - 1];
+      //   delayFromPrev = Math.round((new Date(msg.timestamp).getTime() - new Date(prevMsg.timestamp).getTime()) / 1000);
+      // }
 
       return {
         id: msg.id,
@@ -85,7 +129,11 @@ export async function GET(
         content: msg.text || '',
         timestamp: msg.timestamp.toISOString(),
         elapsedSeconds: msg.elapsedSeconds,
-        delayFromPrev: delayFromPrev,
+        delayFromPrev: msg.delayFromPrev,
+        scoringItems: msg.scoringItems,
+        isDelayed: msg.isDelayed,
+        tag: msg.tag,
+        audioUrl: msg.audioUrl,
       };
     });
 
