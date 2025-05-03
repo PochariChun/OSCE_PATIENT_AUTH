@@ -40,6 +40,7 @@ async function main() {
       { category: '病人辨識', subcategory: '核對病人手圈或腳圈', score: 2, code: 'A13' },
       { category: '病人辨識', subcategory: '自我介紹與說明目的', score: 2, code: 'A14' },
       { category: '病人情況', subcategory: '開始不舒服的時間', score: 2, code: 'B10' },
+      { category: '病人情況', subcategory: '大便主訴症狀', score: 2, code: 'B20' },
       { category: '病人情況', subcategory: '大便情況.次數', score: 2, code: 'B21' },
       { category: '病人情況', subcategory: '大便情況.性狀', score: 3, code: 'B22' },
       { category: '病人情況', subcategory: '大便情況.量', score: 3, code: 'B23' },

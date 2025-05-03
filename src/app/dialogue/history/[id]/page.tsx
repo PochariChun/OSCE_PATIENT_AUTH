@@ -107,7 +107,7 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
       
       const data = await response.json();
       setDialogue(data);
-      // console.log('data= ', data);
+      console.log('data= ', data);
     } catch (error) {
       console.error('獲取對話詳情失敗', error);
     }
@@ -287,6 +287,9 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                     
                     {dialogue.messages.map((msg, index, arr) => {
                       // 判斷是否為用戶消息
+                      // console.log('msg= ', msg);
+                      // console.log('dialogue.messages= ', dialogue.messages);
+
                       const isUserMessage = msg.role === 'user';
                       // 只對用戶消息檢查延遲，確保 isDelayed存在, delayFromPrev 是數字
                       const showDelayWarning = isUserMessage && msg.isDelayed && 
@@ -300,7 +303,6 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
                       
                       // 根據時間差計算間距高度（每秒 5px，最小 40px）
                       const spacing = Math.max(40, timeDiff * 5);
-                      console.log('msg= ', msg);
                       return (
                         <div 
                           key={msg.id || index} 

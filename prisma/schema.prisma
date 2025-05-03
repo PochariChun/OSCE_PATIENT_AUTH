@@ -46,6 +46,21 @@ model Conversation {
   messages     Message[]
   reflections  ReflectionMessage[]
 
+  // 加入護理紀錄筆記的一對一關聯
+  nursingCaseNote NursingCaseNote?
+
+}
+
+model NursingCaseNote {
+  id              Int          @id @default(autoincrement())
+  conversationId  Int          @unique
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+
+  rawText         String       // 自由敘述內容
+  matchedCodes    String[]     // 自動比對後紀錄到的項目 (e.g. ["fever_start", "vomiting"])
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
 
 model Message {
@@ -65,7 +80,7 @@ model Message {
   audioUrl         String?
   conversation     Conversation         @relation(fields: [conversationId], references: [id])
 
-  scoringItems     ScoringItem[]        @relation("MessageToScoringItem")
+  scoringItems     ScoringItem[]        @relation("MessageToScoringItems")
 }
 
 model ReflectionMessage {
@@ -108,7 +123,6 @@ model ScoringItem {
   category   String
   subcategory String
   score      Int
-
-  messages  Message[] @relation("MessageToScoringItem") // ✅ 被哪些訊息觸發了（間接屬於對話）
+  messages   Message[]  @relation("MessageToScoringItems")  // ✅ 被哪些訊息觸發了（間接屬於對話）
 }
 

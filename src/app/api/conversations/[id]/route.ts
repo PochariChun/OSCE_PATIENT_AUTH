@@ -83,7 +83,7 @@ export async function GET(
         },
         messages: {
           orderBy: {
-            timestamp: 'asc',
+            elapsedSeconds: 'asc',
           },
           include: {
             scoringItems: true,

@@ -14,6 +14,10 @@
 {"question": "讓我看一下你的手圈", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "張小威2歲 對嘛？", "answer": "對", "code": "A13,F11", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
 {"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/19004dfead40af89ace04f246dc995b2.mp3"}
+
+{"question": "請問媽媽，小朋友是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+{"question": "請問媽媽，小威是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
+
 {"question": "請問媽媽，弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
 {"question": "弟弟是從何時開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
 {"question": "症狀是什麼時候開始的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}

@@ -106,7 +106,7 @@ function DialogueNewContent() {
   const [lastpatientmsgTime, setLastpatientmsgTime] = useState(0);
   const [lastTag, setLastTag] = useState('');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-  
+  const [delayThreshold, setDelayThreshold] = useState(10);
   const [conversationId, setConversationId] = useState<number | null>(null);
   
   const router = useRouter();
@@ -488,38 +488,39 @@ function DialogueNewContent() {
   
   const sendMessageToServer = async (messageText: string) => {
     try {
-      // 添加用户消息到对话
+
+      // 計算護理師回覆的時間
       let elapsedTimeNurse = elapsedTime;
-      console.log('elapsedTimeNurse= ', elapsedTimeNurse);
+
+      // 添加用户消息到对话
       const userMessage = {
         role: 'nurse' as const,
         content: messageText,
         elapsedSeconds: elapsedTime,
         timestamp: new Date()
       };
-      // const updatedConversation = [...conversation, userMessage];
-      // setConversation(updatedConversation);
+
       // 先添加消息到對話，但時間戳和延遲稍後會更新
       setConversation(prev => [...prev, userMessage]);
 
-      // 計算與上一條消息的延遲
-      const now = new Date();
-      const nowSec = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
-
       // 計算用户回覆的延遲
-      const DelayFromPrev = nowSec - lastpatientmsgTime
-      const delayThreshold = 10 + Math.floor(messageText.length / 3);
+      const DelayFromPrev = elapsedTimeNurse - lastpatientmsgTime
       const IsDelayed = DelayFromPrev > delayThreshold;
-      const Delay = DelayFromPrev - delayThreshold;
 
+      // =======================================================================
       // 获取AI回复
       const { response: aiResponseText, tag, audioUrl, code, answerType } = await getAIResponse(
       messageText, 
       lastTag // 這是 clientPreviousTag 對應的第三個參數
       );
-      
+      // =======================================================================
 
+      // 音頻播放完成後，更新時間戳
+      const replyTime = new Date();
+      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+      // 更新tag
       setLastTag(tag);
+
       // 保存最新的音频URL
       if (audioUrl && answerType === 'dialogue') {
         setLastAudioUrl(audioUrl);
@@ -527,15 +528,25 @@ function DialogueNewContent() {
       
       // 在头像上显示回复文本
       setOverlayText(aiResponseText);
+
+
+      let elapsedTimePatient = replySeconds;
+      setLastpatientmsgTime(replySeconds);
       
+
       // 创建临时消息
       const tempAiMessage = {
         role: 'patient' as const,
         content: aiResponseText,
-        elapsedSeconds: elapsedTime,
+        elapsedSeconds: elapsedTimePatient,
         timestamp: new Date(),
       };
-      setLastpatientmsgTime(elapsedTime);
+      
+      
+
+      
+      
+
       
       // 先添加消息到對話
       setConversation(prev => [...prev, tempAiMessage]);
@@ -554,22 +565,14 @@ function DialogueNewContent() {
         setOverlayText(null);
       }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
       
-      // 音頻播放完成後，更新時間戳
-      const replyTime = new Date();
-      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+
       
-      // // 根據使用者輸入字數調整延遲閾值
-      // const delayThreshold = 3 + Math.floor(messageText.length / 10);
-      // const patientDelayFromPrev = Math.floor((replyTime.getTime() - userMessage.timestamp.getTime()) / 1000);
-      // const patientIsDelayed = patientDelayFromPrev > delayThreshold;
-      console.log('elapsedTimeNurse= ', elapsedTimeNurse);
-      console.log('DelayFromPrev', DelayFromPrev);
-      console.log('IsDelayed', IsDelayed);
+
+      setDelayThreshold(10 + Math.floor(aiResponseText.length / 3));
+
+
       
-      // let scoringItems: string[] = [];
-      // if (code) {
-      //   scoringItems = code.split(',').map((c: string) => c.trim());
-      // }
+ 
       let scoringItems: string[] = [];
       if (code) {
         const codes: string[] = code.split(',').map((c: string) => c.trim());
@@ -581,6 +584,14 @@ function DialogueNewContent() {
           setScoredCodes(prev => new Set([...prev, ...newCodes]));
         }
       }
+      // 計算患者回覆的時間
+      console.log('患者回覆的時間replySeconds', replySeconds);
+      console.log('患者回覆的時間elapsedTimePatient', elapsedTimePatient);
+      console.log('上次患者回覆的時間lastpatientmsgTime', lastpatientmsgTime);
+      console.log('護理師回覆的時間elapsedTimeNurse', elapsedTimeNurse);
+      console.log('護理師回覆的時間-上次患者回覆的時間 DelayFromPrev', DelayFromPrev);
+      console.log('護理師回覆延遲?IsDelayed', IsDelayed);
+      console.log('得分項目scoringItems', scoringItems);
 
       // 保存用户消息到服务器
       if (conversationId) {
@@ -593,7 +604,7 @@ function DialogueNewContent() {
             sender: 'nurse',
             content: messageText,
             elapsedSeconds: elapsedTimeNurse,
-            delayFromPrev: Delay,
+            delayFromPrev: DelayFromPrev,
             isDelayed: IsDelayed,
             tag: lastTag,
             scoringItems: scoringItems,  // <-- 用複數形式傳陣列
@@ -629,7 +640,7 @@ function DialogueNewContent() {
           body: JSON.stringify({
             sender: 'patient',
             content: aiResponseText,
-            elapsedSeconds: replySeconds,
+            elapsedSeconds: elapsedTimePatient,
             timestamp: replyTime.toISOString(),
             delayFromPrev: 0,
             isDelayed: false,
@@ -706,8 +717,11 @@ function DialogueNewContent() {
       const data = await response.json();
       console.log('對話成功結束，返回資料:', data);
       
-      // 重定向到反思頁面
-      router.push(`/dialogue/reflection/${conversationId}`);
+      // 保存最近的对话ID到localStorage，以便在护理记录页面使用
+      localStorage.setItem('recentConversationId', conversationId.toString());
+      
+      // 重定向到护理记录页面，而不是直接到反思页面
+      router.push(`/dialogue/note?id=${conversationId}`);
     } catch (error) {
       console.error('結束對話時發生錯誤:', error);
       alert(`結束對話時發生錯誤: ${(error as Error).message}`);
@@ -1292,7 +1306,7 @@ function DialogueNewContent() {
                       onClick={handleEndDialogue}
                       className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none"
                     >
-                      完成對話
+                      結束評估, 開始紀錄 
                     </button>
                   </div>
                 </div>
