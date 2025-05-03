@@ -1,10 +1,14 @@
+// src/app/dialogue/history/[id]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
+import { allScoringItems } from '@/lib/scoringItems';
 import Link from 'next/link';
 import React from 'react';
+
 
 interface User {
   id: number;
@@ -42,81 +46,92 @@ interface DialogueDetail {
     strategyTag: string | null;
   }[];
   feedback: string | null;
+  scoredItems?: {
+    code: string;
+    category: string;
+    subcategory: string;
+    score: number;
+    awarded: boolean;
+    hitMessages: string[];
+  }[];
 }
 
-export default function DialogueDetailPage({ params }: { params: { id: string } | Promise<{ id: string }> }) {
+export default function DialogueDetailPage() {
+  const params = useParams();
+  const dialogueId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [dialogue, setDialogue] = useState<DialogueDetail | null>(null);
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  
-  // 正确使用 React.use() 解包 params
-  const resolvedParams = params instanceof Promise ? React.use(params) : params;
-  const dialogueId = resolvedParams.id;
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    // 在组件挂载后标记为客户端渲染
-    setIsClient(true);
-    setMounted(true);
-    
-    // 从 localStorage 获取用户信息
-    const fetchUser = async () => {
-      try {
-        const userJson = localStorage.getItem('user');
-        if (!userJson) {
-          console.error('未登入');
-          router.push('/login');
-          return;
-        }
-        
-        const userData = JSON.parse(userJson);
-        setUser(userData);
-        
-        // 获取对话详情
-        await fetchDialogueDetail(dialogueId);
-      } catch (error) {
-        console.error('獲取對話詳情失敗', error);
-        router.push('/login');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [dialogueId, router]);
-
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+      router.push('/login');
+      return;
+    }
+  
+    const userData = JSON.parse(userJson);
+    setUser(userData);
+  
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+    if (id) {
+      fetchDialogueDetail(id);
+    }
+  
+    // 無論如何最後都停止 loading
+    setLoading(false);
+  }, [params.id, router]);
+  
+  
   // 從 API 獲取對話詳情數據
   const fetchDialogueDetail = async (id: string) => {
     try {
-      // 從本地存儲獲取用戶 ID
       const userJson = localStorage.getItem('user');
       const userData = userJson ? JSON.parse(userJson) : null;
       const userId = userData?.id;
-
-      // 添加憑據選項，確保發送 cookies
+  
       const response = await fetch(`/api/conversations/${id}?userId=${userId}`, {
-        credentials: 'include'  // 確保發送 cookies
+        credentials: 'include',
       });
-      
+  
       if (!response.ok) {
         console.warn(`獲取對話詳情失敗: ${response.status} ${response.statusText}`);
         return;
       }
-      
+  
       const data = await response.json();
-      setDialogue(data);
-      console.log('data= ', data);
+      console.log('成功取得對話詳情 data= ', data);
+  
+      const awardedMap: Record<string, { hitMessages: string[] }> = {};
+      for (const msg of data.messages) {
+        if (!msg.scoringItems) continue;
+        for (const item of msg.scoringItems) {
+          if (!awardedMap[item.code]) {
+            awardedMap[item.code] = { hitMessages: [msg.content] };
+          } else if (!awardedMap[item.code].hitMessages.includes(msg.content)) {
+            awardedMap[item.code].hitMessages.push(msg.content);
+          }
+        }
+      }
+  
+      const scoredItems = allScoringItems.map((item) => {
+        const hit = awardedMap[item.code];
+        return {
+          ...item,
+          awarded: !!hit,
+          hitMessages: hit ? hit.hitMessages : [],
+        };
+      });
+  
+      setDialogue({ ...data, scoredItems });
     } catch (error) {
       console.error('獲取對話詳情失敗', error);
     }
   };
-
-  // 避免服务器端和客户端渲染不匹配
-  if (!mounted || !isClient) {
-    return null;
-  }
+  
 
   if (loading) {
     return (
@@ -166,6 +181,15 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
       </div>
     );
   }
+  // 在 return 之前先處理好 groupedScoredItems
+  const groupedScoredItems: Record<string, DialogueDetail['scoredItems']> =
+  dialogue?.scoredItems?.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = []; // 初始化為空陣列
+    }
+    acc[item.category]!.push(item); // 現在 TypeScript 不會抱怨了
+    return acc;
+  }, {} as Record<string, DialogueDetail['scoredItems']>) ?? {};
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -382,6 +406,109 @@ export default function DialogueDetailPage({ params }: { params: { id: string } 
               </div>
             </div>
           </div>
+          {/* 評分細項 */}
+          {Object.entries(groupedScoredItems).length > 0 ? (
+
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評分細項</h2>
+              {/* ✅ 控制全部類別的顯示切換按鈕 */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => setIsCollapsed((prev) => !prev)}
+                  className="text-sm text-blue-600 dark:text-blue-400 font-semibold"
+                >
+                  {isCollapsed ? '（僅顯示得分）' : '（全部顯示）'}
+                </button>
+              </div>
+
+              {Object.entries(groupedScoredItems).map(([category, items], idx) => {
+                const displayItems = (isCollapsed ? items?.filter(item => item.awarded) : items) ?? [];
+
+
+                  
+                const totalScore = items!.reduce((sum, i) => sum + i.score, 0);
+                const earnedScore = items!.reduce((sum, i) => sum + (i.awarded ? i.score : 0), 0);
+                const percentage = Math.round((earnedScore / totalScore) * 100);
+
+                return (
+                  <div key={category} className="mb-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <button
+                        onClick={() =>
+                          setCollapsedCategories((prev) => ({
+                            ...prev,
+                            [category]: !prev[category],
+                          }))
+                        }
+                        className="font-semibold text-left text-lg text-blue-600 dark:text-blue-400"
+                      >
+                        {category}
+
+
+                      </button>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        得分：{earnedScore} / {totalScore}（{percentage}%）
+                      </div>
+                    </div>
+
+                    <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
+
+                   {/* 表頭 */}
+                    <div className="grid grid-cols-[200px_100px_100px_auto] bg-gray-100 dark:bg-gray-700 text-xs uppercase text-gray-700 dark:text-gray-200 px-4 py-2 font-semibold">
+                      <div>項目</div>
+                      <div className="text-center">項目分數</div>
+                      <div className="text-center">是否得分</div>
+                      <div>得分句子</div>
+                    </div>
+
+                    {/* 資料列 */}
+                    {displayItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className={`grid grid-cols-[200px_100px_100px_auto] border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-sm ${
+                          !item.awarded ? 'text-gray-500 dark:text-gray-500 px-4 py-2' : 'text-white-100 dark:text-gray-200 px-4 py-2 font-semibold'
+                        }`}
+                      >
+                        <div>{item.subcategory}</div>
+
+                        <div className="text-center">
+                          {item.score}
+                        </div>
+
+                        <div className="text-center text-white-400 dark:text-gray-200 px-4 py-2">
+                          {item.awarded ? (
+                            <span className="text-green-600 dark:text-green-400 font-semibold">✔ 有</span>
+                          ) : (
+                            <span className="text-red-500 dark:text-red-400 font-semibold">✘ 沒有</span>
+                          )}
+                        </div>
+
+                        <div>
+                          {item.awarded ? item.hitMessages.join('\n') : '—'}
+                        </div>
+                      </div>
+                    ))}
+
+
+
+                      <div className="mt-2 px-4 pb-2">
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded h-2 mt-1">
+                          <div
+                            className="bg-green-500 h-2 rounded"
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{percentage}% 完成</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>            
+          ): (
+            <div className="text-center text-gray-500 dark:text-gray-400">尚無評分項目</div>
+          )}
+
           
           {/* 添加反思内容部分 */}
           {(dialogue.reflection || (dialogue.reflections && dialogue.reflections.length > 0)) && (

@@ -1,3 +1,4 @@
+// src/app/dialogue/note/page.tsx
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
@@ -115,15 +116,12 @@ export default function NursingNotePage() {
     }
   };
   
-  const handleSaveNote = async () => {
-    if (!conversationId) {
-      setError('無效的對話 ID');
-      return;
-    }
-    
+  const handleSaveNote = async (): Promise<number | null> => {
+    if (!conversationId || !noteText.trim()) return null;
+
     if (!noteText.trim()) {
       setError('請輸入護理紀錄內容');
-      return;
+      return null;
     }
     
     try {
@@ -133,12 +131,8 @@ export default function NursingNotePage() {
       
       const response = await fetch(`/api/conversations/${conversationId}/nursing-note`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          rawText: noteText,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawText: noteText }),
       });
       
       if (!response.ok) {
@@ -148,9 +142,13 @@ export default function NursingNotePage() {
       const data = await response.json();
       setMatchedCodes(data.matchedCodes || []);
       setSuccess('護理紀錄已保存');
+
+      return data.totalScore ?? null;
+
     } catch (error) {
       console.error('保存護理紀錄失敗', error);
       setError('保存護理紀錄失敗');
+      return null;
     } finally {
       setSaving(false);
     }
@@ -161,13 +159,35 @@ export default function NursingNotePage() {
       setError('無效的對話 ID');
       return;
     }
-    
-    // 先保存当前笔记
+    let noteScore = 0;
+
+    // 先保存當前筆記
     if (noteText.trim()) {
-      await handleSaveNote();
+      const score = await handleSaveNote();
+      if (score !== null) {
+        noteScore = score;
+      }
     }
-    
-    // 导航到反思页面
+
+    // 呼叫 /end API，把 score 一併更新
+    try {
+      const endRes = await fetch(`/api/conversations/${conversationId}/end`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ extraScore: noteScore }),  // ← 新增的欄位
+      });
+
+      if (!endRes.ok) {
+        throw new Error('更新對話結束資訊失敗');
+      }
+
+    } catch (err) {
+      console.error('結束對話時出錯', err);
+    }
+
+
+
+    // 最後導向反思頁面
     router.push(`/dialogue/reflection/${conversationId}`);
   };
   
@@ -262,29 +282,6 @@ export default function NursingNotePage() {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              護理紀錄指引
-            </h2>
-            <div className="text-gray-700 dark:text-gray-300 space-y-3">
-              <p>
-                請在護理紀錄中包含以下關鍵資訊（如適用）：
-              </p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>病人主訴</li>
-                <li>症狀開始時間</li>
-                <li>症狀嚴重程度</li>
-                <li>生命徵象（體溫、脈搏、呼吸、血壓等）</li>
-                <li>疼痛評估（位置、性質、嚴重程度）</li>
-                <li>已採取的護理措施</li>
-                <li>病人對護理措施的反應</li>
-                <li>其他重要觀察</li>
-              </ul>
-              <p className="mt-4 text-sm italic">
-                系統將自動識別您記錄中的關鍵項目，並顯示在上方的「已識別的關鍵項目」區域。
-              </p>
-            </div>
-          </div>
         </div>
       </main>
       

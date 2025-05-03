@@ -1,93 +1,72 @@
+// src/app/api/conversations/[id]/end/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// 添加动态配置
 export const dynamic = 'force-dynamic';
 
-// 結束對話
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
-    const conversationId = parseInt(id);
-    
+    const conversationId = parseInt(params.id);
+
     if (isNaN(conversationId)) {
-      return NextResponse.json(
-        { error: '無效的對話 ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '無效的對話 ID' }, { status: 400 });
     }
-    
+
     const data = await request.json();
-    
-    // 檢查對話是否存在
+    const extraScore = data.extraScore ?? 0;
+
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
     });
-    
+
     if (!conversation) {
-      return NextResponse.json(
-        { error: '找不到指定的對話' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '找不到指定的對話' }, { status: 404 });
     }
-    
-    // 檢查用戶權限
+
     if (data.userId && conversation.userId !== parseInt(data.userId)) {
-      return NextResponse.json(
-        { error: '您無權結束此對話' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: '您無權結束此對話' }, { status: 403 });
     }
-    
-    // 計算對話時長
+
     const startedAt = conversation.startedAt;
     const endedAt = new Date();
     const durationSec = Math.floor((endedAt.getTime() - startedAt.getTime()) / 1000);
-    
-    // 檢查是否超時
     const overtime = data.overtime || false;
-    
-    // 取得所有訊息中的 scoringItems
+
+    // 計算對話中的原始得分
     const messages = await prisma.message.findMany({
       where: { conversationId },
-      select: { scoringItems: true },
+      select: {
+        scoringItems: {
+          select: { code: true },
+        },
+      },
     });
 
-    // 去重後收集所有 scoringItem code
-    // const uniqueCodes = new Set<string>();
-    // for (const msg of messages) {
-    //   for (const code of msg.scoringItems) {
-    //     uniqueCodes.add(code);
-    //   }
-    // }
-
-    // 正確：從 scoringItems 中取出 code 字串
-    const allCodes: string[] = messages.flatMap((msg: { scoringItems: string[] }) => msg.scoringItems);
-
-    // 去除重複 code
+    const allCodes = messages.flatMap((msg) =>
+      msg.scoringItems.map((item) => item.code)
+    );
     const uniqueCodes = Array.from(new Set(allCodes));
 
-    // 從資料庫查詢這些 code 的分數
     const scoringRecords = await prisma.scoringItem.findMany({
       where: {
-        code: { in: Array.from(uniqueCodes) }
+        code: { in: uniqueCodes },
       },
       select: {
         code: true,
-        score: true
-      }
+        score: true,
+      },
     });
 
-    // 計算總分
-    const totalScore = scoringRecords.reduce(
-      (sum: number, record: { code: string; score: number }) => sum + record.score,
+    const dialogueScore = scoringRecords.reduce(
+      (sum, item) => sum + item.score,
       0
     );
-    
-    // 更新對話
+
+    const totalScore = dialogueScore + extraScore;
+
     const updatedConversation = await prisma.conversation.update({
       where: { id: conversationId },
       data: {
@@ -97,7 +76,7 @@ export async function POST(
         score: totalScore,
       },
     });
-    
+
     return NextResponse.json({
       success: true,
       conversation: {
@@ -107,7 +86,7 @@ export async function POST(
         durationSec: updatedConversation.durationSec,
         overtime: updatedConversation.overtime,
         score: updatedConversation.score,
-      }
+      },
     });
   } catch (error) {
     console.error('結束對話失敗:', error);
@@ -116,4 +95,4 @@ export async function POST(
       { status: 500 }
     );
   }
-} 
+}

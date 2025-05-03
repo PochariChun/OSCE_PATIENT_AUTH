@@ -1,4 +1,4 @@
-// src/app/dialogue/new/old_page.tsx
+// src/app/dialogue/new/page.tsx
 'use client';
 
 import { useEffect, useState, useRef, Suspense } from 'react';

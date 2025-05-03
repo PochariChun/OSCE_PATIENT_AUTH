@@ -14,6 +14,8 @@
 {"question": "讓我看一下你的手圈", "answer": "好", "code": "A13,F12", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "張小威2歲 對嘛？", "answer": "對", "code": "A13,F11", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
 {"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/19004dfead40af89ace04f246dc995b2.mp3"}
+{"question": "請問媽媽，弟弟還好嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10", "tag": "B", "audioUrl": "/audio/19004dfead40af89ace04f246dc995b2.mp3"}
+{"question": "弟弟還好嗎？", "answer": "昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10", "tag": "B", "audioUrl": "/audio/19004dfead40af89ace04f246dc995b2.mp3"}
 
 {"question": "請問媽媽，小朋友是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
 {"question": "請問媽媽，小威是從什麼時候開始不舒服的？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
@@ -27,10 +29,17 @@
 {"question": "這些症狀持續多久了？", "answer": "從昨天晚上開始到現在", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/3d0092f33b1e96e4e087ccb2122d1d05.mp3"}
 {"question": "弟弟是從昨天開始不舒服的嗎？", "answer": "是的，昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/085b8b79f058f0e529453d5d35ec1dc1.mp3"}
 {"question": "腹瀉是什麼時候開始的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+
+{"question": "請問媽媽，弟弟還好嗎？", "answer": "昨天晚上開始腹瀉發燒", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/9a39962588e847589e7291521bfd6c81.mp3"}
 {"question": "媽媽，弟弟的腹瀉情況可以詳細說明一下嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
 {"question": "可以描述一下弟弟的大便情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
 {"question": "弟弟的腹瀉情況如何？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
 {"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20,F11", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "小威有大便嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "弟弟有大便嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+{"question": "弟弟有便便嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "B20", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
+
+
 {"question": "發燒是從什麼時候開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
 {"question": "昨天晚上幾點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61,F11", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
 {"question": "弟弟是什麼時候開始覺得肚子不舒服的？", "answer": "昨天晚上開始", "code": "B10,F11", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
@@ -42,11 +51,14 @@
 {"question": "一天大概拉幾次肚子？", "answer": "昨晚兩次，今天早上三次", "code": "B21", "scoringSubItem": "Frequency", "tag": "B", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
 {"question": "媽媽，您能完整描述一下弟弟大便的情況嗎？包括次數、性狀、顏色和有無血絲", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，最後兩次有一點血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/e73bb69085c0ca0671eefe54e003d5b2.mp3"}
 {"question": "請問媽媽，弟弟的大便從開始到現在有什麼變化？", "answer": "一開始是糊狀，後來變成水狀，顏色一直是黃色，但最近兩次出現血絲", "code": "B21", "scoringSubItem": "Comprehensive", "tag": "B", "audioUrl": "/audio/7403d4e3ad8e4894670584d7bc46b191.mp3"}
+
 {"question": "大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "便便是什麼樣子的？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "大便是水狀還是糊狀？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "大便的性質如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "大便的質地如何？", "answer": "開始三次是糊便，後來二次是水便", "code": "B22", "scoringSubItem": "Consistency", "tag": "B", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+
+
 {"question": "大便是什麼顏色的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
 {"question": "便便的顏色如何？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
 {"question": "腹瀉的顏色是怎樣的？", "answer": "黃色，有一點血絲", "code": "B22", "scoringSubItem": "Color", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
@@ -62,6 +74,14 @@
 {"question": "腹瀉時排出的量大概有多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
 {"question": "媽媽，您觀察到弟弟每次大便的量大概是多少？", "answer": "前三次量中等，後兩次量較多", "code": "B23", "scoringSubItem": "Amount", "tag": "B", "audioUrl": "/audio/9de1f58f4e85ee852604c3a2d902a756.mp3"}
 {"question": "大便中有沒有血絲？", "answer": "黃色，有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/7ff70169a64876d5b47efb5f532a9e57.mp3"}
+
+{"question": "弟弟的大便中有沒有血絲？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "小威的大便中有沒有血絲？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "小威的便便中有沒有血絲？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "弟弟的便便中有沒有血絲？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+{"question": "便便中有沒有血絲？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
+
+
 {"question": "有沒有在便便中看到血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
 {"question": "大便有沒有帶血？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
 {"question": "有沒有發現便便中有紅色的東西？", "answer": "有一點血絲", "code": "B24", "scoringSubItem": "Blood", "tag": "B", "audioUrl": "/audio/5823f1978d151bfe095cb01c161e6b50.mp3"}
@@ -134,14 +154,21 @@
 {"question": "空腹時弟弟的症狀會比較輕嗎？", "answer": "沒有再吐", "code": "B50", "tag": "B", "audioUrl": "/audio/8e7f09f7011978308e2c6e9d4c640332.mp3"}
 {"question": "弟弟是什麼時候開始發燒的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
 {"question": "發燒是從何時開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+
 {"question": "弟弟發燒持續多久了？", "answer": "從昨天晚上8點到現在", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/a882806597a0c2bd83d0873c90f0d5c5.mp3"}
 {"question": "發燒大概是什麼時間點開始的？", "answer": "昨天晚上8點開始燒", "code": "B61", "scoringSubItem": "Onset Time", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
-{"question": "發燒最高到幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
-{"question": "體溫最高測到多少？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
-{"question": "弟弟發燒的溫度有多高？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
-{"question": "量體溫時最高是幾度？", "answer": "最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
-{"question": "發燒後怎麼處理的？", "answer": "塞屁股的藥後降到38.5度", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/7658bb10021300ebb78b2504ded5540e.mp3"}
-{"question": "有沒有採取什麼方法來退燒？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+
+{"question": "最高到幾度？", "answer": "開始37.5度，最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+
+{"question": "發燒最高到幾度？", "answer": "開始37.5度，到半夜2點最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "體溫最高測到多少？", "answer": "開始37.5度，到半夜2點最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "弟弟發燒的溫度有多高？", "answer": "開始37.5度，最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "量體溫時最高是幾度？", "answer": "開始37.5度，最高39.5度", "code": "B62", "scoringSubItem": "Maximum Temperature", "tag": "B", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "發燒後怎麼處理的？", "answer": "有塞屁股的藥, 降到38.5度", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/7658bb10021300ebb78b2504ded5540e.mp3"}
+{"question": "有沒有採取什麼方法來退燒？", "answer": "有塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+{"question": "那塞完有效果嘛？", "answer": "有, 降到38.5度", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+{"question": "那就好", "answer": "謝謝護理師", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
+
 {"question": "弟弟發燒時，您採取了什麼措施？", "answer": "塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/b73bea356819fed11d758cf2d86f5448.mp3"}
 {"question": "有給弟弟吃退燒藥嗎？", "answer": "有，塞屁股的藥", "code": "B63", "scoringSubItem": "Treatment Method", "tag": "B", "audioUrl": "/audio/92722b9badc6dfc50b3789eb62c7a177.mp3"}
 {"question": "退燒藥吃了之後體溫有降低嗎？", "answer": "降到38.5度", "code": "B64", "scoringSubItem": "Post-treatment Condition", "tag": "B", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
@@ -176,10 +203,20 @@
 {"question": "我需要檢查一下你的身體狀況", "answer": "病童安靜配合", "code": "C11", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "我要看看你哪裡不舒服", "answer": "病童指著肚子", "code": "B00", "answerType": "narration", "tag": "C", "audioUrl": "/audio/7ec7fb08c8fc01bab88048d9a5df2fff.mp3"}
 {"question": "我幫你量體溫、脈博、呼吸、血壓哦", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+
 {"question": "我要幫你量一下心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "我現在要聽一下你的心跳聲音", "answer": "病童點頭", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
 {"question": "我要用聽診器聽一下你的心跳", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "媽媽我現在要聽一下弟弟的心跳", "answer": "好", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "媽媽我現在要聽一下小葳的心跳", "answer": "好", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "媽媽我幫聽一下弟弟的心跳", "answer": "好", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+
+
+
 {"question": "脈博測心尖脈", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "測心尖脈", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "量測心尖脈", "answer": "病童安靜配合", "code": "C12", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+
 {"question": "我為小威進行腹部視、聽、扣、觸評估", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "讓我看看聽聽你的肚肚好嗎?", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "我要檢查一下你的肚子", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
@@ -187,31 +224,49 @@
 {"question": "現在我要聽一下你肚子的聲音", "answer": "病童安靜配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Auscultation", "tag": "C", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "我要輕輕敲一下你的肚子", "answer": "病童表情緊張但配合", "code": "C13", "answerType": "narration", "scoringSubItem": "Percussion", "tag": "C", "audioUrl": "/audio/37a9748ede131821b994023b44a39fad.mp3"}
 {"question": "我要摸一下你的肚子，如果痛要告訴我", "answer": "病童點頭", "code": "C13", "answerType": "narration", "scoringSubItem": "Palpation", "tag": "C", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
+
+
 {"question": "肚子痛痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
+{"question": "弟弟肚子痛痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
+{"question": "弟弟肚子還痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
+{"question": "媽媽,弟弟的肚子還痛嘛？", "answer": "病童點點頭", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+
+
 {"question": "小威，你看這些臉，哪一個最像你現在肚子痛的感覺？", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "你的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "code": "C14", "answerType": "narration", "tag": "C", "audioUrl": "/audio/e7b3932316f295da71a3c427a81a5e7c.mp3"}
 {"question": "使用FLACC行為量表", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
 {"question": "小威2歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "C", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
+
 {"question": "觀察小威的臉部表情", "answer": "病童臉部緊繃，偶爾顫抖", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Face", "tag": "C", "audioUrl": "/audio/1efa3fab97848753e7ad107773bd0de7.mp3"}
 {"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Legs", "tag": "C", "audioUrl": "/audio/05b06c27be80ef7e4bb86a0a120d2e2f.mp3"}
 {"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Activity", "tag": "C", "audioUrl": "/audio/e144d065e6ddcd59bf0216f806041769.mp3"}
 {"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Cry", "tag": "C", "audioUrl": "/audio/82008307f6a3b2f9c9b36b85b300f556.mp3"}
+
 {"question": "根據FLACC量表評估小威的疼痛程度", "answer": "總分7分，表示中度疼痛", "code": "C14", "answerType": "narration", "scoringSubItem": "FLACC Scale Total", "tag": "C", "audioUrl": "/audio/0997cfa14d61b21281da583d28a538bc.mp3"}
 {"question": "媽媽，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "D11", "scoringSubItem": "Record Color", "tag": "D", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
 {"question": "每次大便後，請記下大便的顏色變化", "answer": "我會記錄的", "code": "D11", "scoringSubItem": "Record Color", "tag": "D", "audioUrl": "/audio/edb059bdf0c7a89b7efdee6de090ace4.mp3"}
 {"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好的，我會觀察", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D", "audioUrl": "/audio/8a8927801ceecd3736d06bd5da50b659.mp3"}
 {"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "我會注意這些細節", "code": "D12", "scoringSubItem": "Record Consistency", "tag": "D", "audioUrl": "/audio/4fa74a1ba8b1b6024d25dd125b85b53f.mp3"}
 {"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "了解，那要禁食多久？", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D", "audioUrl": "/audio/da5fec328054fdcd498894aab71675f8.mp3"}
-{"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我會遵醫囑", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D", "audioUrl": "/audio/dc4cdc3d06a16a9a2bcded3801bd21f0.mp3"}
+{"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我知道了", "code": "D13", "scoringSubItem": "Fasting If Necessary", "tag": "D", "audioUrl": "/audio/dc4cdc3d06a16a9a2bcded3801bd21f0.mp3"}
 {"question": "每次大便後，請用溫水清洗臀部並擦乾", "answer": "好的，我會這樣做", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D", "audioUrl": "/audio/0d1060cbb4a4b1866dcb37eaadfe3a69.mp3"}
-{"question": "頻繁腹瀉可能造成臀部皮膚紅腫，可塗抹護膚霜保護", "answer": "了解，我會注意保護皮膚", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D", "audioUrl": "/audio/aea91990e39ff6c25f8dba7ba62d666b.mp3"}
+{"question": "頻繁腹瀉可能造成臀部皮膚紅腫，可塗抹護膚霜保護", "answer": "了解，我會注意", "code": "D14", "scoringSubItem": "Skin Care", "tag": "D", "audioUrl": "/audio/aea91990e39ff6c25f8dba7ba62d666b.mp3"}
 {"question": "弟弟可以進食時，建議從香蕉、蘋果泥、白飯和吐司開始", "answer": "好的，這些食物比較容易消化是嗎？", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/4e4aa207860a4842777e499507177674.mp3"}
+{"question": "對", "answer": "好的, 我知道了", "code": "000", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/4e4aa207860a4842777e499507177674.mp3"}
+
+
+{"question": "恢復食慾的時後，再讓弟弟吃：香蕉、蘋果泥、白飯和吐司", "answer": "好的,香蕉、蘋果泥、白飯和吐司對嘛", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
 {"question": "恢復進食時，請遵循BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
+{"question": "恢復進食時，請遵循BART原則：", "answer": "什麼是BART原則", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
+{"question": "香蕉、蘋果泥、白飯和吐司", "answer": "好的", "code": "D15", "scoringSubItem": "BART Diet", "tag": "D", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
+
 {"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "D11,D12,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
 {"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "我明白了，這些都很重要", "code": "D11,D12,D13,D14,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet", "tag": "D", "audioUrl": "/audio/421a4776d2b7ca10d41ce1309b51afe3.mp3"}
 {"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好的，我會按照這些建議做", "code": "D11,D13,D15", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet", "tag": "D", "audioUrl": "/audio/fb6865ada0c26b2624ab5b61c91be948.mp3"}
 {"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "code": "D11,D13,D14", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "D", "audioUrl": "/audio/572011c897e7ae6ccd34a5e97f994015.mp3"}
+
+
 {"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "code": "A00,F13", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/db844808341a6644c4751a8221dac0b2.mp3"}
 {"question": "您好，我是護理師", "answer": "您好，謝謝您來照顧小威", "code": "F13", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/c94f2823ca5604cf975d18dfad2201f7.mp3"}
 {"question": "小威媽媽您好", "answer": "您好，請問有什麼事嗎？", "code": "F13", "answerType": "dialogue", "tag": "F", "audioUrl": "/audio/1df8bbacf09f64ad04daa7721b5766a7.mp3"}
@@ -237,3 +292,11 @@
 {"question": "弟弟看起來很不舒服，我能做什麼幫助他？", "answer": "謝謝您的關心，希望能快點退燒", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/38eb87ebbb78626d75a7cebf9b8c10b3.mp3"}
 {"question": "小威今天的情緒怎麼樣？", "answer": "還是很不舒服，但沒有剛來時那麼嚴重了", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/cd42e19c2e99ecc6f806b91dd6bb7229.mp3"}
 {"question": "弟弟今天有沒有比較舒服一點？", "answer": "還是很不舒服，但至少不像昨天那麼嚴重", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+{"question": "我幫你找醫生來", "answer": "好", "code": "F12", "answerType": "dialogue", "isNotScoring": true, "tag": "F", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+
+
+{"question": "我要下班了", "answer": "媽媽表情不悅", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+{"question": "我很累", "answer": "媽媽表情不悅", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+{"question": "我幫你打針", "answer": "這個沒必要打針吧", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+{"question": "我幫你抽血", "answer": "這個沒必要抽血吧", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
+{"question": "我要聯絡警察", "answer": "媽媽表情不悅", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}

@@ -1,3 +1,4 @@
+// src/app/api/conversations/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';  // ✅ 專門用來補型別
@@ -31,29 +32,6 @@ export async function GET(
     console.log(`獲取對話詳情: ID=${conversationId}, 用户ID=${userId}`);
     
     // 查詢對話資訊，包括關聯的場景
-    // const conversation = await prisma.conversation.findUnique({
-    //   where: {
-    //     id: conversationId,
-    //   },
-    //   include: {
-    //     scenario: {
-    //       select: {
-    //         title: true,
-    //         description: true,
-    //       },
-    //     },
-    //     messages: {
-    //       orderBy: {
-    //         timestamp: 'asc',
-    //       },
-    //     },
-    //     reflections: {
-    //       orderBy: {
-    //         timestamp: 'asc',
-    //       },
-    //     },
-    //   },
-    // });
     // ✅ 正確的型別指定
     const conversation: Prisma.ConversationGetPayload<{
       include: {
@@ -148,6 +126,18 @@ export async function GET(
     }));
 
     // 构建响应数据
+    // 整理所有得分項目
+    const scoredItems = conversation.messages
+    .flatMap(msg =>
+      msg.scoringItems.map(item => ({
+        category: item.category,
+        subcategory: item.subcategory,
+        code: item.code,
+        score: item.score,
+        awarded: true,
+        hitMessage: msg.text || null,
+      }))
+    );
     const responseData = {
       id: conversation.id,
       title: conversation.scenario?.title || '未命名对话',
@@ -161,6 +151,7 @@ export async function GET(
       messages: formattedMessages,
       feedback: conversation.reflection,
       reflections: formattedReflections,
+      scoredItems: scoredItems,
     };
 
     return NextResponse.json(responseData);

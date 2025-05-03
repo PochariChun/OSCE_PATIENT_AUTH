@@ -91,8 +91,18 @@ export async function POST(
       );
     }
 
+    // 辨識 matchedCodes
     const matchedCodes = await extractKeyTerms(rawText);
 
+    // 查詢每個 code 的對應分數
+    const scoringItems = await prisma.scoringItem.findMany({
+      where: { code: { in: matchedCodes } },
+      select: { code: true, score: true },
+    });
+
+    const totalScore = scoringItems.reduce((sum, item) => sum + item.score, 0);
+
+    // 建立或更新護理紀錄
     const existingNote = await prisma.nursingCaseNote.findUnique({
       where: { conversationId },
     });
@@ -106,11 +116,17 @@ export async function POST(
           data: { conversationId, rawText, matchedCodes },
         });
 
-    return NextResponse.json(nursingNote);
+    // 回傳 matchedCodes 與總得分
+    return NextResponse.json({
+      matchedCodes,
+      totalScore,
+      noteId: nursingNote.id,
+    });
+
   } catch (error) {
     console.error('保存護理紀錄失敗:', error);
     return NextResponse.json(
-      { error: '保存護理紀錄失敗' },
+      { error: '保存護理紀錄失敗', details: (error as Error).message },
       { status: 500 }
     );
   }
