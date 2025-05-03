@@ -1,3 +1,5 @@
+
+// src/components/dialogue/MessageInput.tsx
 'use client';
 
 interface MessageInputProps {

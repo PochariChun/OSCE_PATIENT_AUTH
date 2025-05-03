@@ -1,3 +1,4 @@
+// src/app/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -118,44 +119,61 @@ export default function HomePage() {
     }
   };
 
-  // 從 API 獲取推薦場景資料
-  const fetchRecommendedScenarios = async (userId: number) => {
+  // // 從 API 獲取推薦場景資料
+  // const fetchRecommendedScenarios = async (userId: number) => {
+  //   try {
+  //     // 嘗試從 API 獲取資料
+  //     const response = await fetch(`/api/scenarios/recommended?userId=${userId}`);
+      
+  //     if (!response.ok) {
+  //       console.warn(`獲取推薦場景失敗: ${response.status} ${response.statusText}`);
+        
+  //       // 如果 API 尚未實現，使用模擬數據進行測試
+  //       const mockData: RecommendedScenario[] = [
+  //         {
+  //           id: 1,
+  //           title: "糖尿病患者護理對話",
+  //           description: "練習與糖尿病患者的溝通技巧，包括飲食指導和胰島素使用說明。",
+  //           scenarioCode: "diabetes_care"
+  //         },
+  //         {
+  //           id: 2,
+  //           title: "術後疼痛評估",
+  //           description: "學習如何評估和管理患者的術後疼痛，提供適當的護理和支持。",
+  //           scenarioCode: "postop_pain"
+  //         }
+  //       ];
+        
+  //       setRecommendedScenarios(mockData);
+  //       return;
+  //     }
+      
+  //     const data = await response.json();
+  //     setRecommendedScenarios(data);
+  //   } catch (error) {
+  //     console.error('獲取推薦場景失敗', error);
+  //     // 如果獲取失敗，設置為空陣列
+  //     setRecommendedScenarios([]);
+  //   }
+  // };
+  const fetchRecommendedScenarios = async () => {
     try {
-      // 嘗試從 API 獲取資料
-      const response = await fetch(`/api/scenarios/recommended?userId=${userId}`);
+      const response = await fetch(`/api/scenarios`);
       
       if (!response.ok) {
         console.warn(`獲取推薦場景失敗: ${response.status} ${response.statusText}`);
-        
-        // 如果 API 尚未實現，使用模擬數據進行測試
-        const mockData: RecommendedScenario[] = [
-          {
-            id: 1,
-            title: "糖尿病患者護理對話",
-            description: "練習與糖尿病患者的溝通技巧，包括飲食指導和胰島素使用說明。",
-            scenarioCode: "diabetes_care"
-          },
-          {
-            id: 2,
-            title: "術後疼痛評估",
-            description: "學習如何評估和管理患者的術後疼痛，提供適當的護理和支持。",
-            scenarioCode: "postop_pain"
-          }
-        ];
-        
-        setRecommendedScenarios(mockData);
+        setRecommendedScenarios([]);
         return;
       }
       
-      const data = await response.json();
+      const { data } = await response.json();  // ✅ 解構取得 data 屬性
       setRecommendedScenarios(data);
     } catch (error) {
       console.error('獲取推薦場景失敗', error);
-      // 如果獲取失敗，設置為空陣列
       setRecommendedScenarios([]);
     }
   };
-
+  
   const handleStartNewDialogue = () => {
     router.push('/dialogue/new');
   };
@@ -405,7 +423,7 @@ export default function HomePage() {
                 推薦場景
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {recommendedScenarios.length > 0 ? (
+              {Array.isArray(recommendedScenarios) && recommendedScenarios.length > 0 ? (
                   recommendedScenarios.map((scenario) => (
                     <div key={scenario.id} className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg hover:shadow-md transition-shadow">
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{scenario.title}</h3>

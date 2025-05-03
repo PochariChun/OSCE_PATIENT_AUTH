@@ -1,6 +1,5 @@
+// src/components/dialogue/ScenarioSelector.tsx
 'use client';
-
-import { useState } from 'react';
 
 interface ScenarioInfo {
   id: string | number;
@@ -13,23 +12,23 @@ interface ScenarioInfo {
 
 interface ScenarioSelectorProps {
   scenarios: ScenarioInfo[];
-  onSelectScenario: (scenarioCode: string) => void;
+  onSelect: (scenario: ScenarioInfo) => void;
 }
 
-export function ScenarioSelector({ scenarios, onSelectScenario }: ScenarioSelectorProps) {
+export function ScenarioSelector({ scenarios, onSelect }: ScenarioSelectorProps) {
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         選擇對話場景
       </h1>
       
-      {scenarios.length > 0 ? (
+      {(scenarios?.length ?? 0) > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {scenarios.map((scenario) => (
             <div 
               key={scenario.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => onSelectScenario(scenario.scenarioCode)}
+              onClick={() => onSelect(scenario)}
             >
               <div className="flex justify-between items-start mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">

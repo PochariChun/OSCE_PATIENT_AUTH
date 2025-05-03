@@ -1,7 +1,8 @@
+// src/components/dialogue/MicrophoneCheck.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 interface MicrophoneCheckProps {
   onComplete: (success: boolean) => void;

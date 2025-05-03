@@ -1,17 +1,15 @@
+// src/app/api/scenarios/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';  // 使用共享的 Prisma 實例
+import { prisma } from '@/lib/prisma';
 
-export async function GET(request: Request) {
+export async function GET(_req: NextRequest) {
   try {
-    // 獲取所有場景
     const scenarios = await prisma.scenario.findMany({
-      orderBy: {
-        id: 'asc',
-      },
+      where: { isActive: true },
+      orderBy: { id: 'asc' },
     });
-    
-    // 格式化返回數據
-    const formattedScenarios = scenarios.map(scenario => ({
+
+    const formattedScenarios = scenarios.map((scenario: typeof scenarios[number]) => ({
       id: scenario.id,
       title: scenario.title,
       description: scenario.description,
@@ -19,12 +17,9 @@ export async function GET(request: Request) {
       difficulty: scenario.difficulty || 'medium',
     }));
     
-    return NextResponse.json(formattedScenarios);
+    return NextResponse.json({ data: formattedScenarios }, { status: 200 });
   } catch (error) {
     console.error('獲取場景列表錯誤:', error);
-    return NextResponse.json(
-      { error: '獲取場景列表失敗' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '獲取場景列表失敗' }, { status: 500 });
   }
-} 
+}

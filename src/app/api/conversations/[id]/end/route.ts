@@ -57,12 +57,18 @@ export async function POST(
     });
 
     // 去重後收集所有 scoringItem code
-    const uniqueCodes = new Set<string>();
-    for (const msg of messages) {
-      for (const code of msg.scoringItems) {
-        uniqueCodes.add(code);
-      }
-    }
+    // const uniqueCodes = new Set<string>();
+    // for (const msg of messages) {
+    //   for (const code of msg.scoringItems) {
+    //     uniqueCodes.add(code);
+    //   }
+    // }
+
+    // 正確：從 scoringItems 中取出 code 字串
+    const allCodes: string[] = messages.flatMap((msg: { scoringItems: string[] }) => msg.scoringItems);
+
+    // 去除重複 code
+    const uniqueCodes = Array.from(new Set(allCodes));
 
     // 從資料庫查詢這些 code 的分數
     const scoringRecords = await prisma.scoringItem.findMany({
@@ -76,8 +82,11 @@ export async function POST(
     });
 
     // 計算總分
-    const totalScore = scoringRecords.reduce((sum, record) => sum + record.score, 0);
-
+    const totalScore = scoringRecords.reduce(
+      (sum: number, record: { code: string; score: number }) => sum + record.score,
+      0
+    );
+    
     // 更新對話
     const updatedConversation = await prisma.conversation.update({
       where: { id: conversationId },

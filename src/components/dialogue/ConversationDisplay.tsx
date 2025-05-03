@@ -1,4 +1,7 @@
+// src/components/dialogue/ConversationDisplay.tsx
 'use client';
+
+import React from 'react';
 
 interface Message {
   role: 'nurse' | 'patient' | 'system';
@@ -13,7 +16,7 @@ interface Message {
 
 interface ConversationDisplayProps {
   conversation: Message[];
-  audioRef: React.RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
   showPlayButton: boolean;
 }
 
@@ -45,7 +48,7 @@ export function ConversationDisplay({ conversation, audioRef, showPlayButton }: 
                 ) : (
                   <audio 
                     ref={(el) => {
-                      if (el && index === conversation.length - 1) audioRef.current = el;
+                      if (el && index === conversation.length - 1 && audioRef) audioRef.current = el;
                     }}
                     src={msg.audioUrl}
                     className="w-full"
@@ -68,4 +71,4 @@ export function ConversationDisplay({ conversation, audioRef, showPlayButton }: 
       ))}
     </div>
   );
-} 
+}

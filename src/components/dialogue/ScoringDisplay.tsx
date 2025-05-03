@@ -1,3 +1,4 @@
+// src/components/dialogue/ScoringDisplay.tsx
 'use client';
 
 interface ScoringDisplayProps {

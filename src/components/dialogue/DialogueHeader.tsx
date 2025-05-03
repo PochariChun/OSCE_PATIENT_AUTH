@@ -1,3 +1,5 @@
+
+// src/components/dialogue/DialogueHeader.tsx
 'use client';
 
 interface ScenarioInfo {
@@ -8,6 +10,7 @@ interface ScenarioInfo {
   difficulty?: 'easy' | 'medium' | 'hard';
   scenarioCode: string;
 }
+
 
 interface DialogueHeaderProps {
   selectedScenario: ScenarioInfo | null;

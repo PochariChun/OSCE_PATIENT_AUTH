@@ -93,11 +93,22 @@ export default function NursingNotePage() {
       // 检查是否已有护理记录
       const noteResponse = await fetch(`/api/conversations/${id}/nursing-note`);
       
-      if (noteResponse.ok) {
+
+      if (noteResponse.status === 204) {
+        console.log('尚未建立護理紀錄');
+        // 保持 noteText 為空，不顯示錯誤
+      } else if (noteResponse.ok) {
         const noteData = await noteResponse.json();
-        setNoteText(noteData.rawText || '');
-        setMatchedCodes(noteData.matchedCodes || []);
+        if (noteData.exists === false) {
+          console.log('後端標記：無護理紀錄');
+        } else {
+          setNoteText(noteData.rawText || '');
+          setMatchedCodes(noteData.matchedCodes || []);
+        }
+      } else {
+        console.error(`獲取護理紀錄失敗: ${noteResponse.statusText}`);
       }
+
     } catch (error) {
       console.error('獲取對話詳情失敗', error);
       setError('獲取對話詳情失敗');

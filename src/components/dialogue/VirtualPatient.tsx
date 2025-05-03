@@ -1,3 +1,4 @@
+// src/components/dialogue/VirtualPatient.tsx
 'use client';
 
 import { useRef } from 'react';

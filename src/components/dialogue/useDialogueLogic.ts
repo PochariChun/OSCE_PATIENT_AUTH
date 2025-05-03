@@ -1,12 +1,15 @@
-// src/app/dialogue/new/old_page.tsx
-'use client';
+// src/components/dialogue/useDialogueLogic.ts
+import { useState, useEffect, useRef } from 'react';
+import { ScenarioInfo } from '@/types';
 
-import { useEffect, useState, useRef, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Navbar } from '../../../components/navbar';
-import Link from 'next/link';
-import { MicrophoneCheck } from '@/components/dialogue/MicrophoneCheck';
-import Image from 'next/image';
+export interface Message {
+  role: 'nurse' | 'patient' | 'system';
+  content: string;
+  elapsedSeconds?: number;
+  audioUrl?: string;
+  code?: string;
+  answerType?: string;
+}
 
 interface User {
   id: number;
@@ -76,9 +79,7 @@ const normalizeNames = (text: string): string => {
   return text.replace(/小葳|小薇|曉薇|曉威|筱威|小葳/g, '小威');
 };
 
-// 創建一個包裝組件來使用 useSearchParams
-function DialogueNewContent() {
-  const [overlayText, setOverlayText] = useState<string | null>(null);
+export default function useDialogueLogic(scenario: ScenarioInfo) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [scenarios, setScenarios] = useState<ScenarioInfo[]>([]);
@@ -93,28 +94,24 @@ function DialogueNewContent() {
     code?: string;
     answerType?: string;
   }[]>([]);
-  const [message, setMessage] = useState('');
   const [micCheckCompleted, setMicCheckCompleted] = useState(false);
-  const [scoredCodes, setScoredCodes] = useState<Set<string>>(new Set());
 
-  const [isListening, setIsListening] = useState(false);
   const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null);
-  const [interimTranscript, setInterimTranscript] = useState('');
-  const [finalTranscript, setFinalTranscript] = useState('');
   const [lastSentenceEnd, setLastSentenceEnd] = useState(0);
-  const [startTime, setStartTime] = useState<Date | null>(null);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [lastpatientmsgTime, setLastpatientmsgTime] = useState(0);
-  const [lastTag, setLastTag] = useState('');
-  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-  const [delayThreshold, setDelayThreshold] = useState(10);
+
   const [conversationId, setConversationId] = useState<number | null>(null);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [lastpatientmsgTime, setLastpatientmsgTime] = useState<number>(0);
+  const [lastTag, setLastTag] = useState<string | null>(null);
+  const [lastAudioUrl, setLastAudioUrl] = useState<string | null>(null);
+  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const [delayThreshold, setDelayThreshold] = useState<number>(10);
   
   const router = useRouter();
   const searchParams = useSearchParams();
   const scenarioCode = searchParams.get('scenario');
   
-  const [isRecordButtonPressed, setIsRecordButtonPressed] = useState(false);
   
   const [isInitializingSpeech, setIsInitializingSpeech] = useState(false);
   
@@ -132,12 +129,48 @@ function DialogueNewContent() {
 
   const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const [lastAudioUrl, setLastAudioUrl] = useState<string | null>(null);
-
   const finalTranscriptRef = useRef('');
   const interimTranscriptRef = useRef('');
   const lastRecognizedTextRef = useRef('');
 
+
+
+  const [message, setMessage] = useState('');
+  // const [conversation, setConversation] = useState<Message[]>([{
+  //   role: 'system',
+  //   content: `您已進入「${scenario.title}」的模擬對話。請開始與虛擬病人對話。`
+  // }]);
+  const [scoredCodes, setScoredCodes] = useState<Set<string>>(new Set());
+  const [overlayText, setOverlayText] = useState<string | null>(null);
+  const [interimTranscript, setInterimTranscript] = useState('');
+
+  const [isListening, setIsListening] = useState(false);
+  const [isRecordButtonPressed, setIsRecordButtonPressed] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    const now = Date.now();
+
+    const newMessage: Message = {
+      role: 'nurse',
+      content: message,
+      elapsedSeconds: startTimeRef.current ? Math.floor((now - startTimeRef.current) / 1000) : undefined
+    };
+
+    const updatedConversation = [...conversation, newMessage];
+    setConversation(updatedConversation);
+    setMessage('');
+
+    setTimeout(() => {
+      const reply: Message = {
+        role: 'patient',
+        content: `這是虛擬病人的回應。`,
+        elapsedSeconds: 2
+      };
+      setConversation([...updatedConversation, reply]);
+    }, 800);
+  };
 
   useEffect(() => {
     const unlockAudioContext = () => {
@@ -283,7 +316,8 @@ function DialogueNewContent() {
     };
   }, []); // 👈 這裡不要有 speechRecognition 當依賴，否則會重新執行
 
-  // 獲取場景資料
+
+  // 从 API 获取场景数据
   const fetchScenarios = async () => {
     try {
       const response = await fetch('/api/scenarios');
@@ -298,17 +332,15 @@ function DialogueNewContent() {
       const data = await response.json();
       
       // 轉換資料格式
-      const formattedScenarios = data.data.map((scenario: any) => ({
+      const formattedScenarios = data.map((scenario: any) => ({
         id: scenario.id,
         title: scenario.title,
         description: scenario.description,
         scenarioCode: scenario.scenarioCode,
-        patientInfo: scenario.patientName && scenario.patientAge && scenario.diagnosis
-          ? `${scenario.patientName}，${scenario.patientAge}歲，${scenario.diagnosis}。${scenario.accompaniedBy ? `陪同者：${scenario.accompaniedBy}。` : ''}`
-          : '', // 若沒有資料就給空字串
+        // 只使用資料庫中的患者資訊，不使用預設值
+        patientInfo: `${scenario.patientName}，${scenario.patientAge}歲，${scenario.diagnosis}。${scenario.accompaniedBy ? `陪同者：${scenario.accompaniedBy}。` : ''}`,
         difficulty: difficultyMap[scenario.difficulty] || 'medium'
       }));
-      
       
       setScenarios(formattedScenarios);
       
@@ -1147,337 +1179,43 @@ function DialogueNewContent() {
     }
   };
   
-  // 添加手动解锁音频的函数
-  const handleManualAudioUnlock = () => {
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      ctx.resume().then(() => {
-        console.log("🔓 使用者主動解鎖 AudioContext");
-        setIsAudioUnlocked(true);
-        
-        // 如果有最新的音频URL，尝试播放
-        if (lastAudioUrl) {
-          playAudio(lastAudioUrl);
-          // 播放后清除，确保只播放一次
-          setLastAudioUrl(null);
-        }
-      });
-    } catch (e) {
-      console.error("❌ Audio 解鎖失敗", e);
-    }
+  // const handleRecordButtonMouseDown = () => {
+  //   setIsRecordButtonPressed(true);
+  //   setIsListening(true);
+  //   startTimeRef.current = Date.now();
+  // };
+
+  // const handleRecordButtonMouseUp = () => {
+  //   setIsRecordButtonPressed(false);
+  //   setIsListening(false);
+  // };
+
+  // const handleRecordButtonMouseLeave = (e: React.MouseEvent) => {
+  //   if (isRecordButtonPressed) handleRecordButtonMouseUp();
+  // };
+
+  // const handleRecordButtonTouchStart = () => {
+  //   handleRecordButtonMouseDown();
+  // };
+
+  // const handleRecordButtonTouchEnd = () => {
+  //   handleRecordButtonMouseUp();
+  // };
+
+  return {
+    message,
+    setMessage,
+    conversation,
+    scoredCodes,
+    overlayText,
+    interimTranscript,
+    isListening,
+    isRecordButtonPressed,
+    handleSendMessage,
+    handleRecordButtonMouseDown,
+    handleRecordButtonMouseUp,
+    handleRecordButtonMouseLeave,
+    handleRecordButtonTouchStart,
+    handleRecordButtonTouchEnd,
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">載入中...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Navbar user={user} />
-      
-      <main className="container mx-auto px-4 py-8">
-        {/* 麥克風檢查頁面 */}
-        {!micCheckCompleted ? (
-          <div className="flex justify-center items-center py-8">
-            <MicrophoneCheck onComplete={handleMicCheckComplete} />
-          </div>
-        ) : (
-          // 原有的場景選擇和對話頁面
-          !selectedScenario ? (
-            // 場景選擇頁面
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                選擇對話場景
-              </h1>
-              
-              {scenarios.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {scenarios.map((scenario) => (
-                    <div 
-                      key={scenario.id}
-                      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => handleScenarioSelect(scenario.scenarioCode)}
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                          {scenario.title}
-                        </h2>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          scenario.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
-                          scenario.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
-                          'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
-                        }`}>
-                          {scenario.difficulty === 'easy' ? '簡單' : 
-                           scenario.difficulty === 'medium' ? '中等' : '困難'}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {scenario.description}
-                      </p>
-                      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 dark:text-gray-400">暫無可用場景</p>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">請聯絡管理員添加場景</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            // 對話頁面
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {selectedScenario?.title || '新對話'}
-                    </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                      {selectedScenario?.description || '請選擇一個場景開始對話'}
-                    </p>
-                  </div>
-                  
-                  <div className="flex flex-row justify-between items-center gap-3 w-full sm:w-auto">
-                    {/* 計時器顯示 */}
-                    <div className="bg-blue-100 dark:bg-blue-900 border-2 border-blue-500 dark:border-blue-400 px-4 py-2 rounded-md shadow-md flex-1 sm:flex-none">
-                      <div className="text-lg font-mono font-bold text-blue-800 dark:text-blue-200 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:
-                        {(elapsedTime % 60).toString().padStart(2, '0')}
-                      </div>
-                    </div>
-                    
-                    <button 
-                      onClick={handleEndDialogue}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none"
-                    >
-                      結束評估, 開始紀錄 
-                    </button>
-                  </div>
-                </div>
-              </div>
-              {Array.from(scoredCodes).length > 0 && (
-                <div className="mt-4 mb-6 text-center text-sm text-green-700 dark:text-green-200">
-                  <strong>🎯 已得分：</strong>
-                  <div className="mt-2 inline-flex flex-wrap justify-center gap-2">
-                    {Array.from(scoredCodes).map(code => (
-                      <span 
-                        key={code}
-                        className="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 px-2 py-1 rounded text-xs"
-                      >
-                        {code}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 虛擬病人頭像區塊 - 添加点击功能并防止长按下载 */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
-                
-                <div 
-                  className="relative w-full max-w-md cursor-pointer select-none" 
-                  onMouseDown={handleRecordButtonMouseDown}
-                  onMouseUp={handleRecordButtonMouseUp}
-                  onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
-                  onTouchStart={(e) => {
-                    e.preventDefault(); // 防止默认行为
-                    handleRecordButtonTouchStart(e);
-                  }}
-                  onTouchEnd={(e) => {
-                    e.preventDefault(); // 防止默认行为
-                    handleRecordButtonTouchEnd(e);
-                  }}
-                  onContextMenu={(e) => e.preventDefault()} // 防止右键菜单
-                > 
-                  {/* 語音識別狀態 */}
-                  {isListening && (
-                    <div className="mb-4 text-center">
-                      <span className="inline-flex items-center text-sm text-red-500">
-                        <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
-                        正在錄音...
-                      </span>
-                      {interimTranscript && (
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
-                          {interimTranscript}...
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  {overlayText && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                      <div className="bg-gray-800 bg-opacity-70 text-white p-4 rounded-lg max-w-[90%] text-center">
-                        {overlayText}
-                      </div>
-                    </div>
-                  )}
-                  <Image
-                    src="/image/virtualpatient.png"
-                    alt="虛擬病人"
-                    width={400}
-                    height={400}
-                    className="rounded-lg mx-auto pointer-events-none" // 禁用图片的指针事件
-                    priority
-                    draggable="false" // 禁止拖拽
-                    style={{ WebkitTouchCallout: 'none' }} // 禁止iOS长按呼出菜单
-                  />
-                  {isListening && (
-                    <div className="absolute top-14 left-0 right-0 mx-auto w-fit text-center bg-red-500 text-white px-3 py-1 rounded-b-lg text-sm animate-pulse">
-                    正在聆聽...
-                  </div>
-                  
-                  )}
-                  {/* 添加提示信息 */}
-                  <div className="absolute bottom-2 left-0 right-0 text-center text-white bg-black bg-opacity-50 py-1 rounded-b-lg pointer-events-none">
-                    點擊頭像開始錄音
-                  </div>
-                </div>
-              </div>
-              
-              
-              
-              {/* 對話區域 */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                {/* 輸入區域 */}
-                <div className="flex items-center space-x-2 mb-4">
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="按住麥克風或圖片說話..."
-                    className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-                  />
-                  
-                  {/* 錄音按鈕 */}
-                  <button
-                    onMouseDown={handleRecordButtonMouseDown}
-                    onMouseUp={handleRecordButtonMouseUp}
-                    onMouseLeave={isRecordButtonPressed ? handleRecordButtonMouseUp : undefined}
-                    onTouchStart={handleRecordButtonTouchStart}
-                    onTouchEnd={handleRecordButtonTouchEnd}
-                    className={`p-3 rounded-full transition-all duration-200 ${
-                      isRecordButtonPressed 
-                        ? 'bg-red-600 scale-110' 
-                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
-                    }`}
-                    aria-label="按住說話"
-                  >
-                    <div className="relative">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="currentColor" 
-                        className={`w-6 h-6 ${isRecordButtonPressed ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}
-                      >
-                        <path d="M12 16c2.206 0 4-1.794 4-4V6c0-2.217-1.785-4.021-3.979-4.021a.933.933 0 0 0-.209.025A4.006 4.006 0 0 0 8 6v6c0 2.206 1.794 4 4 4z" />
-                        <path d="M11 19.931V22h2v-2.069c3.939-.495 7-3.858 7-7.931h-2c0 3.309-2.691 6-6 6s-6-2.691-6-6H4c0 4.072 3.061 7.436 7 7.931z" />
-                      </svg>
-                      
-                      {isRecordButtonPressed && (
-                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                </div>
-                
-                
-                
-                {/* 对话显示区域 - 移到输入区域下方 */}
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {conversation.map((msg, index) => (
-                    <div 
-                      key={index} 
-                      className={`flex ${msg.role === 'nurse' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div 
-                        className={`max-w-[80%] rounded-lg p-3 ${
-                          msg.role === 'nurse'
-                            ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' 
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                        }`}
-                      >
-                        <p>{msg.content}</p>
-                        {msg.audioUrl && (
-                          <div className="mt-2">
-                            {showPlayButton ? (
-                              <button 
-                                onClick={() => audioRef.current?.play()} 
-                                className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm"
-                              >
-                                播放語音
-                              </button>
-                            ) : (
-                              <audio 
-                                ref={(el) => {
-                                  if (el) audioRef.current = el;
-                                }}
-                                src={msg.audioUrl}
-                                className="w-full"
-                                controls={false}
-                              />
-                            )}
-                          </div>
-                        )}
-                        {msg.elapsedSeconds !== undefined && msg.role !== 'system' && (
-                          <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300 text-right">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {Math.floor(msg.elapsedSeconds / 60).toString().padStart(2, '0')}:
-                            {(msg.elapsedSeconds % 60).toString().padStart(2, '0')}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )
-        )}
-      </main>
-      
-      <footer className="bg-white dark:bg-gray-800 py-6 mt-8">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            © {new Date().getFullYear()} OSCE 虛擬病人對話系統 | 版權所有
-          </p>
-        </div>
-      </footer>
-    </div>
-  );
 }
-
-// 修复全局声明
-declare global {
-  interface Window {
-    SpeechRecognition: new () => SpeechRecognition;
-    webkitSpeechRecognition: new () => SpeechRecognition;
-  }
-}
-
-// 主页面组件
-export default function DialogueNewPage() {
-  return (
-    <Suspense fallback={<div>加载中...</div>}>
-      <DialogueNewContent />
-    </Suspense>
-  );
-}
-

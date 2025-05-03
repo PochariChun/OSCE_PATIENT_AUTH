@@ -13,7 +13,8 @@ export async function GET(
     // 正確使用動態參數 - 使用 await
     const { params: { id } } = await context;
     const conversationId = parseInt(id);
-    
+    console.log('[reflection] conversationId', conversationId);
+
     if (isNaN(conversationId)) {
       return NextResponse.json(
         { error: '無效的對話 ID' },
@@ -36,7 +37,7 @@ export async function GET(
     // 获取反思消息
     const reflectionMessages = await prisma.reflectionMessage.findMany({
       where: { conversationId },
-      orderBy: { timestamp: 'asc' },
+      orderBy: { id: 'asc' },
     });
     
     if (reflectionMessages.length === 0) {
