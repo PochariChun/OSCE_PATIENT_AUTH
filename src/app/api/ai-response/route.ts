@@ -18,7 +18,7 @@ async function queryEmbeddingService(query: string, clientPreviousTag: string | 
       },
       body: JSON.stringify({ 
         query, 
-        top_k: 3,
+        top_k: 5,
         previous_tag: clientPreviousTag, // 使用前端傳來的或從歷史記錄中提取的 previousTag
       }),
     });
@@ -46,7 +46,6 @@ function findAudioUrlByCode(code: string): string | null {
 }
 
 // 修改 POST 處理函數，接收前端傳來的 previousTag
-
 export async function POST(request: NextRequest) {
   try {
     const { message, scenarioId, previousTag } = await request.json();
@@ -63,28 +62,40 @@ export async function POST(request: NextRequest) {
     const processed = normalizeNames(preprocessText(message));
     const results = await queryEmbeddingService(processed, previousTag);
 
-    if (results.length > 0) {
-      const best = results[0];
-      return NextResponse.json({
-        response: best.answer,
-        tag: best.tags,
-        audioUrl: best.audioUrl || findAudioUrlByCode(best.code),
-        code: best.code,
-        answerType: best.answerType || null,
-      });
-    }
-
-    // 無匹配時的預設回應
     const fallbackReplies = [
-      '抱歉，我沒有聽清楚您說的話，能再說一次嗎？',
-      '不好意思，能請您再重複一次嗎？',
-      '對不起，我剛才沒聽清楚，請再說一次好嗎？'
+      {
+        answer: '抱歉，我沒有聽清楚您說的話，能再說一次嗎？',
+        audioUrl: '/audio/fallback_1.mp3'
+      },
+      {
+        answer: '不好意思，能請您再重複一次嗎？',
+        audioUrl: '/audio/fallback_2.mp3'
+      },
+      {
+        answer: '對不起，我剛才沒聽清楚，請再說一次好嗎？',
+        audioUrl: '/audio/fallback_3.mp3'
+      }
     ];
 
+    if (results.length > 0) {
+      const best = results[0];
+      if (best.score >= 0.5) {
+        return NextResponse.json({
+          response: best.answer,
+          tag: best.tags,
+          audioUrl: best.audioUrl || findAudioUrlByCode(best.code),
+          code: best.code,
+          answerType: best.answerType || null,
+        });
+      }
+    }
+
+    // fallback reply if no result or score too low
+    const fallback = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
     return NextResponse.json({
-      response: fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)],
-      tag: undefined,
-      audioUrl: undefined,
+      response: fallback.answer,
+      tag: '',
+      audioUrl: fallback.audioUrl,
       code: undefined,
       answerType: null,
     });

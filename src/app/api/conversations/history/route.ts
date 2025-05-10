@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
         endedAt: true,
         score: true,
         durationSec: true,
+        fluency: true,
         overtime: true,
         scenarioId: true,
         scenario: {
@@ -48,9 +49,14 @@ export async function GET(request: NextRequest) {
       score: conv.score,
       durationSec: conv.durationSec,
       overtime: conv.overtime,
+      fluency: conv.fluency, // ⬅️ 新增這一行
     }));
-
+    // ====================================
+    // ✅ 打印 formattedHistory
+    console.log(`[formattedHistory] formattedHistory: ${formattedHistory}`);
     return NextResponse.json(formattedHistory);
+    // ====================================
+
   } catch (error) {
     console.error('獲取對話歷史失敗:', error);
     return NextResponse.json(

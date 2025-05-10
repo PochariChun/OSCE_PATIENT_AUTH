@@ -1,41 +1,93 @@
-// 关键术语匹配规则
-const keyTermPatterns = [
-  { code: 'fever_start', pattern: /(发烧|發燒|体温升高|體溫升高).{0,10}(开始|開始|起始).{0,10}(时间|時間|点|點)/ },
-  { code: 'fever_max', pattern: /(最高|最大).{0,5}(体温|體溫)/ },
-  { code: 'vomiting', pattern: /(呕吐|嘔吐|吐|嘔)/ },
-  { code: 'pain_location', pattern: /(疼痛|痛).{0,10}(位置|部位|处|處)/ },
-  { code: 'pain_scale', pattern: /(疼痛|痛).{0,5}(程度|等级|等級|分数|分數)/ },
-  { code: 'vital_signs', pattern: /(生命征象|生命徵象|血压|血壓|脉搏|脈搏|呼吸|体温|體溫)/ },
-  { code: 'medication', pattern: /(用药|用藥|服药|服藥|给药|給藥|药物|藥物)/ },
-  { code: 'allergy', pattern: /(过敏|過敏|敏感)/ },
-  { code: 'npo', pattern: /(禁食|禁水|禁飲食|NPO)/ },
-  { code: 'iv_fluid', pattern: /(静脉|靜脈|IV|输液|輸液)/ },
-  { code: 'consciousness', pattern: /(意识|意識|清醒|昏迷|嗜睡)/ },
-  { code: 'skin_condition', pattern: /(皮肤|皮膚|出疹|皮疹)/ },
-  { code: 'bowel_movement', pattern: /(排便|大便|腹泻|腹瀉)/ },
-  { code: 'urination', pattern: /(排尿|小便|尿量|尿频|尿頻)/ },
-  { code: 'mobility', pattern: /(活动|活動|行走|走路|移动|移動)/ },
-  { code: 'nutrition', pattern: /(营养|營養|饮食|飲食|进食|進食)/ },
-  { code: 'hydration', pattern: /(水分|补水|補水|脱水|脫水)/ },
-  { code: 'respiratory', pattern: /(呼吸|喘|气促|氣促)/ },
-  { code: 'sleep', pattern: /(睡眠|入睡|失眠)/ },
-  { code: 'family_support', pattern: /(家属|家屬|家人|亲人|親人)/ },
+const keyTermKeywords = [
+  { code: 'L11', category: '記錄', subcategory: '發燒.開始時間', keywords: ['開始', '發燒'] },
+  { code: 'L12', category: '記錄', subcategory: '發燒.最高溫度', keywords: ['最高', '體溫'] },
+  { code: 'L13', category: '記錄', subcategory: '發燒.處理方式', keywords: ['發燒', '處理'] },
+  { code: 'L14', category: '記錄', subcategory: '發燒.處理結果', keywords: ['體溫', '改善', '降溫', '降到'] },
+  { code: 'L21', category: '記錄', subcategory: '腹瀉.開始時間', keywords: ['腹瀉', '開始', '時間'] },
+  { code: 'L22', category: '記錄', subcategory: '腹瀉.頻率', keywords: ['次','5','五','五次'] },
+  { code: 'L23', category: '記錄', subcategory: '腹瀉.量', keywords: ['腹瀉', '量'] },
+  { code: 'L24', category: '記錄', subcategory: '腹瀉.性狀', keywords: ['腹瀉', '糊'] },
+  { code: 'L25', category: '記錄', subcategory: '腹瀉.顏色', keywords: ['黃色','色'] },
+  { code: 'L26', category: '記錄', subcategory: '腹瀉.有無血絲', keywords: ['血絲'] },
+  { code: 'L31', category: '記錄', subcategory: '嘔吐.開始時間', keywords: ['嘔吐'] },
+  { code: 'L32', category: '記錄', subcategory: '嘔吐.頻率', keywords: ['次','2','兩','兩次'] },
+  { code: 'L33', category: '記錄', subcategory: '嘔吐.量', keywords: ['嘔吐', '量'] },
+  { code: 'L34', category: '記錄', subcategory: '嘔吐.性狀', keywords: ['稀飯','嘔吐',] },
+  { code: 'L35', category: '記錄', subcategory: '嘔吐.顏色', keywords: ['白色','色'] },
 ];
 
-/**
- * 分析护理记录文本，提取关键术语
- * @param text 护理记录文本
- * @returns 匹配到的关键术语代码数组
- */
-export async function extractKeyTerms(text: string): Promise<string[]> {
-  const matchedCodes: string[] = [];
-  
-  // 对每个模式进行匹配
-  keyTermPatterns.forEach(({ code, pattern }) => {
-    if (pattern.test(text)) {
-      matchedCodes.push(code);
-    }
-  });
-  
-  return matchedCodes;
-} 
+function containsTime(text: string): boolean {
+  return /([上下]午)?\s*\d{1,2}[:：點]?\d{0,2}\s*(pm|am|點)?/i.test(text);
+}
+
+function containsTemperature(text: string): boolean {
+  return /\b(3[6-9](\.\d)?|4[0-1](\.\d)?)\s*(°C|度|度C|℃)?\b/.test(text);
+}
+
+function containsCountTimes(text: string): boolean {
+  return /\b\d+\s*(次|回)\b/.test(text);
+}
+
+function containsEitherTimes(text: string, times: string[]): boolean {
+  return times.some(t => text.includes(t));
+}
+
+function containsFood(text: string): boolean {
+  const foodKeywords = ['粥', '稀飯', '飯', '牛奶', '蛋', '餅乾', '湯', '水', '藥'];
+  return foodKeywords.some(food => text.includes(food));
+}
+
+// 🔁 呼叫你的 FastAPI 服務（本地開發時）
+async function fetchCutWords(text: string): Promise<string[]> {
+  const res = await fetch(`http://localhost:8000/cut?text=${encodeURIComponent(text)}`);
+  if (!res.ok) throw new Error("Failed to call jieba API");
+  const json = await res.json();
+  return json.words;
+}
+
+export async function extractKeyTermsBySegmentation(text: string): Promise<
+  { code: string; category: string; subcategory: string; matchedWords: string[] }[]
+> {
+  const words = await fetchCutWords(text);
+  const wordSet = new Set(words);
+
+  const matchedItems = keyTermKeywords
+    .filter(({ keywords }) => keywords.some(k => wordSet.has(k)))
+    .map(({ code, category, subcategory, keywords }) => {
+      const baseMatched = keywords.filter(k => wordSet.has(k));
+      let passesExtra = true;
+
+      switch (code) {
+        case 'L11':
+        case 'L21':
+        case 'L31':
+          passesExtra = containsTime(text);
+          break;
+        case 'L12':
+          passesExtra = containsTemperature(text);
+          break;
+        case 'L22':
+        case 'L32':
+          passesExtra = containsCountTimes(text);
+          break;
+        case 'L31':
+          passesExtra = containsEitherTimes(text, ['8:00', '8點', '11:00', '11點','8pm','11am','8p.m',]);
+          break;
+        case 'L35':
+          passesExtra = containsFood(text);
+          break;
+      }
+
+      if (!passesExtra) return null;
+
+      return {
+        code,
+        category,
+        subcategory,
+        matchedWords: baseMatched,
+      };
+    })
+    .filter(Boolean) as { code: string; category: string; subcategory: string; matchedWords: string[] }[];
+
+  return matchedItems;
+}

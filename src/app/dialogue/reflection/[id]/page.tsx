@@ -7,6 +7,7 @@ import { Navbar } from '@/components/navbar';
 import { fetchJson } from '@/lib/fetchJson';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useReflectionConversation } from '@/hooks/useReflectionConversation';
+// import { speakText } from '@/lib/speakText'; // 你需要封裝 EdgeTTS 播放函數
 
 interface ReflectionMessage {
   role: 'nurse' | 'assistant' | 'system';
@@ -27,6 +28,7 @@ export default function ReflectionPage() {
   const user = useCurrentUser<User>();
   const [message, setMessage] = useState('');
   const [reflection, setReflection] = useState(null);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   const router = useRouter();
   const params = useParams();
@@ -55,7 +57,8 @@ export default function ReflectionPage() {
   };
 
   const handleSendMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || isPlayingVoice) return;
+    // if (!message.trim()) return;
 
     const userMessage: ReflectionMessage = {
       role: 'nurse',
@@ -71,7 +74,13 @@ export default function ReflectionPage() {
       const data = await fetchJson<{
         response: string;
         gibbsStage: string;
+        missedItems?: {
+          id: number;
+          category: string;
+          subcategory: string;
+        }[];
       }>(`/api/conversations/${conversationId}/reflection`, {
+      
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -88,21 +97,35 @@ export default function ReflectionPage() {
         gibbsStage: data.gibbsStage
       };
 
+      // ================================
+      //
       setConversation(prev => [...prev, aiMessage]);
       if (data.gibbsStage) setCurrentStage(data.gibbsStage);
+      // ================================
+
+
     } catch (error: any) {
       console.error('發送反思訊息錯誤:', error.message);
       setConversation(prev => [
         ...prev,
         {
-          role: 'system',
+          role: 'assistant',
           content: `⚠️ 發送失敗：${error.message}`,
-          timestamp: new Date()
+          timestamp: new Date(),
+          gibbsStage: '錯誤'
         }
       ]);
+      setIsPlayingVoice(false); // 保險
     }
   };
-
+  const stageLabels: Record<string, string> = {
+    description: '📝 描述階段',
+    feelings: '💭 感受階段',
+    evaluation: '📈 評估階段',
+    analysis: '🔍 分析階段',
+    conclusion: '📚 結論階段',
+    action: '🛠️ 改善計畫階段',
+  };
   
   const handleFinishReflection = async () => {
     try {
@@ -142,7 +165,7 @@ export default function ReflectionPage() {
                   反思: {conversationTitle}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  使用 Gibbs 反思模型進行深度反思
+                  使用 Gibbs 反思模型進行反思
                 </p>
               </div>
               <div>
@@ -155,10 +178,23 @@ export default function ReflectionPage() {
                   currentStage === 'action' ? 'bg-red-100 text-red-800' :
                   'bg-gray-100 text-gray-800'
                 }`}>
-                  {currentStage || '準備中'}
+                {stageLabels[currentStage] || '準備中'}
                 </span>
+                            
               </div>
+              
             </div>
+            {currentStage && (
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                {currentStage === 'description' && '📝 描述階段：可以跟我聊聊你大概有講什麼呢?\n有哪裡不足的地方?'}
+                {currentStage === 'feelings' && '💭 感受階段：你覺得剛剛？\n開心？緊張？還是有點不確定？都可以跟我分享哦～'}
+                {currentStage === 'evaluation' && '📈 評估階段：你覺得有哪些地方做得還不錯呢？\n有沒有什麼地方，下次可以再更進步？我們一起看看～'}
+                {currentStage === 'analysis' && '🔍 分析階段：你覺得事情會那樣發生的原因是什麼呢？\n可能跟準備、心情、對話方式有關嗎？一起想一想～'}
+                {currentStage === 'conclusion' && '📚 結論階段：經過這次經驗，你有什麼學到的事情嗎？\n可以是一點小發現也沒關係喔～'}
+                {currentStage === 'action' && '🛠️ 改善計畫階段：如果下次再遇到類似的情況，你會想怎麼做不一樣？\n想做的事、想準備的都可以寫下來 😊'}
+              </p>
+
+            )}
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
@@ -168,8 +204,10 @@ export default function ReflectionPage() {
                   <div className={`max-w-[80%] rounded-lg p-3 ${
                     msg.role === 'nurse'
                       ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                  }`}>
+                      : typeof msg.content === 'string' && msg.content.startsWith('⚠️ 發送失敗')
+                      ? 'bg-red-100 dark:bg-red-800 text-red-900 dark:text-red-100'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'                  
+                      }`}>
                     <p className="whitespace-pre-line">{msg.content}</p>
                     {msg.gibbsStage && msg.role === 'assistant' && (
                       <div className="text-xs mt-1 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded inline-block ml-auto text-gray-700 dark:text-gray-300">
@@ -188,12 +226,15 @@ export default function ReflectionPage() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="輸入您的反思..."
+                placeholder={isPlayingVoice ? "請稍等語音播放完畢..." : "輸入您的反思..."}
                 className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                // disabled={isPlayingVoice}
               />
               <button
                 onClick={handleSendMessage}
+                // disabled={isPlayingVoice}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+
               >
                 發送
               </button>

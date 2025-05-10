@@ -73,9 +73,37 @@ interface SpeechRecognition extends EventTarget {
 // 標準化名稱變體
 const normalizeNames = (text: string): string => {
   // 將所有"小威"的變體統一為"小威"
-  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小葳/g, '小威');
+  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小為/g, '小威');
 };
-
+function normalizeMedicalTerms(text: string): string {
+  const medicalCorrections: Record<string, string> = {
+    '新間脈': '心尖脈',
+    '新鮮賣': '心尖脈',
+    'breat': 'BART',
+    'brat': 'BART',
+    'bart': 'BART',
+    '真相': '跡象',
+    '新間賣': '心尖脈',
+    '心尖賣': '心尖脈',
+    '新尖脈': '心尖脈',
+    '心間脈': '心尖脈',
+    '三腸瓣': '三尖瓣',
+    '左心白': '左心房',
+    '拉肚紙': '拉肚子',
+    '抽經': '抽筋',
+    '氣喘病': '氣喘',
+    '寫詩': '血絲',
+    'CC水水': '稀稀水水',
+    '細細水水': '稀稀水水',
+    '床頭塔': '床頭卡',
+  };
+  let normalized = text;
+  for (const [incorrect, correct] of Object.entries(medicalCorrections)) {
+    const regex = new RegExp(incorrect, 'g');
+    normalized = normalized.replace(regex, correct);
+  }
+  return normalized;
+}
 // 創建一個包裝組件來使用 useSearchParams
 function DialogueNewContent() {
   const [overlayText, setOverlayText] = useState<string | null>(null);
@@ -220,9 +248,9 @@ function DialogueNewContent() {
           // 如果有新的最終結果
           if (final !== finalTranscript && final.trim() !== '') {
             // 標準化名稱
-            const normalizedText = normalizeNames(final);
+            const cleaned = normalizeMedicalTerms(normalizeNames(final));
             setFinalTranscript(prev => {
-              const newText = prev + normalizedText;
+              const newText = prev + cleaned;
               finalTranscriptRef.current = newText; // ✅ 同步更新 ref
               return newText;
             });
@@ -784,17 +812,17 @@ function DialogueNewContent() {
         }
         
         if (interimText) {
-          console.log('識別到臨時文本:', interimText);
+          // console.log('識別到臨時文本:', interimText);
           setInterimTranscript(interimText);
           interimTranscriptRef.current = interimText; // ✅ 加這行
         }
         
         
         if (finalText) {
-          console.log('識別到最終文本:', finalText);
+          // console.log('識別到最終文本:', finalText);
           // 標準化名稱
-          const normalizedText = normalizeNames(finalText);
-          console.log('標準化後的文本:', normalizedText);
+          const cleaned = normalizeMedicalTerms(normalizeNames(finalText));
+          // console.log('標準化後的文本:', cleaneㄋd);
           
           // 將最終文本添加到 finalTranscript 中，而不是替換它
           // React 的 setXxx() 是非同步的，所以需要使用 prev 來更新
@@ -803,9 +831,9 @@ function DialogueNewContent() {
           
 
           setFinalTranscript(prev => {
-            const newText = prev + normalizedText;
+            const newText = prev + cleaned;
             finalTranscriptRef.current = newText; // ✅ 更新 ref
-            console.log('更新最終文本為:', newText);
+            // console.log('更新最終文本為:', newText);
             return newText;
           });
         }
@@ -1221,8 +1249,20 @@ function DialogueNewContent() {
                       <p className="text-gray-600 dark:text-gray-400 mb-4">
                         {scenario.description}
                       </p>
-                      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                      </div>
+
+                      
+                      <button
+                        className="mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow transition duration-200 w-full"
+                      >
+                        點我進入對話場景
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </button>
+
                     </div>
                   ))}
                 </div>
@@ -1236,8 +1276,8 @@ function DialogueNewContent() {
           ) : (
             // 對話頁面
             <div className="max-w-4xl mx-auto">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-1">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-3">
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                       {selectedScenario?.title || '新對話'}
@@ -1266,9 +1306,20 @@ function DialogueNewContent() {
                       結束評估, 開始紀錄 
                     </button>
                   </div>
+                    
                 </div>
+                {/* 解說區塊 */}
+                <div className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100 rounded-lg shadow-md p-2 mb-1 max-w-3xl mx-auto">
+                      <h2 className="text-lg font-semibold mb-2">📌 使用說明</h2>
+                      <ul className="list-disc list-inside space-y-1 text-sm leading-relaxed">
+                        <li>點擊虛擬病人頭像即可開始說話，放開就會送出對話內容。</li>
+                        <li>錄音中將顯示「正在錄音...」, 圖像正上方顯示灰色即時辨識文字。</li>
+                        <li>請一次只說一句完整的問題或指令，系統將自動辨識並回應。</li>
+                        <li>對話結束後，請點選「結束評估，開始紀錄」按鈕結束和病人對話, 開始寫護理記錄。</li>
+                      </ul>
+                  </div>
               </div>
-              {Array.from(scoredCodes).length > 0 && (
+              {/* {Array.from(scoredCodes).length > 0 && (
                 <div className="mt-4 mb-6 text-center text-sm text-green-700 dark:text-green-200">
                   <strong>🎯 已得分：</strong>
                   <div className="mt-2 inline-flex flex-wrap justify-center gap-2">
@@ -1282,11 +1333,10 @@ function DialogueNewContent() {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* 虛擬病人頭像區塊 - 添加点击功能并防止长按下载 */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-center">
-                
                 <div 
                   className="relative w-full max-w-md cursor-pointer select-none" 
                   onMouseDown={handleRecordButtonMouseDown}
@@ -1340,8 +1390,8 @@ function DialogueNewContent() {
                   
                   )}
                   {/* 添加提示信息 */}
-                  <div className="absolute bottom-2 left-0 right-0 text-center text-white bg-black bg-opacity-50 py-1 rounded-b-lg pointer-events-none">
-                    點擊頭像開始錄音
+                  <div className="absolute bottom-2 left-0 right-0 text-center bg-yellow-200 text-gray-800 font-semibold py-2 px-4 rounded-b-lg animate-bounce shadow pointer-events-none">
+                    👉 點擊圖片開始說話
                   </div>
                 </div>
               </div>

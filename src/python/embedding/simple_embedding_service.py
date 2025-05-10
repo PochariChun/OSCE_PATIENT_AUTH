@@ -1,3 +1,8 @@
+"""
+用法
+python src/python/embedding/simple_embedding_service.py --data-path src/lib/rag_lookup_data_cleaned.jsonl --output-index src/lib/faiss_index
+python src/python/embedding/simple_embedding_service.py --rebuild-index
+"""
 import sys
 import os
 import jieba
@@ -149,16 +154,42 @@ def generate_variants(question):
     
     # 2. 同义词替换 (繁体中文版)
     synonyms = {
-        '小孩': ['孩子', '小朋友', '小孩子', '兒童'],
-        '媽媽': ['母親', '媽', '娘親'],
-        '爸爸': ['父親', '爹地', '爸', '爹'],
-        '醫生': ['醫師', '大夫', '醫者'],
-        '生病': ['患病', '不舒服', '身體不適', '有病'],
-        '肚子': ['腹部', '肚腹', '腹'],
-        '拉肚子': ['腹瀉', '拉稀', '肚子不舒服', '腸胃炎'],
-        '發燒': ['發熱', '體溫升高', '溫度高', '燒'],
-        '嘔吐': ['吐', '嘔', '噁心吐', '反胃'],
-        '不舒服': ['難受', '不適', '不好受', '不對勁']
+        '小孩': ['弟弟', '小威', '小朋友',' 孩子', '小孩子', '兒童',],
+        '小威': ['弟弟', '小朋友', '他'],
+        '弟弟': ['小威', '小朋友', '他'],
+        '他': ['弟弟', '小威', '小孩'],
+        '小朋友': ['小威', '弟弟', '他'],
+
+        '他的': ['弟弟的','小威的', '小朋友的'],
+       
+        '姊姊': ['我'],
+        '阿姨': ['媽媽', '我'],
+        
+        '母親': ['媽媽', '媽', ],
+        '媽媽': ['母親', '媽', ],
+        '爸爸': ['母親', '媽',],
+
+        '醫生': ['醫師', '大夫',],
+        '醫師': ['醫生', '大夫',],
+
+        '生病': ['患病', '不舒服', '不適',],        
+        '不舒服': ['患病', '生病', '不適',],
+
+        '肚子': ['肚肚', '腹部', '肚腹', '腹',],
+        '肚肚': ['肚子','腹部', '肚腹', '腹',],
+        
+        '發燒': ['體溫升高'],
+        '嘔吐': ['吐', '嘔',],
+        '吐': ['嘔吐', '嘔',],
+        '不舒服': ['難受', '不適', '不好受', '不對勁'],
+
+        '拉肚子': ['腹瀉', '大便', '肚子不舒服', '拉稀'],
+        '腹瀉': ['拉肚子', '大便'],
+        '大便': ['拉肚子', '腹瀉'],
+
+
+        '小便': ['尿尿', '尿',],
+
     }
     
     # 添加繁简转换变体
@@ -471,12 +502,14 @@ if __name__ == "__main__":
     parser.add_argument('--interactive', action='store_true', help='啟動交互式查詢模式')
     parser.add_argument('--rebuild-index', action='store_true', help='重建索引')
     parser.add_argument('--data-path', type=str, help='數據文件路徑')
+    parser.add_argument('--output-index', type=str, help='索引儲存資料夾路徑（預設為 ../../lib/faiss_index）')
+
     args = parser.parse_args()
     
     # 設置數據路徑
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = args.data_path if args.data_path else os.path.join(script_dir, "../../../lib/rag_lookup_data_cleaned.jsonl")
-    index_dir = os.path.join(script_dir, "../../lib/faiss_index")
+    index_dir = args.output_index if args.output_index else os.path.join(script_dir, "../../lib/faiss_index")
     
     # 檢查數據文件是否存在
     if not os.path.exists(data_path):

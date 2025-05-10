@@ -1,3 +1,4 @@
+// src/app/login/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -28,6 +29,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  
 
   useEffect(() => {
     setMounted(true);

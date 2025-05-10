@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import sys
 
+
 # 修改導入方式，避免每次都檢查依賴
 sys.dont_write_bytecode = True  # 避免生成 .pyc 文件
 
@@ -32,64 +33,75 @@ except Exception as e:
 def query():
     data = request.json
     query_text = data.get('query', '')
-    top_k = data.get('top_k', 3)
-    previous_tag = data.get('previous_tag', None)  # 獲取前一句對話的標籤
+    top_k = data.get('top_k', 5)  # 預設為 5
+    previous_tag = data.get('previous_tag', None)
     
     if not query_text:
         return jsonify({"error": "查詢文本不能為空"}), 400
-    
-    results = query_index(index, doc_map, documents, query_text, top_k=top_k)
-    
-    # 如果有前一句對話的標籤，進行加權調整
-    if previous_tag and previous_tag in ['A', 'B', 'C', 'D', 'F']:
-        # 格式化結果並進行加權
+
+    results = query_index(index, doc_map, documents, query_text, top_k=top_k + 5)  # 先多取一些以便排序
+
+    formatted_results = []
+
+    def is_upper_alpha(c):
+        return isinstance(c, str) and len(c) == 1 and 'A' <= c <= 'Z'
+
+    if previous_tag and is_upper_alpha(previous_tag):
         weighted_results = []
         for result in results:
-            # 獲取當前結果的標籤
-            current_tag = result['metadata'].get('tag', '')
-            
-            # 計算加權分數：如果標籤匹配，增加權重
+            metadata = result['metadata']
+            current_tag = metadata.get('tag', '')
             original_score = float(result['score'])
-            if current_tag == previous_tag:
-                # 使用0.9 + 0.1標籤的加權
-                weighted_score = original_score * 0.9 + 0.1
+
+            # 預設不加分
+            weighted_score = original_score
+            if not previous_tag or previous_tag == '':
+                # 沒有 previous_tag 時，A 或 B 給滿分，其餘 0.95
+                if current_tag in ('A', 'B'):
+                    weighted_score = 1.0
+                else:
+                    weighted_score = 0.95
+            elif current_tag == previous_tag:
+                weighted_score = original_score * 0.8 + 0.05
+            elif is_upper_alpha(current_tag) and current_tag > previous_tag:
+                weighted_score = original_score * 0.8 + 0.0495
             else:
-                weighted_score = original_score * 0.9
-            
+                weighted_score = original_score * 0.8 + 0.04
+
+
+
             weighted_results.append({
-                "answer": result['metadata']['answer'],
-                "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
-                "audioUrl": result['metadata'].get('audioUrl', None),
-                "code": result['metadata'].get('code', None),
-                "imageToShow": result['metadata'].get('imageToShow', None),
-                "question": result['metadata']['question'],
+                "answer": metadata['answer'],
+                "question": metadata['question'],
                 "score": weighted_score,
-                "tags": result['metadata'].get('tag', []),
-                # 可選字段
+                "tags": current_tag,
+                "code": metadata.get('code'),
+                "answerType": metadata.get('answerType', 'dialogue'),
+                "imageToShow": metadata.get('imageToShow'),
+                "audioUrl": metadata.get('audioUrl'),
             })
-        
-        # 根據加權後的分數重新排序
+
+        # 依照加分後分數排序
         weighted_results.sort(key=lambda x: x['score'], reverse=True)
-        
-        # 只返回前top_k個結果
         formatted_results = weighted_results[:top_k]
+
     else:
-        # 如果沒有前一句對話的標籤，直接格式化結果
-        formatted_results = []
-        for result in results:
+        # 無前一標籤 → 不加權
+        for result in results[:top_k]:
+            metadata = result['metadata']
             formatted_results.append({
                 "score": float(result['score']),
-                "question": result['metadata']['question'],
-                "answer": result['metadata']['answer'],
-                "tags": result['metadata'].get('tag', []),
-                "code": result['metadata'].get('code', None),
-                "answerType": result['metadata'].get('answerType', 'dialogue'),  # 提供默認值
-                # 可選字段
-                "imageToShow": result['metadata'].get('imageToShow', None),
-                "audioUrl": result['metadata'].get('audioUrl', None)
+                "question": metadata['question'],
+                "answer": metadata['answer'],
+                "tags": metadata.get('tag', []),
+                "code": metadata.get('code'),
+                "answerType": metadata.get('answerType', 'dialogue'),
+                "imageToShow": metadata.get('imageToShow'),
+                "audioUrl": metadata.get('audioUrl'),
             })
-    
+
     return jsonify({"results": formatted_results})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True) 

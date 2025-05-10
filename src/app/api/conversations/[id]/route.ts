@@ -1,7 +1,6 @@
 // src/app/api/conversations/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';  // ✅ 專門用來補型別
 
 // 添加動態配置
 export const dynamic = 'force-dynamic';
@@ -31,27 +30,9 @@ export async function GET(
     
     console.log(`獲取對話詳情: ID=${conversationId}, 用户ID=${userId}`);
     
-    // 查詢對話資訊，包括關聯的場景
-    // ✅ 正確的型別指定
-    const conversation: Prisma.ConversationGetPayload<{
-      include: {
-        scenario: {
-          select: {
-            title: true;
-            description: true;
-          };
-        };
-        messages: {
-          include: {
-            scoringItems: true;
-          };
-        };
-        reflections: true;
-      };
-    }> = await prisma.conversation.findUnique({
-      where: {
-        id: conversationId,
-      },
+
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
       include: {
         scenario: {
           select: {
@@ -60,21 +41,16 @@ export async function GET(
           },
         },
         messages: {
-          orderBy: {
-            elapsedSeconds: 'asc',
-          },
-          include: {
-            scoringItems: true,
-          },
+          orderBy: { elapsedSeconds: 'asc' },
+          include: { scoringItems: true },
         },
         reflections: {
-          orderBy: {
-            timestamp: 'asc',
-          },
+          orderBy: { timestamp: 'asc' },
         },
+        nursingCaseNote: true, // ✅ 新增這個
       },
     });
-
+    
 
     if (!conversation) {
       return NextResponse.json(
@@ -149,10 +125,14 @@ export async function GET(
       scenarioTitle: conversation.scenario?.title || '',
       scenarioDescription: conversation.scenario?.description || '',
       messages: formattedMessages,
-      feedback: conversation.reflection,
+      feedback: conversation.reflections,
       reflections: formattedReflections,
       scoredItems: scoredItems,
-    };
+      nursingCaseNote: conversation.nursingCaseNote
+      ? { rawText: conversation.nursingCaseNote.rawText, matchedCodes: conversation.nursingCaseNote.matchedCodes }
+      : null,
+      fluency: conversation.fluency,
+      };
 
     return NextResponse.json(responseData);
   } catch (error) {
@@ -202,7 +182,7 @@ export async function PATCH(
         durationSec: data.durationSec,
         score: data.score,
         overtime: data.overtime,
-        reflection: data.reflection,
+        reflections: data.reflections,
       },
     });
     

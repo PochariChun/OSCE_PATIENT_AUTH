@@ -1,0 +1,14 @@
+[
+  {
+    "answer": "抱歉，我沒有聽清楚您說的話，能再說一次嗎？",
+    "audioUrl": "/audio/fallback_1.mp3"
+  },
+  {
+    "answer": "不好意思，能請您再重複一次嗎？",
+    "audioUrl": "/audio/fallback_2.mp3"
+  },
+  {
+    "answer": "對不起，我剛才沒聽清楚，請再說一次好嗎？",
+    "audioUrl": "/audio/fallback_3.mp3"
+  }
+]

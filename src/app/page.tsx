@@ -219,6 +219,25 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* 快速操作卡片 */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-4 py-3 mb-6">
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                快速操作
+              </h2>
+              <div className="space-y-3">
+                <button 
+                  onClick={handleStartNewDialogue}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+                >
+                  點我開始新對話
+                </button>
+                
+              </div>
+            </div>
+            </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 左側：用戶資訊和快速操作 */}
           <div className="lg:col-span-1 space-y-6">
@@ -243,22 +262,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 快速操作卡片 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                快速操作
-              </h2>
-              <div className="space-y-3">
-                <button 
-                  onClick={handleStartNewDialogue}
-                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
-                >
-                  開始新對話
-                </button>
-                
-              </div>
-            </div>
-
+            
             {/* 學習進度卡片 */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">

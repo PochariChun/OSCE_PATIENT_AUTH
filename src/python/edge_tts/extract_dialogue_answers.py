@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+# src/python/edge_tts/extract_dialogue_answers.py
 """
 提取 rag_lookup_data.jsonl 中的對話型回答
 將所有 answerType 不為 "narration" 或沒有 answerType 的回答提取出來
@@ -17,8 +17,8 @@ def extract_dialogue_answers():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
     # 構建輸入和輸出文件路徑
-    input_file = os.path.join(script_dir, "../lib/rag_lookup_data.jsonl")
-    output_file = os.path.join(script_dir, "../lib/dialogue_answers.json")
+    input_file = os.path.join(script_dir, "../../lib/rag_lookup_data_cleaned.jsonl")
+    output_file = os.path.join(script_dir, "../../lib/dialogue_answers.json")
     
     # 檢查輸入文件是否存在
     if not os.path.exists(input_file):

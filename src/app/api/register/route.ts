@@ -1,10 +1,11 @@
+// src/app/api/register/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { signJWT } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {
-    const { username } = await request.json();
+    const { username, gender }: { username: string; gender?: string } = await request.json();
     
     // 只檢查用戶名是否提供
     if (!username) {
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest) {
         email: `${username}@stu.ypu.edu.tw`, // 生成臨時郵箱
         password: '', // 空密碼，因為不需要密碼登錄
         nickname: username, // 使用學號作為名稱
+        gender: gender,
         isActive: true,
       },
     });

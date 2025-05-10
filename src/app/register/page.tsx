@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [gender, setGender] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,6 +124,25 @@ export default function RegisterPage() {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
+
+                <div>
+                  <label htmlFor="gender" className="sr-only">
+                    性別
+                  </label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    required
+                    className="w-full rounded-md p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">選擇性別</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                  </select>
+                </div>
+
               </div>
 
               {error && (

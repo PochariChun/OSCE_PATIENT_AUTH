@@ -1,11 +1,32 @@
+"""
+三種呼叫方法
+python src/python/edge_tts/generate_dialogue_audio.py --input src/lib/dialogue_answers.json --all
+python src/python/edge_tts/generate_dialogue_audio.py --fallback
+python src/python/edge_tts/generate_dialogue_audio.py --input src/lib/rag_lookup_data_cleaned_origin.jsonl --jsonl
+
+"""
+
 import asyncio
 import os
 import json
 import argparse
 import hashlib
 from generate_edge_tts_audio import generate_speech
-import jsonlines
 # zh-CN-XiaoyiNeural, zh-CN-XiaoxiaoNeural
+
+
+# === 全域預設設定 ===
+DEFAULT_CONFIG = {
+    "voice": "zh-TW-HsiaoChenNeural",
+    "output_dir": "public/audio",
+    "output_jsonl_dir": "src/lib",
+    "fallback_filename_pattern": "fallback_{i}.mp3",
+    "custom_filename": "custom_audio",
+    "output_jsonl_filename": "rag_lookup_data_cleaned.jsonl",
+    "output_dialogue_json": "dialogue_with_audio.json",
+    "output_fallback_json": "fallback_responses.json"
+}
+
 async def generate_audio_for_answer(answer, question, output_dir, voice="zh-TW-HsiaoChenNeural"):
     """
     為單個回答生成音頻文件
@@ -27,7 +48,7 @@ async def generate_audio_for_answer(answer, question, output_dir, voice="zh-TW-H
     await generate_speech(answer, voice, output_file)
     return output_file
 
-async def process_single_answer(input_file, output_dir, question_text=None, index=None, voice="zh-TW-HsiaoChenNeural"):
+async def process_single_answer(input_file, output_dir, output_jsonl_dir, question_text=None, index=None, voice="zh-TW-HsiaoChenNeural"):
     """
     處理單個回答並生成音頻
     
@@ -78,7 +99,7 @@ async def process_single_answer(input_file, output_dir, question_text=None, inde
         return
     
     # 保存更新後的數據
-    output_json = os.path.join(output_dir, "dialogue_with_audio.json")
+    output_json = os.path.join(output_jsonl_dir, "dialogue_with_audio.json")
     with open(output_json, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
@@ -138,7 +159,7 @@ async def process_custom_text(text, output_dir, filename="custom_audio", voice="
     print(f"已生成自定義音頻: {output_file}")
     return output_file
 
-async def process_jsonl_answers(input_file, output_dir, voice="zh-TW-HsiaoChenNeural"):
+async def process_jsonl_answers(input_file, output_dir,output_jsonl_dir, voice="zh-TW-HsiaoChenNeural"):
     """
     為JSONL文件中的所有回答生成音頻
     
@@ -201,7 +222,7 @@ async def process_jsonl_answers(input_file, output_dir, voice="zh-TW-HsiaoChenNe
                 print(f"已生成音頻: {full_path}")
     
     # 保存更新後的數據
-    output_jsonl = os.path.join(output_dir, "rag_lookup_data_with_audio.jsonl")
+    output_jsonl = os.path.join(output_jsonl_dir, "rag_lookup_data_cleaned.jsonl")
     with open(output_jsonl, 'w', encoding='utf-8') as f:
         for item in data:
             f.write(json.dumps(item, ensure_ascii=False) + '\n')
@@ -209,37 +230,68 @@ async def process_jsonl_answers(input_file, output_dir, voice="zh-TW-HsiaoChenNe
     print(f"已更新JSONL數據: {output_jsonl}")
     print(f"總共處理了 {len(data)} 條記錄，生成了 {len(processed_answers)} 個唯一音頻文件")
 
+async def generate_fallback_responses(
+    output_dir=DEFAULT_CONFIG["output_dir"],
+    voice=DEFAULT_CONFIG["voice"]
+):
+    fallback_sentences = [
+        "抱歉，我沒有聽清楚您說的話，能再說一次嗎？",
+        "不好意思，能請您再重複一次嗎？",
+        "對不起，我剛才沒聽清楚，請再說一次好嗎？"
+    ]
+    results = []
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    for i, sentence in enumerate(fallback_sentences, start=1):
+        filename = DEFAULT_CONFIG["fallback_filename_pattern"].format(i=i)
+        full_path = os.path.join(output_dir, filename)
+        await generate_speech(sentence, voice, full_path)
+        print(f"已生成 fallback 語音: {full_path}")
+        results.append({
+            "answer": sentence,
+            "audioUrl": f"/audio/{filename}"
+        })
+
+    output_json = os.path.join(output_dir, DEFAULT_CONFIG["output_fallback_json"])
+    with open(output_json, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+    print(f"已儲存 fallback 語音描述至: {output_json}")
+
+
 async def main():
     parser = argparse.ArgumentParser(description="為對話回答生成音頻")
     parser.add_argument("--input", help="輸入文件路徑 (JSON或JSONL)")
-    parser.add_argument("--output_dir", default="audio", help="輸出音頻文件目錄")
-    parser.add_argument("--voice", default="zh-TW-HsiaoChenNeural", help="要使用的語音名稱")
+    parser.add_argument("--output_dir", default=DEFAULT_CONFIG["output_dir"], help="輸出音頻文件目錄")
+    parser.add_argument("--output_jsonl_dir", default=DEFAULT_CONFIG["output_jsonl_dir"], help="輸出JSONL文件目錄")
+    parser.add_argument("--voice", default=DEFAULT_CONFIG["voice"], help="要使用的語音名稱")
     parser.add_argument("--question", help="要處理的特定問題文本（部分匹配）")
     parser.add_argument("--index", type=int, help="要處理的問題索引")
     parser.add_argument("--all", action="store_true", help="處理所有問題")
     parser.add_argument("--text", help="直接將指定文本轉換為語音")
-    parser.add_argument("--filename", default="custom_audio", help="自定義文本的輸出文件名")
+    parser.add_argument("--filename", default=DEFAULT_CONFIG["custom_filename"], help="自定義文本的輸出文件名")
     parser.add_argument("--jsonl", action="store_true", help="處理JSONL格式文件")
-    
+    parser.add_argument("--fallback", action="store_true", help="生成 fallback 語音")
+
     args = parser.parse_args()
-    
-    # 處理自定義文本
+
+    if args.fallback:
+        await generate_fallback_responses(args.output_dir, args.voice)
+        return
+
     if args.text:
         await process_custom_text(args.text, args.output_dir, args.filename, args.voice)
         return
-    
-    # 確保提供了輸入文件
+
     if not args.input:
         parser.error("必須提供 --input 參數，除非使用 --text 參數")
-    
-    # 處理JSONL文件
+
     if args.jsonl:
-        await process_jsonl_answers(args.input, args.output_dir, args.voice)
-    # 處理單個問題或所有問題
+        await process_jsonl_answers(args.input, args.output_dir, args.output_jsonl_dir, args.voice)
     elif args.question or args.index is not None:
-        await process_single_answer(args.input, args.output_dir, args.question, args.index, args.voice)
+        await process_single_answer(args.input, args.output_dir, args.output_jsonl_dir, args.question, args.index, args.voice)
     elif args.all or (not args.question and args.index is None):
         await process_dialogue_answers(args.input, args.output_dir, args.voice)
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

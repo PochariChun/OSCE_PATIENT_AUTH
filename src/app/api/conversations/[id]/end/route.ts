@@ -1,4 +1,5 @@
 // src/app/api/conversations/[id]/end/route.ts
+// END 會更新score一次
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -65,7 +66,15 @@ export async function POST(
       0
     );
 
-    const totalScore = dialogueScore + extraScore;
+    // 計算總分
+    let totalScore = dialogueScore + extraScore;
+    let fluency = false;
+
+    // 若 totalScore > 57，額外加上 M1 分數（1分）並標記為 fluent
+    if (totalScore > 57) {
+      totalScore += 1;
+      fluency = true;
+    }
 
     const updatedConversation = await prisma.conversation.update({
       where: { id: conversationId },
@@ -74,6 +83,7 @@ export async function POST(
         durationSec,
         overtime,
         score: totalScore,
+        fluency:fluency,
       },
     });
 

@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
-import { allScoringItems } from '@/lib/scoringItems';
+import { generateScoredItems } from '@/lib/scoringItems';
 import Link from 'next/link';
 import React from 'react';
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 
 interface User {
@@ -54,6 +55,9 @@ interface DialogueDetail {
     awarded: boolean;
     hitMessages: string[];
   }[];
+  nursingCaseNote?: {
+    rawText: string;
+  } | null;
 }
 
 export default function DialogueDetailPage() {
@@ -65,7 +69,22 @@ export default function DialogueDetailPage() {
   const router = useRouter();
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const [sectionVisibility, setSectionVisibility] = useState({
+    info: true,
+    messages: true,
+    notes: true,
+    scores: true,
+    feedback: true,
+  });
+  
+  const toggleSection = (section: keyof typeof sectionVisibility) => {
+    setSectionVisibility((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+  
+  
   useEffect(() => {
     const userJson = localStorage.getItem('user');
     if (!userJson) {
@@ -116,16 +135,18 @@ export default function DialogueDetailPage() {
           }
         }
       }
-  
-      const scoredItems = allScoringItems.map((item) => {
-        const hit = awardedMap[item.code];
-        return {
-          ...item,
-          awarded: !!hit,
-          hitMessages: hit ? hit.hitMessages : [],
-        };
+      // console.log('data.nursingCaseNotematchedCodes= ', data.nursingCaseNote.matchedCodes);
+      const noteMatchedCodes = data.nursingCaseNote?.matchedCodes || [];
+      const scoredItems = generateScoredItems(awardedMap, noteMatchedCodes);
+      // 🔁 加入 M1 項目：以 fluency 判定是否得分
+      scoredItems.push({
+        code: 'M1',
+        category: '綜合性表現',
+        subcategory: '護理評估流暢度',
+        score: 1,
+        awarded: data.fluency === true,
+        hitMessages: [data.fluency === true ? '系統判定語句流暢' : '未達流暢標準'],
       });
-  
       setDialogue({ ...data, scoredItems });
     } catch (error) {
       console.error('獲取對話詳情失敗', error);
@@ -211,8 +232,28 @@ export default function DialogueDetailPage() {
           
           {/* 对话信息 */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">對話信息</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                對話資訊
+              </h2>
+              <button
+                onClick={() => toggleSection('info')}
+                className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
+              >
+                {sectionVisibility.info ? (
+                  <>
+                    收合 <span className="ml-1">▲</span>
+                  </>
+                ) : (
+                  <>
+                    展開 <span className="ml-1">▼</span>
+                  </>
+                )}
+              </button>
+            </div>
+            {sectionVisibility.info && (  
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -265,9 +306,9 @@ export default function DialogueDetailPage() {
                         'text-red-600 dark:text-red-400'
                       }`}>
                         {dialogue.score >= 90 ? 'A (優秀)' :
-                         dialogue.score >= 80 ? 'B (良好)' :
-                         dialogue.score >= 70 ? 'C (及格)' :
-                         'D (需加強)'}
+                        dialogue.score >= 80 ? 'B (良好)' :
+                        dialogue.score >= 70 ? 'C (及格)' :
+                        'D (需加強)'}
                       </span>
                     </div>
                   )}
@@ -295,10 +336,27 @@ export default function DialogueDetailPage() {
                 </div>
               </div>
             </div>
+            )}
+
+
+
+
+
           </div>
           {/* 对话内容 */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">對話內容</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">對話內容</h2>
+              <button
+                onClick={() => toggleSection('messages')}
+                className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
+              >
+                {sectionVisibility.messages ? '收合 ▲' : '展開 ▼'}
+              </button>
+            </div>
+
+            {sectionVisibility.messages && (
+
             <div className="relative max-h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
               <div className="flex justify-center">
                 <div className="relative w-full max-w-4xl">
@@ -405,163 +463,202 @@ export default function DialogueDetailPage() {
                 </div>
               </div>
             </div>
+            )}
           </div>
+
+          {/* 護理紀錄筆記 */}
+          {dialogue.nursingCaseNote?.rawText && (
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">護理紀錄</h2>
+                <button
+                  onClick={() => toggleSection('notes')}
+                  className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
+                >
+                  {sectionVisibility.notes ? '收合 ▲' : '展開 ▼'}
+                </button>
+              </div>
+              {sectionVisibility.notes && (
+
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md whitespace-pre-line text-gray-800 dark:text-gray-200">
+                {dialogue.nursingCaseNote.rawText}
+              </div>
+              )}
+            </div>
+          )}
+
+          {/* 評分細項 */}
           {/* 評分細項 */}
           {Object.entries(groupedScoredItems).length > 0 ? (
-
             <div className="mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評分細項</h2>
-              {/* ✅ 控制全部類別的顯示切換按鈕 */}
-              <div className="flex justify-end mb-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">評分細項</h2>
                 <button
-                  onClick={() => setIsCollapsed((prev) => !prev)}
-                  className="text-sm text-blue-600 dark:text-blue-400 font-semibold"
+                  onClick={() => toggleSection('scores')}
+                  className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
                 >
-                  {isCollapsed ? '（僅顯示得分）' : '（全部顯示）'}
+                  {sectionVisibility.scores ? '收合 ▲' : '展開 ▼'}
                 </button>
               </div>
 
-              {Object.entries(groupedScoredItems).map(([category, items], idx) => {
-                const displayItems = (isCollapsed ? items?.filter(item => item.awarded) : items) ?? [];
-
-
-                  
-                const totalScore = items!.reduce((sum, i) => sum + i.score, 0);
-                const earnedScore = items!.reduce((sum, i) => sum + (i.awarded ? i.score : 0), 0);
-                const percentage = Math.round((earnedScore / totalScore) * 100);
-
-                return (
-                  <div key={category} className="mb-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <button
-                        onClick={() =>
-                          setCollapsedCategories((prev) => ({
-                            ...prev,
-                            [category]: !prev[category],
-                          }))
-                        }
-                        className="font-semibold text-left text-lg text-blue-600 dark:text-blue-400"
-                      >
-                        {category}
-
-
-                      </button>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        得分：{earnedScore} / {totalScore}（{percentage}%）
-                      </div>
-                    </div>
-
-                    <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
-
-                   {/* 表頭 */}
-                    <div className="grid grid-cols-[200px_100px_100px_auto] bg-gray-100 dark:bg-gray-700 text-xs uppercase text-gray-700 dark:text-gray-200 px-4 py-2 font-semibold">
-                      <div>項目</div>
-                      <div className="text-center">項目分數</div>
-                      <div className="text-center">是否得分</div>
-                      <div>得分句子</div>
-                    </div>
-
-                    {/* 資料列 */}
-                    {displayItems.map((item, index) => (
-                      <div
-                        key={index}
-                        className={`grid grid-cols-[200px_100px_100px_auto] border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-sm ${
-                          !item.awarded ? 'text-gray-500 dark:text-gray-500 px-4 py-2' : 'text-white-100 dark:text-gray-200 px-4 py-2 font-semibold'
-                        }`}
-                      >
-                        <div>{item.subcategory}</div>
-
-                        <div className="text-center">
-                          {item.score}
-                        </div>
-
-                        <div className="text-center text-white-400 dark:text-gray-200 px-4 py-2">
-                          {item.awarded ? (
-                            <span className="text-green-600 dark:text-green-400 font-semibold">✔ 有</span>
-                          ) : (
-                            <span className="text-red-500 dark:text-red-400 font-semibold">✘ 沒有</span>
-                          )}
-                        </div>
-
-                        <div>
-                          {item.awarded ? item.hitMessages.join('\n') : '—'}
-                        </div>
-                      </div>
-                    ))}
-
-
-
-                      <div className="mt-2 px-4 pb-2">
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded h-2 mt-1">
-                          <div
-                            className="bg-green-500 h-2 rounded"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{percentage}% 完成</div>
-                      </div>
-                    </div>
+              {sectionVisibility.scores && (
+                <>
+                  {/* ✅ 控制全部類別的顯示切換按鈕 */}
+                  <div className="flex justify-end mb-4">
+                    <button
+                      onClick={() => setIsCollapsed((prev) => !prev)}
+                      className="text-sm text-blue-600 dark:text-blue-400 font-semibold"
+                    >
+                      {isCollapsed ? '（僅顯示得分）' : '（全部顯示）'}
+                    </button>
                   </div>
-                );
-              })}
-            </div>            
-          ): (
+
+                  {Object.entries(groupedScoredItems).map(([category, items], idx) => {
+                    const displayItems = (isCollapsed ? items?.filter(item => item.awarded) : items) ?? [];
+                    const totalScore = items.reduce((sum, i) => sum + i.score, 0);
+                    const earnedScore = items.reduce((sum, i) => sum + (i.awarded ? i.score : 0), 0);
+                    const percentage = Math.round((earnedScore / totalScore) * 100);
+
+                    return (
+                      <div key={category} className="mb-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <button
+                            onClick={() =>
+                              setCollapsedCategories((prev) => ({
+                                ...prev,
+                                [category]: !prev[category],
+                              }))
+                            }
+                            className="font-semibold text-left text-lg text-blue-600 dark:text-blue-400"
+                          >
+                            {category}
+                          </button>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            得分：{earnedScore} / {totalScore}（{percentage}%）
+                          </div>
+                        </div>
+
+                        <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                          {/* 表頭 */}
+                          <div className="grid grid-cols-[200px_100px_100px_auto] bg-gray-100 dark:bg-gray-700 text-xs uppercase text-gray-700 dark:text-gray-200 px-4 py-2 font-semibold">
+                            <div>項目</div>
+                            <div className="text-center">項目分數</div>
+                            <div className="text-center">是否得分</div>
+                            <div>得分句子</div>
+                          </div>
+
+                          {/* 資料列 */}
+                          {displayItems.map((item, index) => (
+                            <div
+                              key={index}
+                              className={`grid grid-cols-[200px_100px_100px_auto] border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-sm ${
+                                !item.awarded
+                                  ? 'text-gray-500 dark:text-gray-500 font-normal'
+                                  : 'text-white-100 dark:text-gray-200 font-semibold'
+                              }`}
+                            >
+                              <div>{item.subcategory}</div>
+                              <div className="text-center">{item.score}</div>
+                              <div className="text-center">
+                                {item.awarded ? (
+                                  <span className="text-green-600 dark:text-green-400 font-semibold">✔ 有</span>
+                                ) : (
+                                  <span className="text-red-500 dark:text-red-400 font-semibold">✘ 沒有</span>
+                                )}
+                              </div>
+                              <div>{item.awarded ? item.hitMessages.join('\n') : '—'}</div>
+                            </div>
+                          ))}
+
+                          {/* 進度條 */}
+                          <div className="mt-2 px-4 pb-2">
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded h-2 mt-1">
+                              <div
+                                className="bg-green-500 h-2 rounded"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{percentage}% 完成</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          ) : (
             <div className="text-center text-gray-500 dark:text-gray-400">尚無評分項目</div>
           )}
+
 
           
           {/* 添加反思内容部分 */}
           {(dialogue.reflection || (dialogue.reflections && dialogue.reflections.length > 0)) && (
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評語</h2>
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-                {dialogue.reflection && (
-                  <div className="mb-4">
-                    <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">總結反思</h3>
-                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.reflection}</p>
-                  </div>
-                )}
-                
-                {dialogue.reflections && dialogue.reflections.length > 0 && (
-                  <div>
-                    <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">反思對話</h3>
-                    <div className="space-y-3 max-h-60 overflow-y-auto p-2">
-                      {dialogue.reflections.map((item, index) => (
-                        <div 
-                          key={item.id || index} 
-                          className={`p-3 rounded-lg ${
-                            item.sender === 'user' 
-                              ? 'bg-blue-100 dark:bg-blue-900 ml-8' 
-                              : 'bg-gray-100 dark:bg-gray-600 mr-8'
-                          }`}
-                        >
-                          <p className="text-sm">{item.text}</p>
-                          {item.strategyTag && (
-                            <span className="inline-block mt-1 text-xs px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200">
-                              {item.strategyTag}
-                            </span>
-                          )}
-                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                            {new Date(item.timestamp).toLocaleTimeString('zh-TW')}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">反思對話</h2>
+                <button
+                  onClick={() => toggleSection('feedback')}
+                  className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
+                >
+                  {sectionVisibility.feedback ? '收合 ▲' : '展開 ▼'}
+                </button>
               </div>
+
+
+              {sectionVisibility.feedback && (
+
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                  {dialogue.reflection && (
+                    <div className="mb-4">
+                      <h3 className="text-md font-medium text-gray-800 dark:text-gray-200 mb-2">總結反思</h3>
+                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.reflection}</p>
+                    </div>
+                  )}
+                  
+                  {dialogue.reflections && dialogue.reflections.length > 0 && (
+                    <div>
+                      <div className="space-y-3 max-h-60 overflow-y-auto p-2">
+                        {dialogue.reflections.map((item, index) => (
+                          <div 
+                            key={item.id || index} 
+                            className={`p-3 rounded-lg ${
+                              item.sender === 'user' 
+                                ? 'bg-blue-100 dark:bg-blue-900 ml-8' 
+                                : 'bg-gray-100 dark:bg-gray-600 mr-8'
+                            }`}
+                          >
+                            <p className="text-sm">{item.text}</p>
+                            {item.strategyTag && (
+                              <span className="inline-block mt-1 text-xs px-2 py-1 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200">
+                                {item.strategyTag}
+                              </span>
+                            )}
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                              {new Date(item.timestamp).toLocaleTimeString('zh-TW')}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+              )}
+
             </div>
           )}
           
           {/* 保留原有的feedback显示，以防有些对话使用旧格式 */}
-          {dialogue.feedback && !dialogue.reflection && (
+          {/* {dialogue.feedback && !dialogue.reflection && (
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評語</h2>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
                 <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.feedback}</p>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </main>
 

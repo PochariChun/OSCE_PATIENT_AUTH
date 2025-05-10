@@ -1,3 +1,4 @@
+// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -21,6 +22,7 @@ const nextConfig = {
     // 构建时忽略 TypeScript 错误
     ignoreBuildErrors: true,
   },
+  
 }
 
 module.exports = nextConfig 
