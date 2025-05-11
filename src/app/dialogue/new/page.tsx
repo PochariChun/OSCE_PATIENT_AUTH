@@ -4,7 +4,6 @@
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Navbar } from '../../../components/navbar';
-import Link from 'next/link';
 import { MicrophoneCheck } from '@/components/dialogue/MicrophoneCheck';
 import Image from 'next/image';
 
@@ -69,11 +68,47 @@ interface SpeechRecognition extends EventTarget {
   onerror: ((event: SpeechRecognitionEvent) => void) | null;
   onend: (() => void) | null;
 }
+// 判斷是否立即回覆的醫療關鍵詞
+function checkImmediateEchoReply(userMessage: string): string | null {
+  const cleaned = userMessage.trim();
+
+  // 體溫回應邏輯
+  const tempMatch = cleaned.match(/(?:他的)?體溫\s*(\d{2,3}(\.\d)?)/);
+  if (tempMatch && cleaned === tempMatch[0]) {
+    return `好的，體溫${tempMatch[1]}`;
+  }
+
+  // 心跳回應邏輯
+  const pulseMatch = cleaned.match(/(?:他的)?心跳\s*(\d{2,3})/);
+  if (pulseMatch && cleaned === pulseMatch[0]) {
+    return `好的，心跳${pulseMatch[1]}`;
+  }
+
+  // 血壓回應邏輯
+  const bpMatch = cleaned.match(/(?:他的)?血壓\s*(\d{2,3})\s*\/\s*(\d{2,3})/);
+  if (bpMatch && cleaned === bpMatch[0]) {
+    return `好的，血壓${bpMatch[1]}/${bpMatch[2]}`;
+  }
+
+  // 呼吸次數回應邏輯
+  const rrMatch = cleaned.match(/(?:他的)?呼吸(次數)?\s*(\d{1,3})/);
+  if (rrMatch && cleaned === rrMatch[0]) {
+    return `好的，呼吸次數${rrMatch[2]}`;
+  }
+
+  // 血糖回應邏輯
+  const sugarMatch = cleaned.match(/(?:他的)?血糖\s*(\d{2,3})/);
+  if (sugarMatch && cleaned === sugarMatch[0]) {
+    return `好的，血糖${sugarMatch[1]}`;
+  }
+
+  return null;
+}
 
 // 標準化名稱變體
 const normalizeNames = (text: string): string => {
   // 將所有"小威"的變體統一為"小威"
-  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小為/g, '小威');
+  return text.replace(/小葳|小薇|曉薇|曉威|筱威|小為|筱薇|孝威。/g, '小威');
 };
 function normalizeMedicalTerms(text: string): string {
   const medicalCorrections: Record<string, string> = {
@@ -96,6 +131,21 @@ function normalizeMedicalTerms(text: string): string {
     'CC水水': '稀稀水水',
     '細細水水': '稀稀水水',
     '床頭塔': '床頭卡',
+    '是聽扣處': '視、聽、扣、觸',
+    '視聽扣觸': '視、聽、扣、觸',
+    '一夏': '一下',
+    '像病人': '向病人',
+    '大小便': '大便和尿尿',
+    '小便': '尿尿',
+    '拉幾次': '腹瀉幾次',
+    '小編': '尿尿',
+    '小小便': '尿尿',
+    '嘻嘻': '稀稀',
+    'cc': '稀稀',
+    'CC': '稀稀',
+    '床好': '床號',
+    '偶數': '嘔吐',
+    '杜德': '嘔吐的',
   };
   let normalized = text;
   for (const [incorrect, correct] of Object.entries(medicalCorrections)) {
@@ -132,7 +182,7 @@ function DialogueNewContent() {
   const [lastSentenceEnd, setLastSentenceEnd] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [lastpatientmsgTime, setLastpatientmsgTime] = useState(0);
+  const [lastpatientmsgTime, setLastpatientmsgTime] = useState<number | null>(0);
   const [lastTag, setLastTag] = useState('');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [delayThreshold, setDelayThreshold] = useState(10);
@@ -370,6 +420,47 @@ function DialogueNewContent() {
       setScenarios([]);
     }
   };
+
+  const saveMessage = async ({
+    sender,
+    content,
+    elapsedSeconds,
+    delayFromPrev = 0,
+    isDelayed = false,
+    tag = null,
+    audioUrl = null,
+    scoringItems = [],
+    timestamp = undefined // ✅ 新增這行
+  }: {
+    sender: 'nurse' | 'patient';
+    content: string;
+    elapsedSeconds: number;
+    delayFromPrev?: number;
+    isDelayed?: boolean;
+    tag?: string | null;
+    audioUrl?: string | null;
+    scoringItems?: string[];
+    timestamp?: string; // ✅ 加上這個屬性
+  }) => {
+    if (!conversationId) return;
+  
+    await fetch(`/api/conversations/${conversationId}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender,
+        content,
+        elapsedSeconds,
+        delayFromPrev,
+        isDelayed,
+        tag,
+        audioUrl,
+        scoringItems,
+        ...(timestamp ? { timestamp } : {}) // ✅ 有傳 timestamp 時才加進去
+
+      })
+    });
+  };
   
   const handleScenarioSelect = async (scenarioCode: string) => {
     const scenario = scenarios.find(s => s.scenarioCode === scenarioCode);
@@ -488,180 +579,141 @@ function DialogueNewContent() {
     }
   };
   
-  
   const sendMessageToServer = async (messageText: string) => {
     try {
-
-      // 計算護理師回覆的時間
-      let elapsedTimeNurse = elapsedTime;
-
-      // 添加用户消息到对话
-      const userMessage = {
-        role: 'nurse' as const,
-        content: messageText,
-        elapsedSeconds: elapsedTime,
-        timestamp: new Date()
-      };
-
-      // 先添加消息到對話，但時間戳和延遲稍後會更新
-      setConversation(prev => [...prev, userMessage]);
-
-      // 計算用户回覆的延遲
-      const DelayFromPrev = elapsedTimeNurse - lastpatientmsgTime
-      const IsDelayed = DelayFromPrev > delayThreshold;
-
-      // =======================================================================
-      // 获取AI回复
-      const { response: aiResponseText, tag, audioUrl, code, answerType } = await getAIResponse(
-      messageText, 
-      lastTag // 這是 clientPreviousTag 對應的第三個參數
-      );
-      // =======================================================================
-
-      // 音頻播放完成後，更新時間戳
-      const replyTime = new Date();
-      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
-      // 更新tag
+      const now = new Date();
+      const currentSec = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
+      const lastSec = lastpatientmsgTime ?? 0;
+      const delayFromPrev = Math.max(0, currentSec - lastSec);
+      const isDelayed = delayFromPrev > delayThreshold;
+  
+      // ✅ 檢查是否為即時回覆語句（例如 體溫 37.8）
+      const immediateReply = checkImmediateEchoReply(messageText);
+      if (immediateReply) {
+        const userMessage = {
+          role: 'nurse' as const,
+          content: messageText,
+          elapsedSeconds: currentSec,
+          timestamp: now
+        };
+        const aiMessage = {
+          role: 'patient' as const,
+          content: immediateReply,
+          elapsedSeconds: currentSec + 1,
+          timestamp: new Date(now.getTime() + 1000)
+        };
+  
+        setConversation(prev => [...prev, userMessage, aiMessage]);
+        setOverlayText(immediateReply);
+        setTimeout(() => setOverlayText(null), 4000);
+  
+        if (conversationId) {
+          await saveMessage({
+            sender: 'nurse',
+            content: messageText,
+            elapsedSeconds: currentSec,
+            delayFromPrev,
+            isDelayed,
+            tag: lastTag,
+          });
+  
+          await saveMessage({
+            sender: 'patient',
+            content: immediateReply,
+            elapsedSeconds: currentSec + 1,
+            delayFromPrev: 0,
+            isDelayed: false
+          });
+        }
+  
+        return; // 不進入 AI 回覆流程
+      }
+  
+      // ✅ 正常 AI 回覆流程
+      setConversation(prev => [
+        ...prev,
+        {
+          role: 'nurse' as const,
+          content: messageText,
+          elapsedSeconds: currentSec,
+          timestamp: now
+        }
+      ]);
+  
+      const { response: aiResponseText, tag, audioUrl, code, answerType } = await getAIResponse(messageText, lastTag);
       setLastTag(tag);
-
-      // 保存最新的音频URL
+  
       if (audioUrl && answerType === 'dialogue') {
         setLastAudioUrl(audioUrl);
       }
-      
-      // 在头像上显示回复文本
+  
       setOverlayText(aiResponseText);
-
-
-      let elapsedTimePatient = replySeconds;
-      setLastpatientmsgTime(replySeconds);
-      
-
-      // 创建临时消息
-      const tempAiMessage = {
-        role: 'patient' as const,
-        content: aiResponseText,
-        elapsedSeconds: elapsedTimePatient,
-        timestamp: new Date(),
-      };
-      
-      
-
-      
-      
-
-      
-      // 先添加消息到對話
-      setConversation(prev => [...prev, tempAiMessage]);
-      
-      // 如果有音頻URL，播放音頻
-      if (audioUrl) {
-        try {
-          await playAudio(audioUrl);
-        } catch (error) {
-          console.error('播放音频失败:', error);
-        }
-      }
-      
-      // 設置一個定時器，在一段時間後清除頭像上的文本
-      setTimeout(() => {
-        setOverlayText(null);
-      }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
-      
-
-      
-
-      setDelayThreshold(10 + Math.floor(aiResponseText.length / 3));
-
-
-      
- 
+      const replyTime = new Date();
+      const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : currentSec + 1;
+  
       let scoringItems: string[] = [];
       if (code) {
-        const codes: string[] = code.split(',').map((c: string) => c.trim());
-        const newCodes = codes.filter((c: string) => !scoredCodes.has(c)); // ✅ 沒有紅線
-
+        const codes = code.split(',').map((c: string) => c.trim());
+        const newCodes = codes.filter((c) => !scoredCodes.has(c));
         scoringItems = newCodes;
-
         if (newCodes.length > 0) {
           setScoredCodes(prev => new Set([...prev, ...newCodes]));
         }
       }
-      // 計算患者回覆的時間
-      console.log('患者回覆的時間replySeconds', replySeconds);
-      console.log('患者回覆的時間elapsedTimePatient', elapsedTimePatient);
-      console.log('上次患者回覆的時間lastpatientmsgTime', lastpatientmsgTime);
-      console.log('護理師回覆的時間elapsedTimeNurse', elapsedTimeNurse);
-      console.log('護理師回覆的時間-上次患者回覆的時間 DelayFromPrev', DelayFromPrev);
-      console.log('護理師回覆延遲?IsDelayed', IsDelayed);
-      console.log('得分項目scoringItems', scoringItems);
-
-      // 保存用户消息到服务器
-      if (conversationId) {
-        const saveResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sender: 'nurse',
-            content: messageText,
-            elapsedSeconds: elapsedTimeNurse,
-            delayFromPrev: DelayFromPrev,
-            isDelayed: IsDelayed,
-            tag: lastTag,
-            scoringItems: scoringItems,  // <-- 用複數形式傳陣列
-          }),
-        });
-        
-        if (!saveResponse.ok) {
-          console.error('保存用戶消息失敗:', saveResponse.statusText);
+  
+      // UI: 加入暫時訊息（待 audio 播放完成後更新）
+      setConversation(prev => [
+        ...prev,
+        {
+          role: 'patient' as const,
+          content: aiResponseText,
+          elapsedSeconds: replySeconds,
+          timestamp: replyTime,
+        }
+      ]);
+  
+      if (audioUrl) {
+        try {
+          await playAudio(audioUrl);
+        } catch (error) {
+          console.error('播放音頻失敗:', error);
         }
       }
-
-      // 更新助理消息
-      const aiMessage = {
-        ...tempAiMessage,
-        elapsedSeconds: replySeconds,
-        timestamp: replyTime
-      };
-      
-      // 更新對話
-      setConversation(prev => {
-        const newConv = [...prev];
-        newConv[newConv.length - 1] = aiMessage;
-        return newConv;
-      });
-      
-      // 保存AI回复到服务器
+  
+      setTimeout(() => setOverlayText(null), audioUrl ? 8000 : 5000);
+      setDelayThreshold(10 + Math.floor(aiResponseText.length / 3));
+  
       if (conversationId) {
-        const saveAiResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sender: 'patient',
-            content: aiResponseText,
-            elapsedSeconds: elapsedTimePatient,
-            timestamp: replyTime.toISOString(),
-            delayFromPrev: 0,
-            isDelayed: false,
-            tag: tag,
-            audioUrl: audioUrl,
-            scoringItems: scoringItems,  // <-- 用複數形式傳陣列
-
-          }),
+        await saveMessage({
+          sender: 'nurse',
+          content: messageText,
+          elapsedSeconds: currentSec,
+          delayFromPrev,
+          isDelayed,
+          tag: lastTag,
+          scoringItems
         });
-        
-        if (!saveAiResponse.ok) {
-          console.error('保存AI回覆失敗:', saveAiResponse.statusText);
-        }
+  
+        await saveMessage({
+          sender: 'patient',
+          content: aiResponseText,
+          elapsedSeconds: replySeconds,
+          timestamp: replyTime.toISOString(),
+          delayFromPrev: 0,
+          isDelayed: false,
+          tag,
+          audioUrl,
+          scoringItems
+        });
       }
+  
+      // ✅ 更新 last patient 回覆時間（AI回完才更新）
+      setLastpatientmsgTime(replySeconds);
+  
     } catch (error) {
       console.error('處理消息時出錯:', error);
       setConversation(prev => [
-        ...prev, 
+        ...prev,
         {
           role: 'system' as const,
           content: '處理消息時出錯，請稍後再試。',
@@ -670,6 +722,242 @@ function DialogueNewContent() {
       ]);
     }
   };
+  
+  // const sendMessageToServer = async (messageText: string) => {
+  //   try {
+
+  //     // 計算護理師回覆的時間
+  //     let elapsedTimeNurse = elapsedTime;
+
+  //     // =======================================================================
+
+  //     // ✅ 加這段：A, 檢查是否為即時回覆語句（例如 體溫 37.8）
+  //     const immediateReply = checkImmediateEchoReply(messageText);
+  //     if (immediateReply) {
+  //       const now = new Date();
+
+  //       // 精準計算目前經過幾秒
+  //       const currentSec = startTime ? Math.floor((now.getTime() - startTime.getTime()) / 1000) : 0;
+        
+  //       // 上次病人回覆秒數
+  //       const lastSec = lastpatientmsgTime ?? 0;
+        
+  //       // 避免負數
+  //       const delayFromPrev = Math.max(0, currentSec - lastSec);
+        
+  //       // 判斷是否延遲
+  //       const isDelayed = delayFromPrev > delayThreshold;
+        
+        
+        
+  //       // 建立訊息資料
+  //       const userMessage = {
+  //         role: 'nurse' as const,
+  //         content: messageText,
+  //         elapsedSeconds: elapsedTime,
+  //         timestamp: now
+  //       };
+  //       const aiMessage = {
+  //         role: 'patient' as const,
+  //         content: immediateReply,
+  //         elapsedSeconds: elapsedTime + 1,
+  //         timestamp: new Date(now.getTime() + 1000)
+  //       };
+      
+  //       // 更新 UI
+  //       setConversation(prev => [...prev, userMessage, aiMessage]);
+  //       setOverlayText(immediateReply);
+  //       setTimeout(() => setOverlayText(null), 4000);
+      
+  //       // 儲存用戶訊息到伺服器
+  //       if (conversationId) {
+  //         await saveMessage({
+  //           sender: 'nurse',
+  //           content: messageText,
+  //           elapsedSeconds: currentSec,
+  //           delayFromPrev: delayFromPrev,
+  //           isDelayed: isDelayed,
+  //           tag: lastTag,
+  //         });
+      
+  //         await saveMessage({
+  //           sender: 'patient',
+  //           content: immediateReply,
+  //           elapsedSeconds: elapsedTime + 1,
+  //           delayFromPrev: 0,
+  //           isDelayed: false
+  //         });          
+          
+  //       }
+      
+  //       return; // ✅ 不進入 AI 回覆流程
+  //     }
+  //     // =======================================================================
+  //     // B, 不是則由AI回覆
+
+  //     // 添加用户消息到对话
+  //     const userMessage = {
+  //       role: 'nurse' as const,
+  //       content: messageText,
+  //       elapsedSeconds: elapsedTime,
+  //       timestamp: new Date()
+  //     };
+
+  //     // 先添加消息到對話，但時間戳和延遲稍後會更新
+  //     setConversation(prev => [...prev, userMessage]);
+
+  //     // 計算用户回覆的延遲
+  //     const DelayFromPrev = elapsedTimeNurse - lastpatientmsgTime
+  //     const IsDelayed = DelayFromPrev > delayThreshold;
+  //     const { response: aiResponseText, tag, audioUrl, code, answerType } = await getAIResponse(
+  //     messageText, 
+  //     lastTag // 這是 clientPreviousTag 對應的第三個參數
+  //     );
+  //     // =======================================================================
+
+  //     // 音頻播放完成後，更新時間戳
+  //     const replyTime = new Date();
+  //     const replySeconds = startTime ? Math.floor((replyTime.getTime() - startTime.getTime()) / 1000) : 0;
+  //     // 更新tag
+  //     setLastTag(tag);
+
+  //     // 保存最新的音頻URL
+  //     if (audioUrl && answerType === 'dialogue') {
+  //       setLastAudioUrl(audioUrl);
+  //     }
+      
+  //     // 在頭像上顯示回覆文本
+  //     setOverlayText(aiResponseText);
+
+
+  //     let elapsedTimePatient = replySeconds;
+  //     setLastpatientmsgTime(replySeconds);
+      
+
+  //     // 創建臨時消息
+  //     const tempAiMessage = {
+  //       role: 'patient' as const,
+  //       content: aiResponseText,
+  //       elapsedSeconds: elapsedTimePatient,
+  //       timestamp: new Date(),
+  //     };
+    
+  //     // 先添加消息到對話
+  //     setConversation(prev => [...prev, tempAiMessage]);
+      
+  //     // 如果有音頻URL，播放音頻
+  //     if (audioUrl) {
+  //       try {
+  //         await playAudio(audioUrl);
+  //       } catch (error) {
+  //         console.error('播放音频失败:', error);
+  //       }
+  //     }
+      
+  //     // 設置一個定時器，在一段時間後清除頭像上的文本
+  //     setTimeout(() => {
+  //       setOverlayText(null);
+  //     }, audioUrl ? 8000 : 5000); // 如果有音頻，顯示時間更長
+      
+
+  //     setDelayThreshold(10 + Math.floor(aiResponseText.length / 3));
+
+
+  //     let scoringItems: string[] = [];
+  //     if (code) {
+  //       const codes: string[] = code.split(',').map((c: string) => c.trim());
+  //       const newCodes = codes.filter((c: string) => !scoredCodes.has(c)); // ✅ 沒有紅線
+
+  //       scoringItems = newCodes;
+
+  //       if (newCodes.length > 0) {
+  //         setScoredCodes(prev => new Set([...prev, ...newCodes]));
+  //       }
+  //     }
+
+  //     // 計算患者回覆的時間
+  //     console.log('患者回覆的時間replySeconds', replySeconds);
+  //     console.log('患者回覆的時間elapsedTimePatient', elapsedTimePatient);
+  //     console.log('上次患者回覆的時間lastpatientmsgTime', lastpatientmsgTime);
+  //     console.log('護理師回覆的時間elapsedTimeNurse', elapsedTimeNurse);
+  //     console.log('護理師回覆的時間-上次患者回覆的時間 DelayFromPrev', DelayFromPrev);
+  //     console.log('護理師回覆延遲?IsDelayed', IsDelayed);
+  //     console.log('得分項目scoringItems', scoringItems);
+
+  //     // 保存用户消息到服务器
+  //     if (conversationId) {
+
+  //       const saveResponse = await saveMessage({
+  //         sender: 'nurse',
+  //         content: messageText,
+  //         elapsedSeconds: elapsedTimeNurse,
+  //         delayFromPrev: DelayFromPrev,
+  //         isDelayed: IsDelayed,
+  //         tag: lastTag,
+  //         scoringItems
+  //       });
+    
+  //     }
+
+  //     // 更新助理消息
+  //     const aiMessage = {
+  //       ...tempAiMessage,
+  //       elapsedSeconds: replySeconds,
+  //       timestamp: replyTime
+  //     };
+      
+  //     // 更新對話
+  //     setConversation(prev => {
+  //       const newConv = [...prev];
+  //       newConv[newConv.length - 1] = aiMessage;
+  //       return newConv;
+  //     });
+      
+  //     // 保存AI回覆到伺服器
+  //     if (conversationId) {
+  //       // === ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+  //       // const saveAiResponse = await fetch(`/api/conversations/${conversationId}/messages`, {
+  //       //   method: 'POST',
+  //       //   headers: {
+  //       //     'Content-Type': 'application/json',
+  //       //   },
+  //       //   body: JSON.stringify({
+  //       //     sender: 'patient',
+  //       //     content: aiResponseText,
+  //       //     elapsedSeconds: elapsedTimePatient,
+  //       //     timestamp: replyTime.toISOString(),
+  //       //     delayFromPrev: 0,
+  //       //     isDelayed: false,
+  //       //     tag: tag,
+  //       //     audioUrl: audioUrl,
+  //       //     scoringItems: scoringItems,  // <-- 用複數形式傳陣列
+
+  //       //   }),
+  //       // });
+  //       // === ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+  //       const saveAiResponse = await saveMessage({
+  //         sender: 'patient',
+  //         content: aiResponseText,
+  //         elapsedSeconds: elapsedTimePatient,
+  //         timestamp: replyTime.toISOString(),
+  //         tag,
+  //         audioUrl,
+  //         scoringItems
+  //       });
+
+  //     }
+  //   } catch (error) {
+  //     console.error('處理消息時出錯:', error);
+  //     setConversation(prev => [
+  //       ...prev, 
+  //       {
+  //         role: 'system' as const,
+  //         content: '處理消息時出錯，請稍後再試。',
+  //         timestamp: new Date()
+  //       }
+  //     ]);
+  //   }
+  // };
   
   const handleEndDialogue = async () => {
     if (!conversationId) {
@@ -1301,9 +1589,13 @@ function DialogueNewContent() {
                     
                     <button 
                       onClick={handleEndDialogue}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none"
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors flex-1 sm:flex-none flex items-center gap-3"
                     >
-                      結束評估, 開始紀錄 
+                      <span className="text-2xl">👉</span>
+                      <span className="flex flex-col text-left leading-tight">
+                        <span>結束評估點我</span>
+                        <span>開始護理紀錄</span>
+                      </span>
                     </button>
                   </div>
                     
@@ -1391,7 +1683,7 @@ function DialogueNewContent() {
                   )}
                   {/* 添加提示信息 */}
                   <div className="absolute bottom-2 left-0 right-0 text-center bg-yellow-200 text-gray-800 font-semibold py-2 px-4 rounded-b-lg animate-bounce shadow pointer-events-none">
-                    👉 點擊圖片開始說話
+                  👆 長按圖片開始說話, 放開即送出 👆
                   </div>
                 </div>
               </div>

@@ -147,8 +147,12 @@ export default function DialogueDetailPage() {
         awarded: data.fluency === true,
         hitMessages: [data.fluency === true ? '系統判定語句流暢' : '未達流暢標準'],
       });
-      setDialogue({ ...data, scoredItems });
-    } catch (error) {
+      setDialogue({
+        ...data,
+        feedback: typeof data.feedback === 'object' && data.feedback !== null ? data.feedback.text ?? '' : data.feedback,
+        scoredItems,
+      });
+          } catch (error) {
       console.error('獲取對話詳情失敗', error);
     }
   };
@@ -282,36 +286,47 @@ export default function DialogueDetailPage() {
               
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
                 <div className="space-y-2">
+
+                  {/* 總分 */}
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">總分：</span>
                     <span className={`font-semibold ${
-                      dialogue.score !== null && dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
-                      dialogue.score !== null && dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
-                      dialogue.score !== null && dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
-                      dialogue.score !== null ? 'text-red-600 dark:text-red-400' :
+                      dialogue.score !== null && dialogue.score < 30 ? 'text-red-600 dark:text-red-400' :
+                      dialogue.score !== null && dialogue.score < 60 ? 'text-orange-500 dark:text-orange-300' :
+                      dialogue.score !== null && dialogue.score < 70 ? 'text-blue-600 dark:text-blue-400' :
+                      dialogue.score !== null && dialogue.score < 80 ? 'text-green-600 dark:text-green-400' :
+                      dialogue.score !== null && dialogue.score < 90 ? 'text-yellow-500 dark:text-yellow-300' :
+                      dialogue.score !== null ? 'text-amber-500 dark:text-amber-300' :
                       'text-gray-600 dark:text-gray-400'
                     }`}>
                       {dialogue.score !== null ? `${dialogue.score}/100` : '未評分'}
                     </span>
                   </div>
+
+
                   
                   {/* 添加評分等級 */}
                   {dialogue.score !== null && (
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">等級：</span>
                       <span className={`font-semibold ${
-                        dialogue.score >= 90 ? 'text-green-600 dark:text-green-400' :
-                        dialogue.score >= 80 ? 'text-blue-600 dark:text-blue-400' :
-                        dialogue.score >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
-                        'text-red-600 dark:text-red-400'
+                        dialogue.score < 30 ? 'text-red-600 dark:text-red-400' :
+                        dialogue.score < 60 ? 'text-orange-500 dark:text-orange-300' :
+                        dialogue.score < 70 ? 'text-blue-600 dark:text-blue-400' :
+                        dialogue.score < 80 ? 'text-green-600 dark:text-green-400' :
+                        dialogue.score < 90 ? 'text-yellow-500 dark:text-yellow-300' :
+                        'text-amber-500 dark:text-amber-300'
                       }`}>
-                        {dialogue.score >= 90 ? 'A (優秀)' :
-                        dialogue.score >= 80 ? 'B (良好)' :
-                        dialogue.score >= 70 ? 'C (及格)' :
-                        'D (需加強)'}
+                        {dialogue.score < 30 ? 'D (需加強)' :
+                        dialogue.score < 60 ? 'C (基本)' :
+                        dialogue.score < 70 ? 'B (普通)' :
+                        dialogue.score < 80 ? 'A (良好)' :
+                        dialogue.score < 90 ? 'A+ (優秀)' :
+                        'A++ (卓越)'}
                       </span>
                     </div>
                   )}
+
                   
                   {/* 添加評分時間 */}
                   {dialogue.endedAt && (
@@ -325,14 +340,25 @@ export default function DialogueDetailPage() {
                   
                   {/* 添加評分說明 */}
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500 dark:text-gray-100">
                       {dialogue.score === null 
-                        ? '此對話尚未評分，完成對話後系統將自動評分。' 
-                        : dialogue.score >= 80 
-                          ? '恭喜！您在此次對話中表現優異。' 
-                          : '繼續練習可以提高您的對話技巧。'}
+                        ? '這次的對話還沒被評分，完成後系統會自動幫你打分數喔！' 
+                        : dialogue.score < 30
+                          ? '沒關係，我們一起慢慢來，從錯誤中學習最扎實。'
+                          : dialogue.score < 60
+                            ? '有些基礎已經掌握了，再多練習幾次會更上手！'
+                            : dialogue.score < 70
+                              ? '離目標越來越近了，再調整一下就更棒了～'
+                              : dialogue.score < 80
+                                ? '表現不錯喔！再多一點練習就更穩定了。'
+                                : dialogue.score < 90
+                                  ? '很好！你已經十分熟練了，繼續保持！'
+                                  : '太棒了！你簡直是入院護理評估的專家，繼續加油！'}
                     </p>
                   </div>
+
+
+
                 </div>
               </div>
             </div>
@@ -651,14 +677,27 @@ export default function DialogueDetailPage() {
           )}
           
           {/* 保留原有的feedback显示，以防有些对话使用旧格式 */}
-          {/* {dialogue.feedback && !dialogue.reflection && (
+          {dialogue.feedback && !dialogue.reflection && (
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">評語</h2>
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.feedback}</p>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">評語</h2>
+                <button
+                  onClick={() => toggleSection('feedback')}
+                  className="text-sm text-blue-600 dark:text-blue-400 flex items-center"
+                >
+                  {sectionVisibility.feedback ? '收合 ▲' : '展開 ▼'}
+                </button>
               </div>
+
+              {sectionVisibility.feedback && (
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{dialogue.feedback}</p>
+                </div>
+              )}
             </div>
-          )} */}
+          )}
+
+
         </div>
       </main>
 

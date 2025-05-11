@@ -1,11 +1,29 @@
-{"question": "你好，請問306第一床請問小朋友叫什麼", "answer": "張小威", "code": "A14,A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
+{"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "code": "A00,M3", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/db844808341a6644c4751a8221dac0b2.mp3"}
+{"question": "您好，我是您的護理師", "answer": "您好，謝謝您來照顧小威", "code": "M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/c94f2823ca5604cf975d18dfad2201f7.mp3"}
+{"question": "小威媽媽的姓名", "answer": "叫我小威媽媽就好", "code": "", "answerType": "dialogue", "tag": "", "audioUrl": "/audio/93e6591bd14de736300b71a818c688f8.mp3"}
+{"question": "媽媽的姓", "answer": "叫我小威媽媽就好", "code": "", "answerType": "dialogue", "tag": "", "audioUrl": "/audio/93e6591bd14de736300b71a818c688f8.mp3"}
+{"question": "小威媽媽您好", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "我是今天負責照顧小威的護理師", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "我是今天負責照顧小威的護生我叫", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "我是今天負責照顧小威的護理師我叫", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "媽媽您好, 我是今天負責照顧小威的護理師我叫", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "我是照顧你的護理師 今天要來為小朋友做入院護理評估", "answer": "好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "我是今天負責照顧小威的護生我叫", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "向病人與案母自我介紹，並說明自己的角色與目的。", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
+{"question": "核對我們的手圈和腳圈而且核對姓名還有出生年月日", "answer": "好的", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "請問出生年月日", "answer": "2021年4月1號出生", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/794b55892463c1cffbe72d67128a9abd.mp3"}
+{"question": "核對病人的床頭卡", "answer": "306 第一床 顯示張小威 4歲", "code": "A11,A12", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/129b9115319b932b993b37e3e20da746.mp3"}
+{"question": "你好，請問306第一床請問小朋友叫什麼", "answer": "張小威", "code": "A11,A12", "answerType": "narration", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
+{"question": "請問306第一床請問小朋友叫什麼", "answer": "張小威", "code": "A11,A12", "answerType": "narration", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
 {"question": "你好，請問是306第一床嘛", "answer": "是", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0a60ac8f02ccd2cf723f927284877851.mp3"}
 {"question": "請問是306第一床嘛", "answer": "是", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0a60ac8f02ccd2cf723f927284877851.mp3"}
 {"question": "請問是第一床嗎", "answer": "是", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0a60ac8f02ccd2cf723f927284877851.mp3"}
 {"question": "你好我是照顧你的護理師先確認床號", "answer": "好", "code": "A11,A14", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "你好我是,確認床號", "answer": "好", "code": "A11,A14", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "你好我是護理師,確認床號", "answer": "好", "code": "A11,A14", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
-{"question": "確認床號", "answer": "好", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "確認床號", "answer": "媽媽微笑點頭", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/6749dedb53df20a2c4d358b0fc5f87a9.mp3"}
+{"question": "可以確認你的床號嗎", "answer": "媽媽微笑點頭", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/6749dedb53df20a2c4d358b0fc5f87a9.mp3"}
+{"question": "媽媽，你好，我確認一下床號。", "answer": "好的", "code": "A11", "answerType": "narration", "tag": "A", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
 {"question": "你好，我是照顧你的護生，要為你做入院護理評估哦", "answer": "病童安靜地看著護生", "code": "A14,M3", "answerType": "narration", "tag": "A", "audioUrl": "/audio/e061242a0e9156e2b358ca63db50849b.mp3"}
 {"question": "你好，我是照顧你的護理師，要為你做入院護理評估哦", "answer": "病童和媽媽安靜地看著護生", "code": "A14,M3", "answerType": "narration", "tag": "A", "audioUrl": "/audio/83fda4b5fdbda978227779d21841ae53.mp3"}
 {"question": "你好，我是照顧弟弟的護理師，要做入院評估", "answer": "病童眼神看向護理師", "code": "A14,M3", "answerType": "narration", "tag": "A", "audioUrl": "/audio/b83bc06dd644040587eeb4f475abd6e3.mp3"}
@@ -13,26 +31,30 @@
 {"question": "你好，我是負責照顧你的護理師，現在要做入院評估", "answer": "病童眼神專注看著護理師", "code": "A14,M3", "answerType": "narration", "tag": "A", "audioUrl": "/audio/c2a6f9d67290f84eddb3c7e351b8f9f0.mp3"}
 {"question": "你好，我是照顧你的護生，請問弟弟叫什麼名字？", "answer": "張小威", "code": "A14,M3", "answerType": "narration", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
 {"question": "請問弟弟叫什麼名字？", "answer": "張小威", "code": "A12,", "tag": "A", "audioUrl": "/audio/9368157642f5397f5e2f7a545ee20069.mp3"}
-{"question": "請問小朋友幾歲？", "answer": "2歲", "code": "000,", "tag": "", "audioUrl": "/audio/d101b19f99f858749be3e28edfbccf01.mp3"}
-{"question": "請問弟弟幾歲？", "answer": "2歲", "code": "000,", "tag": "", "audioUrl": "/audio/d101b19f99f858749be3e28edfbccf01.mp3"}
-{"question": "請問弟弟叫什麼名字？他幾歲？", "answer": "他叫張小威 2歲", "code": "A12,", "tag": "A", "audioUrl": "/audio/e2e075bf97b8add0bed3d6e2b1b83aa6.mp3"}
-{"question": "請問你叫什麼名字，幾歲？", "answer": "他叫張小威2 歲", "code": "A12,", "tag": "A", "audioUrl": "/audio/a4c711f19869980cab5570809c7b6a11.mp3"}
+{"question": "請問小朋友幾歲？", "answer": "4歲", "code": "000,", "tag": "", "audioUrl": "/audio/d311fb253a6105300209944da217d2f0.mp3"}
+{"question": "請問弟弟幾歲？", "answer": "4歲", "code": "000,", "tag": "", "audioUrl": "/audio/d311fb253a6105300209944da217d2f0.mp3"}
+{"question": "請問弟弟叫什麼名字？他幾歲？", "answer": "他叫張小威 4歲", "code": "A12,", "tag": "A", "audioUrl": "/audio/026f2154f4e29e0c989f2f3f6a979d1c.mp3"}
+{"question": "請問你叫什麼名字，幾歲？", "answer": "他叫張小威4 歲", "code": "A12,", "tag": "A", "audioUrl": "/audio/cfca68d04d43000dd32796efeea262fb.mp3"}
 {"question": "你是張小威嗎？", "answer": "對", "code": "A12,", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
-{"question": "你今年2歲對嗎？", "answer": "對", "code": "A12,", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "你今年4歲對嗎？", "answer": "對", "code": "A12,", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "那我確認一下弟弟的手圈跟床頭卡", "answer": "306第一床 顯示張小威 4歲", "code": "A11,A13", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ecd5f90dec157f21bdad3b1b676f2586.mp3"}
+{"question": "確認一下弟弟的手圈跟床頭卡", "answer": "306第一床 顯示張小威 4歲", "code": "A11,A13", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ecd5f90dec157f21bdad3b1b676f2586.mp3"}
+{"question": "確認一下小朋友的手圈跟床頭卡", "answer": "306第一床 顯示張小威 4歲", "code": "A11,A13", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ecd5f90dec157f21bdad3b1b676f2586.mp3"}
+{"question": "可以借我確認一下小朋友的手圈嗎？", "answer": "好, 顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/183e9c7a97c87baca8414c30c2746341.mp3"}
 {"question": "可以借我看你的手圈嗎？", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "可以借我看弟弟的手圈嗎？", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "可以借我看小朋友的手圈嗎？", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
-{"question": "核對病人的手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
-{"question": "核對小朋友的手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
-{"question": "核對弟弟的手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
-{"question": "核對手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
-{"question": "我要核對手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
-{"question": "我要核對手圈", "answer": "顯示張小威 2歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/0316ccff7cdf5d69107055a096d45f43.mp3"}
+{"question": "核對病人的手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
+{"question": "核對小朋友的手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
+{"question": "核對弟弟的手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
+{"question": "核對手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
+{"question": "我要核對手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
+{"question": "我要核對手圈", "answer": "顯示張小威 4歲", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/4d53ee7d79a1ef210e10ac150a9feb84.mp3"}
 {"question": "可以讓我確認一下手圈上的資料嗎？", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "可以讓我核對手圈上的資料嗎？", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "answerType": "narration", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "我需要看一下手圈確認身份", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "讓我看一下你的手圈", "answer": "好", "code": "A13,", "imageToShow": "Bracelet.png", "tag": "A", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
-{"question": "張小威2歲 對嘛？", "answer": "對", "code": "A13,", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
+{"question": "張小威4歲 對嘛？", "answer": "對", "code": "A13,", "tag": "A", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
 {"question": "媽媽，可以請您描述一下弟弟的不舒服情況嗎？", "answer": "他昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,C1,D1", "tag": "B", "audioUrl": "/audio/2c1636a3286e4f04dc765ea744f46b7c.mp3"}
 {"question": "媽媽，可以請您描述一下小威的不舒服情況嗎？", "answer": "他昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,C1,D1", "tag": "B", "audioUrl": "/audio/2c1636a3286e4f04dc765ea744f46b7c.mp3"}
 {"question": "媽媽，可以請您描述一下小朋友的不舒服情況嗎？", "answer": "他昨天晚上開始腹瀉發燒，到今天中午總共拉五次，早上還吐了兩次", "code": "B10,C1,D1", "tag": "B", "audioUrl": "/audio/2c1636a3286e4f04dc765ea744f46b7c.mp3"}
@@ -48,16 +70,26 @@
 {"question": "請問媽媽，小朋友是從什麼時候開始不舒服的？", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "B10,", "tag": "B", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
 {"question": "請問媽媽，小威是從什麼時候開始不舒服的？", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "B10,", "tag": "B", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
 {"question": "請問媽媽，弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "B10,", "tag": "B", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
+{"question": "昨天晚上開始有什麼不舒服", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
+{"question": "昨天開始有什麼不舒服", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
+{"question": "弟弟昨天開始有什麼不舒服", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
+{"question": "弟弟昨天有哪些什麼不舒服", "answer": "昨天晚上開始拉肚子,也有發燒", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/640d27c0196d4548d67f447d1e424d30.mp3"}
+{"question": "昨天晚上幾點開始的？", "answer": "昨天晚上8點開始", "code": "G1,", "tag": "B", "audioUrl": "/audio/22815dbac59ac84e8edb826d8a7b7917.mp3"}
 {"question": "弟弟是從何時開始不舒服的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "弟弟是從什麼時候開始不舒服的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "請問弟弟昨天什麼時候開始不舒服的呢", "answer": "晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/a93924832e6ab9d807942a53fb25a44b.mp3"}
 {"question": "症狀是什麼時候開始的？", "answer": "昨天晚上", "code": "B10,", "tag": "B", "audioUrl": "/audio/06ee1705fdec6d8d1eea9553602c02bc.mp3"}
+{"question": "請問弟弟的症狀是什麼時候開始的？", "answer": "昨天晚上", "code": "B10,", "tag": "B", "audioUrl": "/audio/06ee1705fdec6d8d1eea9553602c02bc.mp3"}
 {"question": "不舒服是從什麼時候開始的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
 {"question": "弟弟從什麼時候開始有症狀的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
 {"question": "腹瀉和發燒是什麼時候開始的？", "answer": "昨天晚上", "code": "B10,G1,", "tag": "B", "audioUrl": "/audio/06ee1705fdec6d8d1eea9553602c02bc.mp3"}
 {"question": "這些症狀持續多久了？", "answer": "從昨天晚上開始到現在", "code": "B10,", "tag": "B", "audioUrl": "/audio/3d0092f33b1e96e4e087ccb2122d1d05.mp3"}
 {"question": "弟弟是從昨天開始不舒服的嗎？", "answer": "對，從昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/1999c9a3e314aed9b261a14301e8a27c.mp3"}
+{"question": "弟弟什麼時候開始不舒服的？", "answer": "對，從昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/1999c9a3e314aed9b261a14301e8a27c.mp3"}
 {"question": "腹瀉是什麼時候開始的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "弟弟什麼時候開始腹瀉是的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
+{"question": "弟弟什麼時候開始拉肚子的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
 {"question": "發燒是從什麼時候開始的？", "answer": "昨天晚上8點開始燒", "code": "B10, G1,", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
-{"question": "昨天晚上幾點開始的？", "answer": "昨天晚上8點開始燒", "code": "G1,", "tag": "B", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
 {"question": "弟弟是什麼時候開始覺得肚子不舒服的？", "answer": "昨天晚上開始", "code": "B10,", "tag": "B", "audioUrl": "/audio/dc7dceccf814900e147cf954007a7b32.mp3"}
 {"question": "這個情況持續多久了？", "answer": "從昨天晚上到現在", "code": "B10,", "tag": "B", "audioUrl": "/audio/d72bfe50434f3fa3aaf8fa84214b18a8.mp3"}
 {"question": "弟弟從何時開始有這些症狀？", "answer": "昨天晚上開始的", "code": "B10,", "tag": "B", "audioUrl": "/audio/d5e74cd2c9a855e05de40531659a5bd2.mp3"}
@@ -77,16 +109,31 @@
 {"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
 {"question": "能詳細說明一下大便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
 {"question": "能詳細說明一下便便的情況嗎？", "answer": "昨晚到今天中午總共拉五次，開始三次是糊便，後來二次是水便，黃色，有一點血絲", "code": "C1, C2, C3, C4,", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/f31c68862f48d6df3ba18db7bf1b6e9e.mp3"}
-{"question": "小威有大便嗎？", "answer": "有", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
-{"question": "弟弟有大便嗎？", "answer": "有", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
-{"question": "弟弟有便便嗎？", "answer": "有", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
+{"question": "那昨天晚有大便嗎", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
+{"question": "那弟弟昨天晚上有大便嗎", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
+{"question": "那弟弟昨天晚上有便便嗎", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
+{"question": "小威有大便嗎？", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
+{"question": "小威有大便嗎？", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
+{"question": "弟弟有便便嗎？", "answer": "有.從昨天晚上到今天中午總共拉五次", "code": "", "scoringSubItem": "Comprehensive", "tag": "C", "audioUrl": "/audio/789b028ee1060de43d42ba09a2dbbe5b.mp3"}
 {"question": "小威總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "小威總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "昨天晚上大了幾次便呢", "answer": "昨晚兩次, 今天三次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/ab9590ab6ab78ed03ceb549cafee0dad.mp3"}
+{"question": "昨天晚上大了幾次便呢", "answer": "昨晚兩次, 今天三次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/ab9590ab6ab78ed03ceb549cafee0dad.mp3"}
 {"question": "請問小威他大便的次數？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
 {"question": "請問弟弟他大便的次數？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
 {"question": "弟弟總共腹瀉了幾次？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
 {"question": "從昨天到現在拉了幾次肚子？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "那從昨天晚上的是大了幾次呢？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "那從昨天晚上的是拉了幾次呢？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "那從昨天晚上總共拉了幾次呢？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
+{"question": "那從昨天晚上有拉了幾次呢？", "answer": "到今天中午總共拉五次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/621f7f4f4bccef46aa131ab279530745.mp3"}
 {"question": "腹瀉的頻率如何？", "answer": "昨晚兩次，今天早上三次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
+{"question": "多久腹瀉一次", "answer": "昨晚兩次，今天早上三次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
 {"question": "一天大概拉幾次肚子？", "answer": "昨晚兩次，今天早上三次", "code": "C1", "scoringSubItem": "Frequency", "tag": "C", "audioUrl": "/audio/c58226203c8f580e6f5d965ec9fe0afb.mp3"}
+{"question": "大便都是水水的嗎", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "這五次大便都是水水的嗎", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "這五次大便是什麼樣的", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
+{"question": "大便是稀稀水水的嗎", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "小威大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
 {"question": "弟弟大便的形狀是什麼樣的？", "answer": "開始三次是糊便，後來二次是水便", "code": "C1,C2", "scoringSubItem": "Consistency", "tag": "C", "audioUrl": "/audio/3bdb659774f0cbc8ea22a41ed04f7593.mp3"}
@@ -137,20 +184,23 @@
 {"question": "有嘔吐嗎？", "answer": "有", "code": "D0", "tag": "D", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
 {"question": "弟弟有沒有吐過？", "answer": "有", "code": "D0", "tag": "D", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
 {"question": "媽媽，弟弟嘔吐後有什麼不適反應嗎？", "answer": "吐完後看起來很疲倦，不想吃東西也不想喝水", "code": "D0", "scoringSubItem": "Comprehensive", "tag": "D", "audioUrl": "/audio/136f8c5d9fbcedd276b470b1122df1d3.mp3"}
-{"question": "什麼時候吐？", "answer": "早上8點和11點", "code": "D0", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
-{"question": "是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
-{"question": "媽媽，弟弟是什麼時候吐的？", "answer": "早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
-{"question": "請問媽媽，您記得弟弟嘔吐的具體時間嗎？", "answer": "早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
-{"question": "媽媽，弟弟嘔吐是在什麼時間發生的？", "answer": "早上8點和11點各吐了一次", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/92b33f96ef0227e861d7b8192643f59f.mp3"}
+{"question": "什麼時候吐？", "answer": "今天早上8點和11點", "code": "D0", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "嘔吐頻率", "answer": "今天早上8點和11點", "code": "D0", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "嘔吐開始時間", "answer": "今天早上8點和11點", "code": "D0", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "是在什麼時間點吐的？", "answer": "今天早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "媽媽，弟弟是什麼時候吐的？", "answer": "今天早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "請問媽媽，您記得弟弟嘔吐的具體時間嗎？", "answer": "今天早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "媽媽，弟弟嘔吐是在什麼時間發生的？", "answer": "今天早上8點和11點各吐了一次", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/99da01de96e2e5837edc9449b6f957f6.mp3"}
 {"question": "吐了幾次？", "answer": "吐2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/df891406fe9cb98866a9359034abb8d0.mp3"}
 {"question": "總共吐了幾次？", "answer": "吐2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/df891406fe9cb98866a9359034abb8d0.mp3"}
 {"question": "媽媽，弟弟總共吐了幾次？", "answer": "吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/2f1316f220d1bd4070259881f22b6e41.mp3"}
-{"question": "請問媽媽，弟弟從昨天到現在吐過幾次？", "answer": "今天早上吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/6070cbef490e7686ba950106b9f1f52d.mp3"}
+{"question": "請問媽媽，弟弟從昨天到現在吐過幾次？", "answer": "到今天早上總共吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/50ad1bc19302ccd13ee1df89d9d9e860.mp3"}
 {"question": "請問弟弟嘔吐的次數？", "answer": "今天早上吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/6070cbef490e7686ba950106b9f1f52d.mp3"}
-{"question": "請問弟弟昨天到現在嘔吐的次數？", "answer": "今天早上吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/6070cbef490e7686ba950106b9f1f52d.mp3"}
-{"question": "媽媽，您觀察到弟弟嘔吐的次數是多少？", "answer": "總共吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/9f17c50226050bce08ccbc79ebedb7ca.mp3"}
-{"question": "媽媽，弟弟吐了幾次？吐了什麼東西？", "answer": "吐了2次，第一次是稀飯，第二次是藥跟水", "code": "D1,D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/f5c94ba8dadc10d8293f4f8b1388185b.mp3"}
-{"question": "請問媽媽，弟弟是在什麼時間點吐的？", "answer": "早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/c9ae2d0ac3a2e03b296e9f33a71a83b3.mp3"}
+{"question": "請問弟弟昨天到現在嘔吐的次數？", "answer": "到今天早上總共吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/50ad1bc19302ccd13ee1df89d9d9e860.mp3"}
+{"question": "媽媽，您觀察到弟弟嘔吐的次數是多少？", "answer": "今天早上總共吐了2次", "code": "D1", "scoringSubItem": "Frequency", "tag": "D", "audioUrl": "/audio/8361a9909962d9d4cd0f6184026b6757.mp3"}
+{"question": "媽媽，弟弟吐了幾次？吐了什麼東西？", "answer": "今天早上吐了2次，第一次是稀飯，第二次是藥跟水", "code": "D1,D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/d887f618114de64f7ffa4ba2fec227c0.mp3"}
+{"question": "請問媽媽，弟弟是在什麼時間點吐的？", "answer": "今天早上8點和11點", "code": "D1", "scoringSubItem": "Time", "tag": "D", "audioUrl": "/audio/6525063c86423fbb575f3fb309784cb0.mp3"}
+{"question": "嘔吐的形狀", "answer": "糊糊的稀飯跟藥水", "code": "D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/b238b325a7a0a324f320adc6d453dcf0.mp3"}
 {"question": "吐了什麼？", "answer": "第一次是稀飯，第二次是藥跟水", "code": "D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
 {"question": "都吐什麼東西", "answer": "第一次是稀飯，第二次是藥跟水", "code": "D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
 {"question": "都吐了什麼", "answer": "第一次是稀飯，第二次是藥跟水", "code": "D2", "scoringSubItem": "Content", "tag": "D", "audioUrl": "/audio/5a74e7cefec4bbe5a0d5e1be5b7d90b1.mp3"}
@@ -188,33 +238,38 @@
 {"question": "媽媽，您能完整描述一下弟弟嘔吐的情況嗎？包括次數、時間、內容和量", "answer": "今天早上總共吐了2次，分別在8點和11點。第一次吐出稀飯，量比較多；第二次吐出藥水，量比較少", "code": "D1,D2,D3,D4", "scoringSubItem": "Comprehensive", "tag": "D", "audioUrl": "/audio/6617d97da44d8f8e6a614875abcaf964.mp3"}
 {"question": "請問媽媽，弟弟嘔吐的整體情況如何？", "answer": "今天早上8點吐了一次稀飯，量比較多；11點又吐了一次藥水，量比較少", "code": "D1,D2,D3,D4", "scoringSubItem": "Comprehensive", "tag": "D", "audioUrl": "/audio/f345bfbb14cd3d5e2a55565044a8b367.mp3"}
 {"question": "弟弟的食慾怎麼樣？", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
+{"question": "弟弟有食慾嘛？", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "他的食慾有減少嗎", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "弟弟的食慾有減少嗎", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "食慾有減少嗎", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "食慾還好嗎", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "媽媽，弟弟的食慾怎麼樣？", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
 {"question": "弟弟最近胃口好嗎？", "answer": "不太好, 吃很少", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/6e8c5054e45c90b3250d9fd7845bfd8b.mp3"}
-{"question": "弟弟現在還能吃嗎？", "answer": "不太行", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/3afb3c369462f9aab1680043356bf1e5.mp3"}
-{"question": "小朋友有沒有想吃東西？", "answer": "沒有", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/ffeb3033f6ad04ed85477c75b363606f.mp3"}
-{"question": "弟弟現在願意吃東西嗎？", "answer": "沒有", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/ffeb3033f6ad04ed85477c75b363606f.mp3"}
-{"question": "請問媽媽，弟弟今天吃了什麼？", "answer": "吃碗稀飯", "code": "E2", "scoringSubItem": "Food Type,Amount", "tag": "E", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
-{"question": "弟弟今天進食了哪些食物？", "answer": "吃碗稀飯", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
-{"question": "小朋友今天吃了什麼東西？", "answer": "吃碗稀飯", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
-{"question": "弟弟最近都吃些什麼？", "answer": "吃碗稀飯", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
-{"question": "能告訴我弟弟今天的飲食內容嗎？", "answer": "吃碗稀飯", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/9f6495f20954edfe80fa19932b24ca7e.mp3"}
+{"question": "弟弟現在還能吃嗎？", "answer": "現在不太行", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/5805f4f24c711ff091bfce1b3d73f747.mp3"}
+{"question": "小朋友有沒有想吃東西？", "answer": "現在沒有", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/601eac5a4b1fc733036b4e251f5bfde8.mp3"}
+{"question": "弟弟現在願意吃東西嗎？", "answer": "現在沒有", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/601eac5a4b1fc733036b4e251f5bfde8.mp3"}
+{"question": "弟弟想吃東西嗎？", "answer": "現在沒有", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/601eac5a4b1fc733036b4e251f5bfde8.mp3"}
+{"question": "從昨天晚上開始都沒有吃東西嘛。", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "那之還有吃東西嘛。", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "他有吃東西嘛。", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E1", "scoringSubItem": "Decrease", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "請問媽媽，弟弟今天吃了什麼？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E2", "scoringSubItem": "Food Type,Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟今天進食了哪些食物？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "小朋友今天吃了什麼東西？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟最近都吃些什麼？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "能告訴我弟弟今天的飲食內容嗎？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E2", "scoringSubItem": "Food Type", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
 {"question": "媽媽，弟弟喝水的情況如何？", "answer": "喝一點就吐，現在不太敢給他喝", "code": "E2", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/fb507db868f3af001d1e4e0c26f69ae7.mp3"}
-{"question": "弟弟吃了多少東西？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "小朋友的進食量大概有多少？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "小朋友可以吃多少？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "弟弟可以吃多少？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "弟弟現在可以吃多少？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "小威現在可以吃多少？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "弟弟能吃下多少食物？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
-{"question": "弟弟每餐的進食量如何？", "answer": "吃了3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/32981f4c9119443e176fc8d23ace8629.mp3"}
+{"question": "弟弟吃了多少東西？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "小朋友的進食量大概有多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "小朋友可以吃多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟可以吃多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟現在可以吃多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "小威現在可以吃多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟能吃下多少食物？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟每餐的進食量如何？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
 {"question": "食慾如何？吃了什麼？量多少？", "answer": "沒有食慾，吃3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/8e50ab529003bff38fc9ac8cc7275b93.mp3"}
-{"question": "弟弟吃了什麼東西？吃了多少？", "answer": "吃3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Food Type,Amount", "tag": "E", "audioUrl": "/audio/8182271b4c49148e21fe714cf67aa58b.mp3"}
-{"question": "能詳細說明一下弟弟的飲食情況嗎？", "answer": "沒有食慾，吃3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/8e50ab529003bff38fc9ac8cc7275b93.mp3"}
-{"question": "弟弟的進食狀況如何？", "answer": "沒有食慾，吃3/4碗稀飯, 然後就吐了", "code": "E3", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/8e50ab529003bff38fc9ac8cc7275b93.mp3"}
+{"question": "弟弟吃了什麼東西？吃了多少？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Food Type,Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "能詳細說明一下弟弟的飲食情況嗎？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
+{"question": "弟弟的進食狀況如何？", "answer": "今天早上有吃3/4碗稀飯, 然後就吐了,後來就沒有再吃", "code": "E3", "scoringSubItem": "Decrease,Food Type,Amount", "tag": "E", "audioUrl": "/audio/85c6dba9a85536c017310279feed2063.mp3"}
 {"question": "不吃東西之後有比較好嗎？", "answer": "有好一點, 沒有再吐", "code": "F0", "tag": "F", "audioUrl": "/audio/6cc153937e2e6df1e61937a007d72719.mp3"}
 {"question": "弟弟他不吃東西之後有比較好嗎？", "answer": "有好一點, 沒有再吐", "code": "F0", "tag": "F", "audioUrl": "/audio/6cc153937e2e6df1e61937a007d72719.mp3"}
 {"question": "小威他不吃東西之後有比較好嗎？", "answer": "有好一點, 沒有再吐", "code": "F0", "tag": "F", "audioUrl": "/audio/6cc153937e2e6df1e61937a007d72719.mp3"}
@@ -248,6 +303,9 @@
 {"question": "什麼時候發現在發燒？", "answer": "昨天晚上8點開始燒", "code": "G1", "scoringSubItem": "Onset Time", "tag": "G", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
 {"question": "弟弟發燒持續多久了？", "answer": "從昨天晚上8點到現在", "code": "G1", "scoringSubItem": "Onset Time", "tag": "G", "audioUrl": "/audio/a882806597a0c2bd83d0873c90f0d5c5.mp3"}
 {"question": "發燒大概是什麼時間點開始的？", "answer": "昨天晚上8點開始燒", "code": "G1", "scoringSubItem": "Onset Time", "tag": "G", "audioUrl": "/audio/e29f3fbd891d125145a3225c280c2189.mp3"}
+{"question": "八點開始燒那最高燒到幾度呢?", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "最高燒到幾度", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
+{"question": "燒到幾度", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
 {"question": "量體溫時最高是幾度？", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
 {"question": "最高到幾度？", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
 {"question": "發燒最高到幾度？", "answer": "最高39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/25857e0a7b39c2e701af7b4e85cf7238.mp3"}
@@ -257,6 +315,9 @@
 {"question": "弟弟發燒的溫度有多高？", "answer": "開始37.5度，到半夜2點的時候39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/bb1565bd150dddc1544677b22778fa47.mp3"}
 {"question": "弟弟發燒到幾度？", "answer": "開始37.5度，到半夜2點的時候39.5度", "code": "G2", "scoringSubItem": "Maximum Temperature", "tag": "G", "audioUrl": "/audio/bb1565bd150dddc1544677b22778fa47.mp3"}
 {"question": "發燒後怎麼處理的？", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
+{"question": "發燒之後昨天有躺冰枕嗎", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
+{"question": "那您當下有做什麼處置嗎幫她躺冰枕之類的嗎", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
+{"question": "那您當下有做什麼處置嗎", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
 {"question": "怎麼處理的？", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
 {"question": "有做什麼處理嗎？", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
 {"question": "發燒後有做什麼嗎？", "answer": "有給小威塞屁股的藥, 後來就降到38.5度", "code": "G3,G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/332e2cea6943a7e0abb055c159ce1343.mp3"}
@@ -266,6 +327,9 @@
 {"question": "小威發燒時，您採取了什麼措施？", "answer": "有給小威塞屁股的藥", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/9cd674fb75ce65d0e2697ee333a3e933.mp3"}
 {"question": "那他發燒後有做什麼嘛？", "answer": "有給小威塞屁股的藥", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/9cd674fb75ce65d0e2697ee333a3e933.mp3"}
 {"question": "有給弟弟吃退燒藥嗎？", "answer": "我有給他塞屁股的藥", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/fb9365f80184ce539a3527fc7f134406.mp3"}
+{"question": "有用塞劑嗎？", "answer": "有", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/cc4ad2fd27e24ff9191e254d8576d2ba.mp3"}
+{"question": "是用塞劑嗎？", "answer": "是", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/0a60ac8f02ccd2cf723f927284877851.mp3"}
+{"question": "用塞劑嗎？", "answer": "對", "code": "G3", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/0fa3e872546347387a9e46a9ff451a4a.mp3"}
 {"question": "那塞完有效果嘛？", "answer": "有, 降到38.5度", "code": "G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/ae94b91d579653884a1f2141ebab7042.mp3"}
 {"question": "塞完有效果", "answer": "有, 降到38.5度", "code": "G4", "scoringSubItem": "Treatment Method", "tag": "G", "audioUrl": "/audio/ae94b91d579653884a1f2141ebab7042.mp3"}
 {"question": "用藥後體溫變化如何？", "answer": "降到38.5度", "code": "G4", "scoringSubItem": "Post-treatment Condition", "tag": "G", "audioUrl": "/audio/13cab63b46015b06f9a2a4faf7430081.mp3"}
@@ -276,36 +340,47 @@
 {"question": "有退燒嘛？", "answer": "有, 降到38.5度", "code": "G4", "scoringSubItem": "Post-treatment Condition", "tag": "G", "audioUrl": "/audio/ae94b91d579653884a1f2141ebab7042.mp3"}
 {"question": "後來有退燒嘛？", "answer": "有, 降到38.5度", "code": "G4", "scoringSubItem": "Post-treatment Condition", "tag": "G", "audioUrl": "/audio/ae94b91d579653884a1f2141ebab7042.mp3"}
 {"question": "弟弟今天尿了幾次？尿很農嘛？", "answer": "只有兩次，有點濃是深黃色", "code": "H1, H2", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/c2d3092bc208f6f345f10cf4325113d6.mp3"}
-{"question": "弟弟有小便嗎？", "answer": "有, 但尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/15cdb4cf285cc59418897abf9285e451.mp3"}
+{"question": "弟弟尿有變濃嘛？", "answer": "有變濃,變深黃色", "code": "H1, H2", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/ee5a99ada320cc5adb8f40f4dbe1a24c.mp3"}
+{"question": "弟弟今天尿了幾次？尿很農嘛？", "answer": "只有兩次，有點濃是深黃色", "code": "H1, H2", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/c2d3092bc208f6f345f10cf4325113d6.mp3"}
 {"question": "弟弟有尿尿嗎？", "answer": "有, 但尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/15cdb4cf285cc59418897abf9285e451.mp3"}
-{"question": "小朋友有小便嗎？", "answer": "有, 但尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/15cdb4cf285cc59418897abf9285e451.mp3"}
-{"question": "每次小便的量大概多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "小便的量大概有多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "弟弟小便的量大概有多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "小便的量如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "小朋友有尿尿嗎？", "answer": "有, 但尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/15cdb4cf285cc59418897abf9285e451.mp3"}
+{"question": "每次尿尿的量大概多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "尿尿的量大概有多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "弟弟尿尿的量大概有多少？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
 {"question": "尿尿的量如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "小朋友的小便如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "小朋友的小便狀況還好嗎？", "answer": "尿有點少", "code": "H1,M2,M3", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "尿尿的量如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "小朋友的尿尿如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "小朋友的尿尿狀況還好嗎？", "answer": "尿有點少", "code": "H1,M2,M3", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
 {"question": "小朋友的尿量如何？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
 {"question": "大概尿多少？", "answer": "沒有注意, 就是尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/410e319570e7c7122d963c3179bd11ab.mp3"}
 {"question": "弟弟排尿的量多嗎？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "弟弟小便的量多嗎？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
-{"question": "小威小便的量多嗎？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "弟弟尿尿的量多嗎？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
+{"question": "小威尿尿的量多嗎？", "answer": "尿有點少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/39f13d5562b88f3e0d36829bffde8363.mp3"}
 {"question": "弟弟今天尿了幾次？尿量如何？", "answer": "只有兩次，量都很少", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/710db3bafaebdcd4c55ecf30fae24e8a.mp3"}
+{"question": "弟弟今天尿了幾次？", "answer": "兩次", "code": "H1", "scoringSubItem": "Amount", "tag": "H", "audioUrl": "/audio/00fd51234c43c558c5e68191a4e447b8.mp3"}
 {"question": "弟弟的尿液顏色是怎樣的？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
 {"question": "小朋友的尿液是什麼顏色？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
 {"question": "尿液看起來是什麼顏色？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
 {"question": "尿尿的顏色如何？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
 {"question": "他尿尿的顏色如何？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
 {"question": "弟弟尿尿的顏色如何？", "answer": "深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/86f1994ab864f6bad3629977726043fc.mp3"}
-{"question": "尿尿有很農嗎？", "answer": "有, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/e37a5235b7d6e67a7d23228687340f16.mp3"}
-{"question": "弟弟的尿尿有很農嗎？", "answer": "有, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/e37a5235b7d6e67a7d23228687340f16.mp3"}
-{"question": "小朋友的尿尿有很農嗎？", "answer": "有, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/e37a5235b7d6e67a7d23228687340f16.mp3"}
-{"question": "小威的尿尿有很農嗎？", "answer": "有, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/e37a5235b7d6e67a7d23228687340f16.mp3"}
+{"question": "尿尿有很濃嗎？", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
+{"question": "尿尿會很濃嗎？", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
+{"question": "尿尿濃度", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
+{"question": "弟弟的尿尿有很濃嗎？", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
+{"question": "小朋友的尿尿有濃嗎？", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
+{"question": "小威的尿尿有很濃嗎？", "answer": "很濃, 是深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/30dacd13567e675cf606afa2765f0c03.mp3"}
 {"question": "弟弟尿尿有變黃嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
+{"question": "弟弟尿尿有變濃嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
+{"question": "請問弟弟尿尿有變濃嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
+{"question": "請問弟弟尿尿有變濃嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
+{"question": "弟弟尿尿有變深嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
+{"question": "請問弟弟尿尿有變深嗎？", "answer": "有, 變深黃色", "code": "H2", "scoringSubItem": "Concentration", "tag": "H", "audioUrl": "/audio/bd67c5743f901bcb1c7785f4509463e2.mp3"}
 {"question": "之前有帶弟弟去看醫生嗎？", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
 {"question": "有帶弟弟去診所嗎？", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
 {"question": "弟弟之前有就醫嗎？", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
+{"question": "那他不舒服之後有就醫嗎", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
+{"question": "不舒服後有就醫嗎", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
 {"question": "生病後有帶去哪裡看診？", "answer": "早上有帶去診所，醫師說是感冒，開藥給我們回家吃，中午看他不能吃藥，一吃就吐，而且又開始燒，活力很差，所以就帶來急診，樓下急診醫師說是急性腸胃炎，建議我們住院。", "code": "I1,I2", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/6e3ae274a260beb9ca6718573e7515bb.mp3"}
 {"question": "弟弟是在哪裡就醫的？", "answer": "早上有帶去診所，後來來急診", "code": "I1", "scoringSubItem": "Clinic Visit", "tag": "I", "audioUrl": "/audio/5e99e279dd2f4f081d27fa5480722e9e.mp3"}
 {"question": "醫師怎麼說？", "answer": "診所醫師說是感冒，後來急診醫師說是急性腸胃炎", "code": "I2", "scoringSubItem": "Diagnosis", "tag": "I", "audioUrl": "/audio/1816462f4ebb12dd628e3ab1105652a3.mp3"}
@@ -323,8 +398,13 @@
 {"question": "我現在要幫弟弟做一般的護理評估，好嗎？", "answer": "好", "code": "J1", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "我現在要幫小威做一般的護理評估，好嗎？", "answer": "好", "code": "J1", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "我需要檢查一下你的身體狀況", "answer": "病童安靜配合", "code": "J1", "answerType": "narration", "tag": "J", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "我現在要幫他量生命徵象。", "answer": "病童安靜配合量生命徵象", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/7def7e7d62061bc096dab18902224481.mp3"}
+{"question": "我現在要幫他量生命徵象。", "answer": "病童安靜配合量生命徵象", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/7def7e7d62061bc096dab18902224481.mp3"}
 {"question": "我幫你量體溫、脈博、呼吸、血壓哦", "answer": "病童安靜配合量體溫、脈博、呼吸、血壓", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/a7dc242ca4065cde228558313e7936db.mp3"}
+{"question": "體溫37.8。", "answer": "好", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
 {"question": "我要幫你量一下心跳", "answer": "病童安靜配合量體溫、脈博、呼吸、血壓", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/a7dc242ca4065cde228558313e7936db.mp3"}
+{"question": "心跳 90", "answer": "媽媽點頭", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
+{"question": "心跳 120", "answer": "媽媽點頭", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
 {"question": "我現在要聽一下你的心跳聲音", "answer": "病童安靜配合量體溫、脈博、呼吸、血壓", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/a7dc242ca4065cde228558313e7936db.mp3"}
 {"question": "我要用聽診器聽一下你的心跳", "answer": "病童安靜配合量體溫、脈博、呼吸、血壓", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/a7dc242ca4065cde228558313e7936db.mp3"}
 {"question": "媽媽我現在要聽一下弟弟的心跳", "answer": "好", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
@@ -335,54 +415,83 @@
 {"question": "量測心尖脈", "answer": "病童安靜配合量測心尖脈", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac50b5a9ed0272605b631151754fb4f9.mp3"}
 {"question": "量測心間脈", "answer": "病童安靜配合量測心尖脈", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac50b5a9ed0272605b631151754fb4f9.mp3"}
 {"question": "量測新間脈", "answer": "病童安靜配合量測心尖脈", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac50b5a9ed0272605b631151754fb4f9.mp3"}
-{"question": "我為小威進行腹部視、聽、扣、觸評估", "answer": "病童安靜配合", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
-{"question": "讓我看看聽聽你的肚肚好嗎?", "answer": "病童安靜配合", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
-{"question": "我要檢查一下你的肚子", "answer": "病童安靜配合", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
+{"question": "讓我量他的心尖脈一下。", "answer": "病童安靜配合量測心尖脈", "code": "J2", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac50b5a9ed0272605b631151754fb4f9.mp3"}
+{"question": "視、聽、扣、觸", "answer": "病童安靜配合視、聽、扣、觸", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/d389e2c17e78e2df689a5217026f7c47.mp3"}
+{"question": "我為小威進行腹部視、聽、扣、觸評估", "answer": "病童安靜配合視、聽、扣、觸", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/d389e2c17e78e2df689a5217026f7c47.mp3"}
+{"question": "讓我看看聽聽你的肚肚好嗎?", "answer": "病童安靜配合腹部評估", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/30131b3320880376293a87693ad4ebb9.mp3"}
+{"question": "那我打開弟弟的衣服幫他做腹部的評估囉", "answer": "好, 麻煩護理師了", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/00c3259d8993ede40d61f7782e64885d.mp3"}
+{"question": "那我打幫他做腹部的評估囉", "answer": "好", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "那我打開弟弟的衣服囉", "answer": "好, 麻煩護理師了", "code": "", "answerType": "narration", "tag": "J", "audioUrl": "/audio/00c3259d8993ede40d61f7782e64885d.mp3"}
+{"question": "我評估他的腹部", "answer": "病童安靜配合腹部評估", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/30131b3320880376293a87693ad4ebb9.mp3"}
+{"question": "我要檢查一下你的肚子", "answer": "病童安靜配合腹部評估", "code": "J3", "answerType": "narration", "tag": "J", "audioUrl": "/audio/30131b3320880376293a87693ad4ebb9.mp3"}
 {"question": "我先看一下你的肚子", "answer": "病童露出肚子", "code": "J3", "answerType": "narration", "scoringSubItem": "Inspection", "tag": "J", "audioUrl": "/audio/d7123d9bcef1f0c86a09cfe515fb3538.mp3"}
 {"question": "現在我要聽一下你肚子的聲音", "answer": "病童安靜配合", "code": "J3", "answerType": "narration", "scoringSubItem": "Auscultation", "tag": "J", "audioUrl": "/audio/20a461cc927732b9ce0dd9f44c4ff90e.mp3"}
 {"question": "我要輕輕敲一下你的肚子", "answer": "病童表情緊張但配合", "code": "J3", "answerType": "narration", "scoringSubItem": "Percussion", "tag": "J", "audioUrl": "/audio/37a9748ede131821b994023b44a39fad.mp3"}
 {"question": "我要摸一下你的肚子，如果痛要告訴我", "answer": "病童點頭", "code": "J3", "answerType": "narration", "scoringSubItem": "Palpation", "tag": "J", "audioUrl": "/audio/8cf2154b19a7b4a9ee764c602565428f.mp3"}
 {"question": "肚子痛痛嘛？", "answer": "病童點點頭", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
+{"question": "弟弟有很痛嗎？", "answer": "病童點點頭", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
 {"question": "弟弟肚子痛痛嘛？", "answer": "病童點點頭", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
 {"question": "弟弟肚子還痛嘛？", "answer": "病童點點頭", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/bc7f1e8c15a08d5363485f08b3cde7dd.mp3"}
 {"question": "媽媽,弟弟的肚子還痛嘛？", "answer": "剛剛都還在痛", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/c9367e52e41ce04f1505344074035d26.mp3"}
+{"question": "我要為他測量腹部疼痛的情形請問他有腹痛嗎？", "answer": "剛剛都還在痛", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/c9367e52e41ce04f1505344074035d26.mp3"}
+{"question": "我要為弟弟測量腹部疼痛, 請問弟弟有腹痛嗎？", "answer": "剛剛都還在痛", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/c9367e52e41ce04f1505344074035d26.mp3"}
 {"question": "小威，你看這些臉，哪一個最像你現在肚子痛的感覺？", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "3歲以上使用臉譜量表,3歲以下使用行為量表", "answer": "媽媽專心聽", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/5aff5a794c345ed60d18159e9f112bec.mp3"}
+{"question": "幫他做腹痛評估。", "answer": "媽媽點頭", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
 {"question": "3歲以上使用臉譜量表,3歲以下使用 FLACC 量表", "answer": "媽媽專心聽", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/5aff5a794c345ed60d18159e9f112bec.mp3"}
 {"question": "你的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
+{"question": "0分不痛10分最痛弟弟，你現在幾分痛？", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "弟弟的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "小威的肚子痛有多痛？可以指給我看", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
-{"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/e7b3932316f295da71a3c427a81a5e7c.mp3"}
-{"question": "這裡有一個臉譜量表,笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著中間偏痛的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/e7b3932316f295da71a3c427a81a5e7c.mp3"}
+{"question": "這個笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
+{"question": "這裡有一個臉譜量表,笑臉代表不痛，哭臉代表非常痛，你現在是哪一個？", "answer": "病童指著哭臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/67b864b5a177040a78ec0142e7f36660.mp3"}
+{"question": "腹部疼痛評估來小威弟弟我現在給你這個紙卡你幫我比一個臉譜出來", "answer": "病童指著痛苦程度6分的臉", "code": "J4", "answerType": "narration", "tag": "J", "audioUrl": "/audio/431d062c7447c39e3a4f017c7820c607.mp3"}
 {"question": "使用FLACC行為量表", "answer": "記錄評估", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "J", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
-{"question": "小威2歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "J", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
+{"question": "小威4歲，我使用FLACC行為量表評估疼痛", "answer": "記錄評估", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "J", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
 {"question": "我用FLACC量表", "answer": "記錄評估", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "J", "audioUrl": "/audio/4962d97f22dea2595200d038cd026d15.mp3"}
 {"question": "總分7分，表示中度疼痛", "answer": "正確", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale", "tag": "J", "audioUrl": "/audio/8c29ef07de29438e8fabbdc442aa1149.mp3"}
 {"question": "觀察小威的臉部表情", "answer": "病童臉部緊繃，偶爾顫抖", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale Face", "tag": "J", "audioUrl": "/audio/1efa3fab97848753e7ad107773bd0de7.mp3"}
 {"question": "觀察小威的腿部活動", "answer": "病童腿部不安，蜷縮", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale Legs", "tag": "J", "audioUrl": "/audio/05b06c27be80ef7e4bb86a0a120d2e2f.mp3"}
 {"question": "觀察小威的活動狀態", "answer": "病童躁動不安，翻來覆去", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale Activity", "tag": "J", "audioUrl": "/audio/e144d065e6ddcd59bf0216f806041769.mp3"}
 {"question": "觀察小威的哭泣情況", "answer": "病童偶爾抽泣", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale Cry", "tag": "J", "audioUrl": "/audio/82008307f6a3b2f9c9b36b85b300f556.mp3"}
+{"question": "測試結束", "answer": "病童表情舒緩", "code": "J4", "answerType": "narration", "scoringSubItem": "FLACC Scale Cry", "tag": "J", "audioUrl": "/audio/72a6bb8a896f196050ea9e85e7cc5991.mp3"}
+{"question": "腹瀉護理指導", "answer": "媽媽點頭", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
+{"question": "腹瀉的護理指導記錄顏色性質", "answer": "媽媽點頭", "code": "K1,K2", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
+{"question": "腹瀉的護理指導記錄性質", "answer": "媽媽點頭", "code": "K2", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
+{"question": "腹瀉的護理指導記錄顏色", "answer": "媽媽點頭", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/8402f2db7379eb5a8a2a2b3e379fd5dc.mp3"}
 {"question": "媽媽我要為你進行護理指導，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
+{"question": "也要幫我記錄他大便的顏色有無血絲？", "answer": "好的，我會注意", "code": "K1,K2", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
 {"question": "媽媽，請您記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
 {"question": "媽媽，請您回去要記得記錄一下弟弟大便的顏色", "answer": "好的，我會注意", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
 {"question": "弟弟每次大便後，請記下大便的顏色變化", "answer": "我會記錄的", "code": "K1", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/edb059bdf0c7a89b7efdee6de090ace4.mp3"}
-{"question": "媽媽我要為你進行護理指導，也請您觀察大便還有小便的性質", "answer": "好的，我會觀察", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/8a8927801ceecd3736d06bd5da50b659.mp3"}
-{"question": "媽媽，也請您觀察大便還有小便的性質", "answer": "好,我會多注意", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/07fe87fb4d33f84040bc64ce82a73b27.mp3"}
-{"question": "請記錄小便的性質，還有顏色", "answer": "好,我會多注意他這些小便的性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/ee69978c3cc926eab694d547a57ad190.mp3"}
-{"question": "媽媽，也請您觀察他小便的性質", "answer": "好,我會多注意他尿尿的狀況", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/2ef432477d90338fee0313b31aaea708.mp3"}
-{"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好,我會多注意他這些大便的性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/75a853650e5e249b4e5fbbda667a3805.mp3"}
-{"question": "媽媽我要為你進行護理指導，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好,我會多注意他這些大便的性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/75a853650e5e249b4e5fbbda667a3805.mp3"}
-{"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "好,我會多注意他這些大便的性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/75a853650e5e249b4e5fbbda667a3805.mp3"}
-{"question": "我要為你進行護理指導, 請記錄大便的性質，是否有黏液或特殊氣味", "answer": "好,我會多注意他這些大便的性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/75a853650e5e249b4e5fbbda667a3805.mp3"}
-{"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "了解，那要禁食多久？", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/da5fec328054fdcd498894aab71675f8.mp3"}
-{"question": "如果弟弟嘔吐嚴重，可以先不要讓他吃東西", "answer": "了解，那要禁食多久？", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/da5fec328054fdcd498894aab71675f8.mp3"}
+{"question": "也要幫我記錄他大便的顏色有無血絲？", "answer": "好的，我會注意", "code": "K1,K2", "scoringSubItem": "Record Color", "tag": "K", "audioUrl": "/audio/6b08b89e7db4890d03011fa44e6b7729.mp3"}
+{"question": "幫我觀察他的大便跟尿尿", "answer": "好的，我會多注意他的大便跟尿尿", "code": "K1,K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/cfd5d07dd3bd5c8585eecec5479867e0.mp3"}
+{"question": "媽媽我要為你進行護理指導，也請您觀察大便還有尿尿的性質", "answer": "好的，我會觀察", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/8a8927801ceecd3736d06bd5da50b659.mp3"}
+{"question": "媽媽，也請您觀察大便還有尿尿的性質", "answer": "好,我會多注意", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/07fe87fb4d33f84040bc64ce82a73b27.mp3"}
+{"question": "請記錄尿尿的性質，還有顏色", "answer": "好,我會多注意", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/07fe87fb4d33f84040bc64ce82a73b27.mp3"}
+{"question": "媽媽，也請您觀察他尿尿的性質", "answer": "好,我會多注意", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/07fe87fb4d33f84040bc64ce82a73b27.mp3"}
+{"question": "媽媽，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好,我會多注意他這些性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/e1f6a66b7c1a57d46c68ef5692169c15.mp3"}
+{"question": "媽媽我要為你進行護理指導，也請您觀察大便的性質，是水狀還是糊狀", "answer": "好,我會多注意他這些性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/e1f6a66b7c1a57d46c68ef5692169c15.mp3"}
+{"question": "請記錄大便的性質，是否有黏液或特殊氣味", "answer": "好,我會多注意他這些性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/e1f6a66b7c1a57d46c68ef5692169c15.mp3"}
+{"question": "我要為你進行護理指導, 請記錄大便的性質，是否有黏液或特殊氣味", "answer": "好,我會多注意他這些性質", "code": "K2", "scoringSubItem": "Record Consistency", "tag": "K", "audioUrl": "/audio/e1f6a66b7c1a57d46c68ef5692169c15.mp3"}
+{"question": "要禁食", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "必要時要禁食", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "如果弟弟嘔吐嚴重，可能需要短暫禁食讓腸胃休息", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "如果弟弟嘔吐嚴重，可以先不要讓他吃東西", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "嚴重腹瀉時，可能需要暫時禁食4-6小時", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "如果拉的很嚴重或吐得很嚴重，我們就不能再吃東西。", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "如果拉的很嚴重，我們就不能再吃東西。", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
+{"question": "如果吐的很嚴重，我們就不能再吃東西。", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "如果腹瀉很嚴重的話，可能需要先禁食4-6小時", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "如果拉肚子拉的很嚴重的話，要先禁食4-6小時", "answer": "好的，我知道了", "code": "K3", "scoringSubItem": "Fasting If Necessary", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "媽媽，先不要給小威吃東西", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "媽媽，從現在開始，我們必須要禁食。", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "現在不能吃東西。", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "弟弟現在不能吃東西。", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
 {"question": "媽媽，先不要給弟弟吃東西", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
 {"question": "媽媽，弟弟先不要吃東西", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
 {"question": "媽媽，必要時讓弟弟暫停進食，", "answer": "好的", "code": "K3", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "她的肛門附近大便的話用清水清洗。", "answer": "好的，我知道了", "code": "K4", "scoringSubItem": "Skin Care", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "每次大便後，請用溫水清洗臀部並擦乾", "answer": "好的，我知道了", "code": "K4", "scoringSubItem": "Skin Care", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "每次弟弟拉肚子後，請用溫水清洗臀部並擦乾", "answer": "好的，我知道了", "code": "K4", "scoringSubItem": "Skin Care", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "每次弟弟拉肚子後，請用溫水洗他的屁股並擦乾", "answer": "好的，我知道了", "code": "K4", "scoringSubItem": "Skin Care", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
@@ -397,43 +506,48 @@
 {"question": "如果小威屁股紅腫的話,可以塗護膚霜", "answer": "好的，我知道了", "code": "K4", "scoringSubItem": "Skin Care", "tag": "K", "audioUrl": "/audio/5b8fe37ba2e0f0136712302fff9d247a.mp3"}
 {"question": "弟弟可以進食時，建議從香蕉、蘋果泥、白飯和吐司開始", "answer": "好的，這些食物比較容易消化是嗎？", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/4e4aa207860a4842777e499507177674.mp3"}
 {"question": "對", "answer": "好的, 我知道了", "code": "000", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/599e6f4040aaa8844b14f9e64b3ffb2d.mp3"}
-{"question": "讓弟弟吃：香蕉、蘋果泥、白飯和吐司", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
-{"question": "讓弟弟吃：香蕉、蘋果泥、白飯和吐司", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
-{"question": "讓弟弟吃：香蕉、蘋果泥、稀飯和吐司", "answer": "好的,香蕉、蘋果泥、稀飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/000664fcb3510ad34ef1ee350d43d136.mp3"}
+{"question": "他現在只能吃BART。", "answer": "好的", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "他現在只能吃香蕉蘋果泥白飯和吐司。", "answer": "好的,香蕉、蘋果泥、飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/525f9ccd2dbc8d8c2b4708a2e0de7759.mp3"}
+{"question": "讓弟弟吃：香蕉、蘋果泥、稀飯和吐司", "answer": "好的,香蕉、蘋果泥、飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/525f9ccd2dbc8d8c2b4708a2e0de7759.mp3"}
 {"question": "讓弟弟吃：香蕉、蘋果泥、米湯和吐司", "answer": "好的,香蕉、蘋果泥、米湯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/4e7653cf6fba908f4a82c26ed7fc7cad.mp3"}
 {"question": "恢復食慾的時後，再讓弟弟吃：香蕉、蘋果泥、米湯和吐司", "answer": "好的,香蕉、蘋果泥、米湯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/4e7653cf6fba908f4a82c26ed7fc7cad.mp3"}
 {"question": "恢復食慾的時後，再讓弟弟吃：香蕉、蘋果泥、稀飯和吐司", "answer": "好的,香蕉、蘋果泥、米湯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/4e7653cf6fba908f4a82c26ed7fc7cad.mp3"}
 {"question": "如果弟弟可以吃東西了，再給他 BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
 {"question": "恢復進食時，請遵循BART原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
 {"question": "恢復進食時，請遵循BRAT原則：香蕉、蘋果泥、白飯和吐司", "answer": "我會記住這些食物", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/d85a6c7ff15ee58c307b22959027cb75.mp3"}
-{"question": "弟弟可以吃東西後，再給他 BART原則：", "answer": "什麼是BART原則食物?", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/22d7f804de6a7e6a62733dae2f02bbab.mp3"}
-{"question": "弟弟恢復食慾後，再給他 BART原則食物：", "answer": "什麼是BART原則食物?", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/22d7f804de6a7e6a62733dae2f02bbab.mp3"}
 {"question": "恢復進食時，請遵循BRAT原則食物：", "answer": "什麼是BRAT原則食物?", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/d528de7f5f27ae5f0df4d06a081cd4af.mp3"}
 {"question": "BRAT是香蕉、蘋果泥、白飯和吐司", "answer": "好的, 香蕉、蘋果泥、白飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/6ccc4cdf63f3376a9fe230ab02b05120.mp3"}
 {"question": "BRAT是香蕉、蘋果泥、稀飯和吐司", "answer": "好的, 香蕉、蘋果泥、稀飯和吐司", "code": "K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/5a74cbfc96d961276134c1cfe30914d1.mp3"}
-{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的,B R A T是什麼", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/a81cb07ec6bf64d092ff2734db9f9983.mp3"}
-{"question": "還有記錄他大便的性質,先讓弟弟禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的,B R A T是什麼", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/a81cb07ec6bf64d092ff2734db9f9983.mp3"}
-{"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的,B R A T是什麼", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/a81cb07ec6bf64d092ff2734db9f9983.mp3"}
-{"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 要記得用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的,B R A T是什麼", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/a81cb07ec6bf64d092ff2734db9f9983.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子要給予皮膚的護理, 弟弟開始想吃東西的時候給他吃  brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子要給予皮膚的護理, 開始進食的時候要給他吃 brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子要給予皮膚的護理, 開始進食的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 弟弟開始想吃東西的時候給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他的便便,先不要吃東西, 如果有拉肚子要給予皮膚的護理, 可以吃的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他的便便,先不要吃東西, 如果有拉肚子要給予皮膚的護理, 弟弟可以吃的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他的便便,先不要吃東西, 如果有拉肚子要給予皮膚的護理, 弟弟開始想吃東西的時候 給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子要用清水洗屁屁, 開始進食的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他大便,先禁食, 就是不能吃東西, 如果有拉肚子要用清水洗屁屁, 開始進食的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他便便的顏色,現在先不要吃東西, 如果有拉肚子要用清水洗屁屁, 開始進食的時候要給他吃 brat飲食 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
+{"question": "還有記錄他大便的性質,先讓弟弟禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
+{"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 要記得用清水洗屁屁, 開始進食的時候要給他吃 brat飲食", "answer": "好的", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/375ec8858f2e8ec21295958624199520.mp3"}
 {"question": "還有記錄他大便的性質,必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
 {"question": "還有記錄他大便的性質,先讓弟弟禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
 {"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 用清水洗屁屁, 開始進食的時候要給他吃 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
 {"question": "還有記錄他大便的性質,先讓弟弟禁食, 如果有拉肚子, 要記得用清水洗屁屁, 開始進食的時候要給他吃 香蕉、蘋果泥、白飯和吐司", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
-{"question": "還有記錄他小便的性質, 必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁股, 開始進食的時候要給他吃 brat飲食", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
-{"question": "還有記錄他小便的性質, 必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁股, 可以吃飯了之後要給他吃 brat飲食", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
-{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，先不要給小威吃東西，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
-{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
-{"question": "媽媽，腹瀉期間需要注意記錄小便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
-{"question": "媽媽，腹瀉期間需要注意記錄小便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意這些方面", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/2d6fd9b94f19e446c5e9f926f156d602.mp3"}
-{"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "我明白了，這些都很重要", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet", "tag": "K", "audioUrl": "/audio/421a4776d2b7ca10d41ce1309b51afe3.mp3"}
-{"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好的，我會按照這些建議做", "code": "K1,K3,K5", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet", "tag": "K", "audioUrl": "/audio/fb6865ada0c26b2624ab5b61c91be948.mp3"}
-{"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "code": "K1,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/572011c897e7ae6ccd34a5e97f994015.mp3"}
-{"question": "弟弟拉肚子時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意這些事項", "code": "K1,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/572011c897e7ae6ccd34a5e97f994015.mp3"}
-{"question": "你好，請問是小威的媽媽嗎？", "variants": ["你好是小威媽媽嗎", "請問您是小威的媽媽", "您是小威的母親嗎"], "answer": "是的，我是小威的媽媽", "code": "A00,M3", "answerType": "dialogue", "tag": "A", "audioUrl": "/audio/db844808341a6644c4751a8221dac0b2.mp3"}
-{"question": "您好，我是您的護理師", "answer": "您好，謝謝您來照顧小威", "code": "M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/c94f2823ca5604cf975d18dfad2201f7.mp3"}
-{"question": "小威媽媽您好", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
-{"question": "我是今天負責照顧小威的護理師", "answer": "您好", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/f070aa69f8d73650da15a0f9d0878a41.mp3"}
-{"question": "媽媽您還好嗎？", "answer": "是有點累，昨晚小威一直哭鬧，沒怎麼睡", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/840bacb86e0d942f6a799ba33db22fa5.mp3"}
+{"question": "還有記錄他尿尿的性質, 必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁股, 開始進食的時候要給他吃 brat飲食", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
+{"question": "還有記錄他尿尿的性質, 必要的時候我們要先禁食, 就是不能吃東西, 如果有拉肚子, 用清水洗屁股, 可以吃飯了之後要給他吃 brat飲食", "answer": "好的,香蕉、蘋果泥、白飯和吐司", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "BART Diet", "tag": "K", "audioUrl": "/audio/ec5e6373a65d75710a5236080743cf0c.mp3"}
+{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，先不要給小威吃東西，並做好皮膚護理", "answer": "好的，我會特別注意", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ec47cb2d55b934ba2db5802aebbe0254.mp3"}
+{"question": "媽媽，腹瀉期間需要注意記錄大便顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ec47cb2d55b934ba2db5802aebbe0254.mp3"}
+{"question": "媽媽，腹瀉期間需要注意記錄尿尿顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ec47cb2d55b934ba2db5802aebbe0254.mp3"}
+{"question": "媽媽，腹瀉期間需要注意記錄尿尿顏色和性質，必要時暫停進食，並做好皮膚護理", "answer": "好的，我會特別注意", "code": "K1,K2,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ec47cb2d55b934ba2db5802aebbe0254.mp3"}
+{"question": "腹瀉護理有幾個重點：記錄大便情況、適當禁食、保護皮膚，以及恢復飲食時選擇容易消化的食物", "answer": "好", "code": "K1,K2,K3,K4,K5", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care,BART Diet", "tag": "K", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "請記錄大便顏色和性質，如果嘔吐嚴重需要禁食，恢復進食時從BART食物開始", "answer": "好", "code": "K1,K3,K5", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,BART Diet", "tag": "K", "audioUrl": "/audio/ac2c8f13c6e60810197b19d683f5f184.mp3"}
+{"question": "腹瀉時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意", "code": "K1,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ad616f3b746110d006f9795a9252e59a.mp3"}
+{"question": "弟弟拉肚子時要保護臀部皮膚，記錄大便情況，並遵循醫囑適當禁食", "answer": "了解，我會特別注意", "code": "K1,K3,K4", "scoringSubItem": "Record Color,Record Consistency,Fasting If Necessary,Skin Care", "tag": "K", "audioUrl": "/audio/ad616f3b746110d006f9795a9252e59a.mp3"}
+{"question": "好那我現在已經完成對小朋友進行的評估", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
+{"question": "請小朋友好好休息", "answer": "好,謝謝護理師", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
 {"question": "媽媽您看起來很擔心", "answer": "是的，小威從來沒這麼不舒服過，我很擔心", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/17b35d91d2808ef80dd2da2e5542c414.mp3"}
 {"question": "媽媽您需要休息一下嗎？", "answer": "不用了，我想陪著小威", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/552cfb25a0428db59130f3dc03622a1c.mp3"}
 {"question": "媽媽您吃過飯了嗎？", "answer": "還沒有，但我現在沒什麼胃口", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/a1de913879a37d0b27c5b9a35997bdfc.mp3"}
@@ -458,12 +572,16 @@
 {"question": "弟弟今天有沒有比較舒服一點？", "answer": "還是很不舒服，但至少不像昨天那麼嚴重", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "M", "audioUrl": "/audio/cdfe18e116bc4d3785241f4270794354.mp3"}
 {"question": "我幫你找醫生來", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "M", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
 {"question": "那我就先回護理站了", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "M", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
-{"question": "我要下班了", "answer": "好,謝謝護理師", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
-{"question": "那我先下班了", "answer": "好,護理師您辛苦了", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/dd83c38714f2eacf2d0f71653c70053f.mp3"}
+{"question": "我要下班了", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
+{"question": "測試測試", "answer": "護理師請說", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/6c3dcff10f08462f4cf3128839f0c03a.mp3"}
+{"question": "有沒有要補充", "answer": "沒有,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/fc8abcb462deea19993f538e6bda35ad.mp3"}
+{"question": "還有什麼其他的問題", "answer": "沒有,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/fc8abcb462deea19993f538e6bda35ad.mp3"}
+{"question": "那我先下班了", "answer": "好,護理師您辛苦了", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/dd83c38714f2eacf2d0f71653c70053f.mp3"}
 {"question": "我很累", "answer": "你還好嗎", "code": "M2,M3", "answerType": "dialogue", "isNotScoring": true, "tag": "M", "audioUrl": "/audio/73f2d0c3bcdcfa2d643bd474db5147e9.mp3"}
-{"question": "我幫你打針", "answer": "好,謝謝護理師", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
-{"question": "我幫你抽血", "answer": "好,謝謝護理師", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
-{"question": "我要聯絡警察", "answer": "媽媽面無表情", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/be41fa64afa65f6e1a66d5a2d476cfe7.mp3"}
-{"question": "謝謝", "answer": "不會,謝謝護理師", "code": "zzz", "answerType": "dialogue", "isNotScoring": true, "tag": "Z", "audioUrl": "/audio/f5b569846843c4a6e5718a5cc4a2555a.mp3"}
+{"question": "我幫你打針", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
+{"question": "我幫你抽血", "answer": "好,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/30603680b563a94bead34e61c1d3d1fd.mp3"}
+{"question": "我要聯絡警察", "answer": "媽媽面無表情", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/be41fa64afa65f6e1a66d5a2d476cfe7.mp3"}
+{"question": "謝謝", "answer": "不會,謝謝護理師", "code": "", "answerType": "dialogue", "isNotScoring": true, "tag": "", "audioUrl": "/audio/f5b569846843c4a6e5718a5cc4a2555a.mp3"}
 {"question": "我要看看你哪裡不舒服", "answer": "病童指著肚子", "code": "M1", "answerType": "narration", "tag": "M", "audioUrl": "/audio/7ec7fb08c8fc01bab88048d9a5df2fff.mp3"}
 {"question": "弟弟你哪裡不舒服", "answer": "病童指著肚子", "code": "M1", "answerType": "narration", "tag": "M", "audioUrl": "/audio/7ec7fb08c8fc01bab88048d9a5df2fff.mp3"}
+{"question": "媽媽您還好嗎？", "answer": "是有點累，昨晚小威一直哭鬧，沒怎麼睡", "code": "M2,M3", "answerType": "dialogue", "tag": "M", "audioUrl": "/audio/840bacb86e0d942f6a799ba33db22fa5.mp3"}

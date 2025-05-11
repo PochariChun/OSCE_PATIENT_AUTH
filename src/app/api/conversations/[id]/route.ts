@@ -125,7 +125,7 @@ export async function GET(
       scenarioTitle: conversation.scenario?.title || '',
       scenarioDescription: conversation.scenario?.description || '',
       messages: formattedMessages,
-      feedback: conversation.reflections,
+      feedback: conversation.feedback ?? null,
       reflections: formattedReflections,
       scoredItems: scoredItems,
       nursingCaseNote: conversation.nursingCaseNote

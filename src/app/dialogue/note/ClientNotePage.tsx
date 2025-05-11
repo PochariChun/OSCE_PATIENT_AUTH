@@ -280,22 +280,7 @@ return (
             </div>
             )}
             
-            {/* <div className="flex justify-between">
-            <button
-                onClick={handleSaveNote}
-                disabled={saving}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors disabled:bg-blue-400"
-            >
-                {saving ? '保存中...' : '保存紀錄'}
-            </button>
-            
-            <button
-                onClick={handleFinish}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition-colors"
-            >
-                結束紀錄，開始反思
-            </button>
-            </div> */}
+    
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
                 onClick={handleFinish} // A組邏輯與原來一樣
